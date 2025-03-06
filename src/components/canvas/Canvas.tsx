@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useCanvas } from "../../context/CanvasContext";
 import { DraggableElement } from "./DraggableElement";
@@ -28,6 +28,7 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
   const [tableLabel, setTableLabel] = useState("");
   const [tableType, setTableType] = useState("");
 
+  const constraintsRef = useRef(null);
   useEffect(() => {
     if (state.selectedElement) {
       const element = state.elements.find(
@@ -112,6 +113,7 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
 
       <div
         className="relative border-2 border-gray-300 bg-gray-100 canvas-container"
+        ref={constraintsRef}
         style={{
           width: state.canvasConfig.width,
           height: state.canvasConfig.height,
@@ -119,7 +121,11 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
       >
         <AnimatePresence>
           {state.elements.map((element) => (
-            <DraggableElement key={element.id} element={element} />
+            <DraggableElement
+              constraintsRef={constraintsRef}
+              key={element.id}
+              element={element}
+            />
           ))}
         </AnimatePresence>
       </div>

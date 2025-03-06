@@ -9,6 +9,7 @@ interface DraggableElementProps {
 
 export const DraggableElement: React.FC<DraggableElementProps> = ({
   element,
+  constraintsRef,
 }) => {
   const { dispatch, state } = useCanvas();
   const isSelected = state.selectedElement === element.id;
@@ -58,7 +59,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   };
 
   const handleRotate = (direction: "clockwise" | "counterclockwise") => {
-    const rotationAmount = direction === "clockwise" ? 15 : -15;
+    const rotationAmount = direction === "clockwise" ? 90 : -90;
     const updatedElement = {
       ...element,
       rotation: element.rotation + rotationAmount,
@@ -106,6 +107,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
 
   return (
     <motion.div
+      dragConstraints={constraintsRef}
       className={`absolute cursor-move ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       style={{
         x: element.position.x,
