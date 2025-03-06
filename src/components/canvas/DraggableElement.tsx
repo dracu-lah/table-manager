@@ -17,14 +17,43 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { offset: { x: number; y: number } },
   ) => {
+    // Calculate new position
+    let newX = element.position.x + info.offset.x;
+    let newY = element.position.y + info.offset.y;
+
+    // Get canvas boundaries
+    const canvas = document.querySelector(".canvas-container");
+    if (canvas) {
+      const rect = canvas.getBoundingClientRect();
+      const elementWidth =
+        element.type === "table"
+          ? 24
+          : element.type === "window"
+            ? 48
+            : element.type === "separator"
+              ? 4
+              : 16;
+      const elementHeight =
+        element.type === "table"
+          ? 24
+          : element.type === "window"
+            ? 4
+            : element.type === "separator"
+              ? 32
+              : 16;
+
+      // Constrain to canvas
+      newX = Math.max(0, Math.min(newX, rect.width - elementWidth));
+      newY = Math.max(0, Math.min(newY, rect.height - elementHeight));
+    }
+
     const updatedElement = {
       ...element,
       position: {
-        x: element.position.x + info.offset.x,
-        y: element.position.y + info.offset.y,
+        x: newX,
+        y: newY,
       },
     };
-
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
   };
 
@@ -34,7 +63,6 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
       ...element,
       rotation: element.rotation + rotationAmount,
     };
-
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
   };
 
@@ -53,8 +81,16 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     switch (element.type) {
       case "table":
         return (
-          <div className="w-24 h-24 bg-amber-700 rounded-full flex items-center justify-center text-white">
-            {element.tableNumber || element.label}
+          <div className="w-24 h-24 bg-amber-700 rounded-full flex flex-col items-center justify-center text-white">
+            <div className="font-bold">{element.tableNumber || "?"}</div>
+            {element.tableLabel && (
+              <div className="text-xs">{element.tableLabel}</div>
+            )}
+            {element.tableType && (
+              <div className="text-xs italic opacity-75">
+                {element.tableType}
+              </div>
+            )}
           </div>
         );
       case "window":
@@ -87,7 +123,6 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
       exit={{ opacity: 0, scale: 0.8 }}
     >
       {getElementComponent()}
-
       {isSelected && (
         <div className="absolute -top-8 left-0 flex space-x-1">
           <button

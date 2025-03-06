@@ -1,10 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { useCanvas } from "../../context/CanvasContext";
 import { DraggableElement } from "./DraggableElement";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "../ui/select";
 import { ElementData } from "../../types";
 
 interface CanvasProps {
@@ -17,6 +25,8 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
   const [selectedElementData, setSelectedElementData] =
     useState<ElementData | null>(null);
   const [tableNumber, setTableNumber] = useState("");
+  const [tableLabel, setTableLabel] = useState("");
+  const [tableType, setTableType] = useState("");
 
   useEffect(() => {
     if (state.selectedElement) {
@@ -26,17 +36,21 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
       if (element) {
         setSelectedElementData(element);
         setTableNumber(element.tableNumber?.toString() || "");
+        setTableLabel(element.tableLabel || "");
+        setTableType(element.tableType || "");
       }
     } else {
       setSelectedElementData(null);
     }
   }, [state.selectedElement, state.elements]);
 
-  const handleSaveTableNumber = () => {
-    if (selectedElementData && tableNumber) {
+  const handleSaveTableProperties = () => {
+    if (selectedElementData) {
       const updatedElement = {
         ...selectedElementData,
-        tableNumber: parseInt(tableNumber, 10),
+        tableNumber: tableNumber ? parseInt(tableNumber, 10) : undefined,
+        tableLabel,
+        tableType,
       };
       dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
     }
@@ -97,7 +111,7 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
       )}
 
       <div
-        className="relative border-2 border-gray-300 bg-gray-100"
+        className="relative border-2 border-gray-300 bg-gray-100 canvas-container"
         style={{
           width: state.canvasConfig.width,
           height: state.canvasConfig.height,
@@ -113,7 +127,7 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
       {selectedElementData && selectedElementData.type === "table" && (
         <div className="mt-4">
           <Button onClick={() => setIsDialogOpen(true)}>
-            Set Table Number
+            Edit Table Properties
           </Button>
         </div>
       )}
@@ -121,16 +135,47 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Set Table Number</DialogTitle>
+            <DialogTitle>Table Properties</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
-            <Input
-              type="number"
-              value={tableNumber}
-              onChange={(e) => setTableNumber(e.target.value)}
-              placeholder="Enter table number"
-            />
-            <Button onClick={handleSaveTableNumber}>Save</Button>
+            <div className="space-y-2">
+              <Label htmlFor="tableNumber">Table Number</Label>
+              <Input
+                id="tableNumber"
+                type="number"
+                value={tableNumber}
+                onChange={(e) => setTableNumber(e.target.value)}
+                placeholder="Enter table number"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tableLabel">Table Label</Label>
+              <Input
+                id="tableLabel"
+                type="text"
+                value={tableLabel}
+                onChange={(e) => setTableLabel(e.target.value)}
+                placeholder="Enter table label (e.g. VIP, Reserved)"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="tableType">Table Type</Label>
+              <Select value={tableType} onValueChange={setTableType}>
+                <SelectTrigger id="tableType">
+                  <SelectValue placeholder="Select table type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="round">Round</SelectItem>
+                  <SelectItem value="square">Square</SelectItem>
+                  <SelectItem value="rectangular">Rectangular</SelectItem>
+                  <SelectItem value="oval">Oval</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <Button onClick={handleSaveTableProperties}>Save</Button>
           </div>
         </DialogContent>
       </Dialog>
