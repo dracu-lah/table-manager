@@ -3,7 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { CanvasProvider } from "../context/CanvasContext";
 import AreaManager from "../pages/AreaManager";
 import CustomerView from "../pages/CustomerView";
-import Home from "../pages/Home";
 
 const AppRouter: React.FC = () => {
   return (
