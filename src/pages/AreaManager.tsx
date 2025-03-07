@@ -1,13 +1,11 @@
 import React from "react";
 import { Canvas } from "../components/canvas/Canvas";
-import { Sidebar } from "../components/layout/Sidebar";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
 
 const AreaManager: React.FC = () => {
   return (
     <div className="flex h-screen">
-      <Sidebar />
       <div className="flex-1 p-6 flex flex-col">
         <div className="flex justify-between mb-6">
           <h1 className="text-2xl font-bold">Area Manager</h1>

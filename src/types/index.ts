@@ -1,32 +1,10 @@
 export type ElementType = "table" | "window" | "door" | "separator";
 export type TableType = "type-1" | "type-2" | "type-3";
 
-export interface Position {
-  x: number;
-  y: number;
-}
-
-export interface CanvasConfig {
-  aspectRatio: string;
-  width: number;
-  height: number;
-}
-
 export interface CanvasState {
   elements: ElementData[];
   selectedElement: string | null;
   canvasConfig: CanvasConfig;
-}
-
-export interface ElementData {
-  id: string;
-  type: string;
-  position: { x: number; y: number };
-  rotation: number;
-  tableNumber?: number;
-  tableLabel?: string;
-  tableType?: string;
-  label?: string;
 }
 
 export interface CanvasState {
@@ -48,3 +26,28 @@ export type CanvasAction =
       type: "SET_CANVAS_CONFIG";
       payload: { aspectRatio: string; width: number; height: number };
     };
+export interface Position {
+  x: number;
+  y: number;
+}
+
+export interface CanvasConfig {
+  aspectRatio: string;
+  width: number;
+  height: number;
+}
+
+export interface ElementData {
+  id: string;
+  type: "table" | "window" | "door" | "separator" | string;
+  position: Position;
+  rotation: number;
+  tableNumber?: number;
+  tableLabel?: string;
+  tableType?: "round" | "square" | "rectangular" | "oval" | string;
+  width?: number;
+  height?: number;
+  color?: string;
+  shape?: string;
+  canvasId: string;
+}

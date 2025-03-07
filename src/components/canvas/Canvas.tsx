@@ -14,6 +14,7 @@ import {
   SelectItem,
 } from "../ui/select";
 import { ElementData } from "../../types";
+import { Toolbar } from "./Toolbar";
 
 interface CanvasProps {
   isEditable?: boolean;
@@ -26,9 +27,14 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
     useState<ElementData | null>(null);
   const [tableNumber, setTableNumber] = useState("");
   const [tableLabel, setTableLabel] = useState("");
-  const [tableType, setTableType] = useState("");
 
   const constraintsRef = useRef(null);
+
+  // Find the current canvas
+  const currentCanvas =
+    state.canvases.find((canvas) => canvas.id === state.currentCanvasId) ||
+    state.canvases[0];
+
   useEffect(() => {
     if (state.selectedElement) {
       const element = state.elements.find(
@@ -38,7 +44,6 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
         setSelectedElementData(element);
         setTableNumber(element.tableNumber?.toString() || "");
         setTableLabel(element.tableLabel || "");
-        setTableType(element.tableType || "");
       }
     } else {
       setSelectedElementData(null);
@@ -51,7 +56,6 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
         ...selectedElementData,
         tableNumber: tableNumber ? parseInt(tableNumber, 10) : undefined,
         tableLabel,
-        tableType,
       };
       dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
     }
@@ -81,62 +85,72 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4">
-      {isEditable && (
-        <div className="flex space-x-2 mb-4">
-          <Button
-            variant={
-              state.canvasConfig.aspectRatio === "1:1" ? "default" : "outline"
-            }
-            onClick={() => handleAspectRatioChange("1:1")}
-          >
-            1:1
-          </Button>
-          <Button
-            variant={
-              state.canvasConfig.aspectRatio === "4:3" ? "default" : "outline"
-            }
-            onClick={() => handleAspectRatioChange("4:3")}
-          >
-            4:3
-          </Button>
-          <Button
-            variant={
-              state.canvasConfig.aspectRatio === "16:9" ? "default" : "outline"
-            }
-            onClick={() => handleAspectRatioChange("16:9")}
-          >
-            16:9
-          </Button>
-        </div>
-      )}
+    <div className="flex flex-col items-center space-y-4 w-full">
+      {isEditable && <Toolbar />}
 
-      <div
-        className="relative border-2 border-gray-300 bg-gray-100 canvas-container"
-        ref={constraintsRef}
-        style={{
-          width: state.canvasConfig.width,
-          height: state.canvasConfig.height,
-        }}
-      >
-        <AnimatePresence>
-          {state.elements.map((element) => (
-            <DraggableElement
-              constraintsRef={constraintsRef}
-              key={element.id}
-              element={element}
-            />
-          ))}
-        </AnimatePresence>
+      <div className="flex flex-col items-center w-full">
+        <h2 className="text-xl font-bold mb-2">{currentCanvas.name}</h2>
+
+        {isEditable && (
+          <div className="flex space-x-2 mb-4">
+            <Button
+              variant={
+                state.canvasConfig.aspectRatio === "1:1" ? "default" : "outline"
+              }
+              onClick={() => handleAspectRatioChange("1:1")}
+            >
+              1:1
+            </Button>
+            <Button
+              variant={
+                state.canvasConfig.aspectRatio === "4:3" ? "default" : "outline"
+              }
+              onClick={() => handleAspectRatioChange("4:3")}
+            >
+              4:3
+            </Button>
+            <Button
+              variant={
+                state.canvasConfig.aspectRatio === "16:9"
+                  ? "default"
+                  : "outline"
+              }
+              onClick={() => handleAspectRatioChange("16:9")}
+            >
+              16:9
+            </Button>
+          </div>
+        )}
+
+        <div
+          className="relative border-2 border-gray-300 bg-gray-100 canvas-container"
+          ref={constraintsRef}
+          style={{
+            width: state.canvasConfig.width,
+            height: state.canvasConfig.height,
+          }}
+        >
+          <AnimatePresence>
+            {state.elements
+              .filter((el) => el.canvasId === state.currentCanvasId)
+              .map((element) => (
+                <DraggableElement
+                  constraintsRef={constraintsRef}
+                  key={element.id}
+                  element={element}
+                />
+              ))}
+          </AnimatePresence>
+        </div>
+
+        {selectedElementData && selectedElementData.type === "table" && (
+          <div className="mt-4">
+            <Button onClick={() => setIsDialogOpen(true)}>
+              Edit Table Properties
+            </Button>
+          </div>
+        )}
       </div>
-
-      {selectedElementData && selectedElementData.type === "table" && (
-        <div className="mt-4">
-          <Button onClick={() => setIsDialogOpen(true)}>
-            Edit Table Properties
-          </Button>
-        </div>
-      )}
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent>
@@ -164,21 +178,6 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
                 onChange={(e) => setTableLabel(e.target.value)}
                 placeholder="Enter table label (e.g. VIP, Reserved)"
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="tableType">Table Type</Label>
-              <Select value={tableType} onValueChange={setTableType}>
-                <SelectTrigger id="tableType">
-                  <SelectValue placeholder="Select table type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="round">Round</SelectItem>
-                  <SelectItem value="square">Square</SelectItem>
-                  <SelectItem value="rectangular">Rectangular</SelectItem>
-                  <SelectItem value="oval">Oval</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
             <Button onClick={handleSaveTableProperties}>Save</Button>

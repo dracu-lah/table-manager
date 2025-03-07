@@ -5,6 +5,7 @@ import { useCanvas } from "../../context/CanvasContext";
 
 interface DraggableElementProps {
   element: ElementData;
+  constraintsRef: React.RefObject<HTMLDivElement>;
 }
 
 export const DraggableElement: React.FC<DraggableElementProps> = ({
@@ -26,22 +27,8 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     const canvas = document.querySelector(".canvas-container");
     if (canvas) {
       const rect = canvas.getBoundingClientRect();
-      const elementWidth =
-        element.type === "table"
-          ? 24
-          : element.type === "window"
-            ? 48
-            : element.type === "separator"
-              ? 4
-              : 16;
-      const elementHeight =
-        element.type === "table"
-          ? 24
-          : element.type === "window"
-            ? 4
-            : element.type === "separator"
-              ? 32
-              : 16;
+      const elementWidth = element.width || 24;
+      const elementHeight = element.height || 24;
 
       // Constrain to canvas
       newX = Math.max(0, Math.min(newX, rect.width - elementWidth));
@@ -82,28 +69,69 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     switch (element.type) {
       case "table":
         return (
-          <div className="w-24 h-24 bg-amber-700 rounded-full flex flex-col items-center justify-center text-white">
+          <div
+            className={`flex flex-col items-center justify-center text-white ${element.color || "bg-amber-700"} ${element.shape || "rounded-full"}`}
+            style={{
+              width: element.width || 24,
+              height: element.height || 24,
+            }}
+          >
             <div className="font-bold">{element.tableNumber || "?"}</div>
             {element.tableLabel && (
               <div className="text-xs">{element.tableLabel}</div>
             )}
-            {element.tableType && (
-              <div className="text-xs italic opacity-75">
-                {element.tableType}
-              </div>
-            )}
+            <div className="text-xs italic opacity-75">
+              {element.tableType || "table"}
+            </div>
           </div>
         );
       case "window":
-        return <div className="w-48 h-4 bg-blue-500"></div>;
+        return (
+          <div
+            className={element.color || "bg-blue-500"}
+            style={{
+              width: element.width || 48,
+              height: element.height || 4,
+            }}
+          ></div>
+        );
       case "door":
-        return <div className="w-16 h-8 bg-gray-800 rounded"></div>;
+        return (
+          <div
+            className={`rounded ${element.color || "bg-gray-800"}`}
+            style={{
+              width: element.width || 16,
+              height: element.height || 8,
+            }}
+          ></div>
+        );
       case "separator":
-        return <div className="w-4 h-32 bg-gray-400"></div>;
+        return (
+          <div
+            className={element.color || "bg-gray-400"}
+            style={{
+              width: element.width || 4,
+              height: element.height || 32,
+            }}
+          ></div>
+        );
       default:
-        return <div className="w-16 h-16 bg-gray-500"></div>;
+        return (
+          <div
+            className={element.color || "bg-gray-500"}
+            style={{
+              width: element.width || 16,
+              height: element.height || 16,
+            }}
+          ></div>
+        );
     }
   };
+
+  // Don't render if element doesn't belong to current canvas
+  if (element.canvasId !== state.currentCanvasId) {
+    return null;
+  }
 
   return (
     <motion.div
