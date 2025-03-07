@@ -63,15 +63,15 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
   };
 
   const handleAspectRatioChange = (newRatio: string) => {
-    let width = 800;
-    let height = 800;
+    let width = 600;
+    let height = 600;
 
     if (newRatio === "4:3") {
-      width = 800;
-      height = 600;
-    } else if (newRatio === "16:9") {
-      width = 800;
+      width = 600;
       height = 450;
+    } else if (newRatio === "16:9") {
+      width = 600;
+      height = 338;
     }
 
     dispatch({
@@ -85,10 +85,10 @@ export const Canvas: React.FC<CanvasProps> = ({ isEditable = true }) => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-4 w-full">
+    <div className="flex  items-start gap-4 w-full">
       {isEditable && <Toolbar />}
 
-      <div className="flex flex-col items-center w-full">
+      <div className="flex flex-col-reverse gap-4 items-center w-full">
         <h2 className="text-xl font-bold mb-2">{currentCanvas.name}</h2>
 
         {isEditable && (

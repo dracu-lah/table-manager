@@ -157,21 +157,21 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
         <div className="absolute -top-8 left-0 flex space-x-1">
           <button
             onClick={() => handleRotate("counterclockwise")}
-            className="p-1 bg-blue-500 text-white rounded-full text-xs"
+            className="size-6 bg-blue-500 text-white rounded-full text-xs"
             title="Rotate counterclockwise"
           >
             ↺
           </button>
           <button
             onClick={() => handleRotate("clockwise")}
-            className="p-1 bg-blue-500 text-white rounded-full text-xs"
+            className="size-6 bg-blue-500 text-white rounded-full text-xs"
             title="Rotate clockwise"
           >
             ↻
           </button>
           <button
             onClick={handleDelete}
-            className="p-1 bg-red-500 text-white rounded-full text-xs"
+            className="size-6 bg-red-500 text-white rounded-full text-xs"
             title="Delete"
           >
             ✕

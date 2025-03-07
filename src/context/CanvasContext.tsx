@@ -25,16 +25,16 @@ const initialState: CanvasState = {
       name: "Main Floor",
       config: {
         aspectRatio: "1:1",
-        width: 800,
-        height: 800,
+        width: 600,
+        height: 600,
       },
     },
   ],
   currentCanvasId: defaultCanvasId,
   canvasConfig: {
     aspectRatio: "1:1",
-    width: 800,
-    height: 800,
+    width: 600,
+    height: 600,
   },
   selectedElement: null,
 };
