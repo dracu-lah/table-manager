@@ -39,6 +39,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   );
   const [tableLabel, setTableLabel] = useState(element.tableLabel || "");
   const [tableType, setTableType] = useState(element.tableType || "round");
+  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
     if (element.type === "table") {
@@ -88,7 +89,8 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     dispatch({ type: "REMOVE_ELEMENT", payload: element.id });
   };
 
-  const handleSelect = () => {
+  const handleSelect = (e: React.MouseEvent) => {
+    e.stopPropagation();
     dispatch({
       type: "SET_SELECTED_ELEMENT",
       payload: isSelected ? null : element.id,
@@ -133,7 +135,8 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     };
 
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
-    dispatch({ type: "SET_SELECTED_ELEMENT", payload: null }); // Deselect after saving
+    dispatch({ type: "SET_SELECTED_ELEMENT", payload: null });
+    setIsPopoverOpen(false);
   };
 
   const getStatusIndicator = () => {
@@ -215,6 +218,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     }
   };
 
+  const stopPropagation = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent clicks inside Popover from bubbling up
+  };
+
   return (
     <motion.div
       ref={elementRef}
@@ -244,7 +251,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-blue-500 text-white"
-            onClick={() => handleRotate("counterclockwise")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRotate("counterclockwise");
+            }}
             title="Rotate counterclockwise"
           >
             <RotateCcw className="size-3" />
@@ -253,7 +263,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-blue-500 text-white"
-            onClick={() => handleRotate("clockwise")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRotate("clockwise");
+            }}
             title="Rotate clockwise"
           >
             <RotateCw className="size-3" />
@@ -262,23 +275,30 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-red-500 text-white"
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
             title="Delete"
           >
             <X className="size-3" />
           </Button>
-          <Popover>
+          <Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
             <PopoverTrigger asChild>
               <Button
                 size="icon"
                 variant="outline"
                 className="size-6 rounded-full bg-green-500 text-white"
                 title="Edit properties"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsPopoverOpen(true);
+                }}
               >
                 <Edit className="size-3" />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-80">
+            <PopoverContent className="w-80" onClick={stopPropagation}>
               <div className="space-y-4 p-2">
                 <h3 className="font-semibold">Table Properties</h3>
                 <div className="space-y-2">
@@ -302,6 +322,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                     type="number"
                     value={tableNumber}
                     onChange={(e) => setTableNumber(e.target.value)}
+                    onClick={stopPropagation} // Prevent click from closing Popover
                     placeholder="Enter table number"
                   />
                 </div>
@@ -312,13 +333,17 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                     type="text"
                     value={tableLabel}
                     onChange={(e) => setTableLabel(e.target.value)}
+                    onClick={stopPropagation} // Prevent click from closing Popover
                     placeholder="E.g. VIP, Reserved"
                   />
                 </div>
                 <div className="flex justify-end space-x-2">
                   <Button
                     size="sm"
-                    onClick={handleSaveProperties}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSaveProperties();
+                    }}
                     className="bg-green-500 text-white"
                   >
                     Save
@@ -335,7 +360,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-blue-500 text-white"
-            onClick={() => handleRotate("counterclockwise")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRotate("counterclockwise");
+            }}
             title="Rotate counterclockwise"
           >
             <RotateCcw className="size-3" />
@@ -344,7 +372,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-blue-500 text-white"
-            onClick={() => handleRotate("clockwise")}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleRotate("clockwise");
+            }}
             title="Rotate clockwise"
           >
             <RotateCw className="size-3" />
@@ -353,7 +384,10 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             size="icon"
             variant="outline"
             className="size-6 rounded-full bg-red-500 text-white"
-            onClick={handleDelete}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleDelete();
+            }}
             title="Delete"
           >
             <X className="size-3" />
