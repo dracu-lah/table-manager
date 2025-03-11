@@ -1,25 +1,65 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ElementData } from "../../types";
 import { useCanvas } from "../../context/CanvasContext";
+import { Button } from "../ui/button";
+import {
+  Edit,
+  X,
+  RotateCcw,
+  RotateCw,
+  Maximize,
+  Minimize,
+  Check,
+} from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 
 interface DraggableElementProps {
   element: ElementData;
   constraintsRef: React.RefObject<HTMLDivElement>;
+  isEditable?: boolean;
+  onTableSelect?: (tableData: ElementData) => void;
 }
 
 export const DraggableElement: React.FC<DraggableElementProps> = ({
   element,
   constraintsRef,
+  isEditable = true,
+  onTableSelect,
 }) => {
   const { dispatch, state } = useCanvas();
   const isSelected = state.selectedElement === element.id;
   const elementRef = useRef<HTMLDivElement>(null);
 
+  // Form state for editing
+  const [tableNumber, setTableNumber] = useState(
+    element.tableNumber?.toString() || "",
+  );
+  const [tableLabel, setTableLabel] = useState(element.tableLabel || "");
+  const [tableType, setTableType] = useState(element.tableType || "round");
+
+  // Update form state when selected element changes
+  useEffect(() => {
+    setTableNumber(element.tableNumber?.toString() || "");
+    setTableLabel(element.tableLabel || "");
+    setTableType(element.tableType || "round");
+  }, [element]);
+
   const handleDragEnd = (
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { offset: { x: number; y: number } },
   ) => {
+    if (!isEditable) return;
+
     // Calculate new position
     let newX = element.position.x + info.offset.x;
     let newY = element.position.y + info.offset.y;
@@ -43,6 +83,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
         y: newY,
       },
     };
+
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
   };
 
@@ -52,6 +93,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
       ...element,
       rotation: element.rotation + rotationAmount,
     };
+
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
   };
 
@@ -64,9 +106,53 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
       type: "SET_SELECTED_ELEMENT",
       payload: isSelected ? null : element.id,
     });
+
+    if (element.type === "table" && onTableSelect) {
+      onTableSelect(element);
+    }
+  };
+
+  const handleSaveProperties = () => {
+    if (element.type === "table") {
+      // Determine color and shape based on table type
+      let color = "bg-amber-700";
+      let shape = "rounded-full";
+
+      switch (tableType) {
+        case "round":
+          color = "bg-amber-700";
+          shape = "rounded-full";
+          break;
+        case "square":
+          color = "bg-blue-600";
+          shape = "rounded-md";
+          break;
+        case "rectangular":
+          color = "bg-green-600";
+          shape = "rounded-md";
+          break;
+        case "oval":
+          color = "bg-purple-600";
+          shape = "rounded-full";
+          break;
+      }
+
+      const updatedElement = {
+        ...element,
+        tableNumber: tableNumber ? parseInt(tableNumber, 10) : undefined,
+        tableLabel,
+        tableType,
+        color,
+        shape,
+      };
+
+      dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
+    }
   };
 
   const handleResize = (direction: string, e: React.MouseEvent) => {
+    if (!isEditable) return;
+
     e.stopPropagation();
 
     const startX = e.clientX;
@@ -143,74 +229,34 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     document.addEventListener("mouseup", onMouseUp);
   };
 
-  const handleKeyboardShortcuts = (e: KeyboardEvent) => {
-    if (!isSelected) return;
+  const getStatusIndicator = () => {
+    if (element.type !== "table" || !element.tableStatus) return null;
 
-    // Shift + + to enlarge
-    if (e.shiftKey && e.key === "+") {
-      e.preventDefault();
-      dispatch({
-        type: "UPDATE_ELEMENT",
-        payload: {
-          ...element,
-          width: (element.width || 24) * 1.1,
-          height: (element.height || 24) * 1.1,
-        },
-      });
+    let statusColor = "";
+    let statusText = "";
+
+    switch (element.tableStatus) {
+      case "available":
+        statusColor = "bg-green-500";
+        statusText = "Available";
+        break;
+      case "occupied":
+        statusColor = "bg-red-500";
+        statusText = "Occupied";
+        break;
+      case "reserved":
+        statusColor = "bg-yellow-500";
+        statusText = "Reserved";
+        break;
     }
 
-    // Shift + - to reduce
-    if (e.shiftKey && e.key === "-") {
-      e.preventDefault();
-      dispatch({
-        type: "UPDATE_ELEMENT",
-        payload: {
-          ...element,
-          width: Math.max(8, (element.width || 24) * 0.9),
-          height: Math.max(8, (element.height || 24) * 0.9),
-        },
-      });
-    }
-
-    // Arrow keys for precise positioning
-    if (e.key.startsWith("Arrow")) {
-      e.preventDefault();
-      const moveAmount = e.shiftKey ? 10 : 1;
-      const newPos = { ...element.position };
-
-      switch (e.key) {
-        case "ArrowUp":
-          newPos.y -= moveAmount;
-          break;
-        case "ArrowDown":
-          newPos.y += moveAmount;
-          break;
-        case "ArrowLeft":
-          newPos.x -= moveAmount;
-          break;
-        case "ArrowRight":
-          newPos.x += moveAmount;
-          break;
-      }
-
-      dispatch({
-        type: "UPDATE_ELEMENT",
-        payload: {
-          ...element,
-          position: newPos,
-        },
-      });
-    }
+    return (
+      <div className="absolute -top-6 left-0 flex items-center">
+        <div className={`size-3 ${statusColor} rounded-full mr-1`}></div>
+        <span className="text-xs font-medium">{statusText}</span>
+      </div>
+    );
   };
-
-  useEffect(() => {
-    if (isSelected) {
-      document.addEventListener("keydown", handleKeyboardShortcuts);
-      return () => {
-        document.removeEventListener("keydown", handleKeyboardShortcuts);
-      };
-    }
-  }, [isSelected, element]);
 
   const getElementComponent = () => {
     switch (element.type) {
@@ -275,96 +321,171 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     }
   };
 
-  // Don't render if element doesn't belong to current canvas
-  if (element.canvasId !== state.currentCanvasId) {
-    return null;
-  }
-
   return (
     <motion.div
       ref={elementRef}
       dragConstraints={constraintsRef}
-      className={`absolute cursor-move ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`absolute ${isEditable ? "cursor-move" : "cursor-default"} ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       style={{
         x: element.position.x,
         y: element.position.y,
         rotate: element.rotation,
         zIndex: isSelected ? 10 : 1,
       }}
-      drag
+      drag={isEditable}
       dragMomentum={false}
-      onDragEnd={handleDragEnd}
-      whileDrag={{ scale: 1.05 }}
+      onDragEnd={isEditable ? handleDragEnd : undefined}
+      whileDrag={isEditable ? { scale: 1.05 } : undefined}
       onClick={handleSelect}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.8 }}
     >
+      {getStatusIndicator()}
       {getElementComponent()}
 
-      {/* Control buttons */}
-      {isSelected && (
-        <div className="absolute -top-8 left-0 flex space-x-1">
-          <button
-            onClick={() => handleRotate("counterclockwise")}
-            className="size-6 bg-blue-500 text-white rounded-full text-xs"
-            title="Rotate counterclockwise"
-          >
-            ↺
-          </button>
-          <button
-            onClick={() => handleRotate("clockwise")}
-            className="size-6 bg-blue-500 text-white rounded-full text-xs"
-            title="Rotate clockwise"
-          >
-            ↻
-          </button>
-          <button
-            onClick={handleDelete}
-            className="size-6 bg-red-500 text-white rounded-full text-xs"
-            title="Delete"
-          >
-            ✕
-          </button>
-          <button
-            onClick={() => {
-              dispatch({
-                type: "UPDATE_ELEMENT",
-                payload: {
-                  ...element,
-                  width: (element.width || 24) * 1.2,
-                  height: (element.height || 24) * 1.2,
-                },
-              });
-            }}
-            className="size-6 bg-blue-500 text-white rounded-full text-xs"
-            title="Enlarge (Shift++)"
-          >
-            +
-          </button>
-          <button
-            onClick={() => {
-              dispatch({
-                type: "UPDATE_ELEMENT",
-                payload: {
-                  ...element,
-                  width: Math.max(8, (element.width || 24) * 0.8),
-                  height: Math.max(8, (element.height || 24) * 0.8),
-                },
-              });
-            }}
-            className="size-6 bg-blue-500 text-white rounded-full text-xs"
-            title="Reduce (Shift+-)"
-          >
-            -
-          </button>
-        </div>
-      )}
-
-      {/* Resize handles */}
-      {isSelected && (
+      {/* Element editing controls - only visible when selected and editable */}
+      {isSelected && isEditable && (
         <>
-          {/* Corner resize handles */}
+          {/* Control buttons */}
+          <div className="absolute -top-8 left-0 flex space-x-1">
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={() => handleRotate("counterclockwise")}
+              title="Rotate counterclockwise"
+            >
+              <RotateCcw className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={() => handleRotate("clockwise")}
+              title="Rotate clockwise"
+            >
+              <RotateCw className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-red-500 text-white"
+              onClick={handleDelete}
+              title="Delete"
+            >
+              <X className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={() => {
+                dispatch({
+                  type: "UPDATE_ELEMENT",
+                  payload: {
+                    ...element,
+                    width: (element.width || 24) * 1.2,
+                    height: (element.height || 24) * 1.2,
+                  },
+                });
+              }}
+              title="Enlarge"
+            >
+              <Maximize className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={() => {
+                dispatch({
+                  type: "UPDATE_ELEMENT",
+                  payload: {
+                    ...element,
+                    width: Math.max(8, (element.width || 24) * 0.8),
+                    height: Math.max(8, (element.height || 24) * 0.8),
+                  },
+                });
+              }}
+              title="Reduce"
+            >
+              <Minimize className="size-3" />
+            </Button>
+
+            {/* In-element properties edit popover */}
+            {element.type === "table" && (
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    size="icon"
+                    variant="outline"
+                    className="size-6 rounded-full bg-green-500 text-white"
+                    title="Edit properties"
+                  >
+                    <Edit className="size-3" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80">
+                  <div className="space-y-4 p-2">
+                    <h3 className="font-semibold">Table Properties</h3>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="tableType">Table Type</Label>
+                      <Select value={tableType} onValueChange={setTableType}>
+                        <SelectTrigger id="tableType">
+                          <SelectValue placeholder="Select table type" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="round">Round</SelectItem>
+                          <SelectItem value="square">Square</SelectItem>
+                          <SelectItem value="rectangular">
+                            Rectangular
+                          </SelectItem>
+                          <SelectItem value="oval">Oval</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="tableNumber">Table Number</Label>
+                      <Input
+                        id="tableNumber"
+                        type="number"
+                        value={tableNumber}
+                        onChange={(e) => setTableNumber(e.target.value)}
+                        placeholder="Enter table number"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <Label htmlFor="tableLabel">Table Label</Label>
+                      <Input
+                        id="tableLabel"
+                        type="text"
+                        value={tableLabel}
+                        onChange={(e) => setTableLabel(e.target.value)}
+                        placeholder="E.g. VIP, Reserved"
+                      />
+                    </div>
+
+                    <div className="flex justify-end space-x-2">
+                      <Button
+                        size="sm"
+                        onClick={handleSaveProperties}
+                        className="bg-green-500 text-white"
+                      >
+                        <Check className="size-4 mr-1" />
+                        Save
+                      </Button>
+                    </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            )}
+          </div>
+
+          {/* Resize handles */}
           <div
             className="absolute -top-1 -left-1 size-3 bg-white border border-blue-500 rounded-full cursor-nwse-resize"
             onMouseDown={(e) => handleResize("nw", e)}
