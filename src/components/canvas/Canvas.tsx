@@ -21,24 +21,20 @@ export const Canvas: React.FC<CanvasProps> = ({
   const constraintsRef = useRef<HTMLDivElement>(null);
 
   const handleAspectRatioChange = (newRatio: string) => {
-    let width = 600;
-    let height = 600;
+    let width = 800;
+    let height = 800;
 
     if (newRatio === "4:3") {
-      width = 600;
-      height = 450;
+      width = 800;
+      height = 600;
     } else if (newRatio === "16:9") {
-      width = 600;
-      height = 338;
+      width = 800;
+      height = 450;
     }
 
     dispatch({
       type: "SET_CANVAS_CONFIG",
-      payload: {
-        aspectRatio: newRatio,
-        width,
-        height,
-      },
+      payload: { aspectRatio: newRatio, width, height },
     });
   };
 
@@ -46,13 +42,9 @@ export const Canvas: React.FC<CanvasProps> = ({
     dispatch({ type: "RESET_CANVAS" });
   };
 
-  // Update elements with latest status from props
   const elementsWithStatus = state.elements.map((element) => {
     if (element.type === "table" && tableStatuses[element.id]) {
-      return {
-        ...element,
-        tableStatus: tableStatuses[element.id],
-      };
+      return { ...element, tableStatus: tableStatuses[element.id] };
     }
     return element;
   });
@@ -60,7 +52,6 @@ export const Canvas: React.FC<CanvasProps> = ({
   return (
     <div className="flex flex-col w-full gap-4">
       {isEditable && <Toolbar />}
-
       <div className="flex flex-col gap-4 items-center w-full">
         {isEditable && (
           <div className="flex space-x-2 self-start">
@@ -95,7 +86,6 @@ export const Canvas: React.FC<CanvasProps> = ({
             </Button>
           </div>
         )}
-
         <div
           className="relative border-2 border-gray-300 bg-gray-100 canvas-container w-full"
           ref={constraintsRef}

@@ -9,12 +9,11 @@ import { TableIcon, Square, DoorOpen, Minus } from "lucide-react";
 export const Toolbar: React.FC = () => {
   const { state, dispatch } = useCanvas();
 
-  // Add a table to the canvas with default values
   const addTable = (tableType: string) => {
-    let elementWidth = 24;
-    let elementHeight = 24;
+    let elementWidth = 32;
+    let elementHeight = 32;
     let color = "bg-amber-700";
-    let shape = "rounded-full"; // Default round table
+    let shape = "rounded-full";
 
     switch (tableType) {
       case "round":
@@ -28,25 +27,24 @@ export const Toolbar: React.FC = () => {
       case "rectangular":
         color = "bg-green-600";
         shape = "rounded-md";
-        elementWidth = 36;
-        elementHeight = 24;
+        elementWidth = 48;
+        elementHeight = 32;
         break;
       case "oval":
         color = "bg-purple-600";
         shape = "rounded-full";
-        elementWidth = 36;
-        elementHeight = 24;
+        elementWidth = 48;
+        elementHeight = 32;
         break;
     }
 
-    // Generate a default table number by counting existing tables and adding 1
     const tableElements = state.elements.filter((el) => el.type === "table");
     const nextTableNumber = tableElements.length + 1;
 
     const newElement: ElementData = {
       id: uuidv4(),
       type: "table",
-      tableType: tableType,
+      tableType,
       tableNumber: nextTableNumber,
       tableLabel: "",
       tableStatus: "available",
@@ -64,26 +62,25 @@ export const Toolbar: React.FC = () => {
     dispatch({ type: "ADD_ELEMENT", payload: newElement });
   };
 
-  // Add other elements to the canvas
   const addElement = (elementType: "window" | "door" | "separator") => {
-    let width = 16;
-    let height = 16;
+    let width = 24;
+    let height = 24;
     let color = "bg-gray-500";
 
     switch (elementType) {
       case "window":
-        width = 48;
-        height = 4;
+        width = 64;
+        height = 6;
         color = "bg-blue-500";
         break;
       case "door":
-        width = 16;
-        height = 8;
+        width = 24;
+        height = 12;
         color = "bg-gray-800";
         break;
       case "separator":
-        width = 4;
-        height = 32;
+        width = 6;
+        height = 48;
         color = "bg-gray-400";
         break;
     }
@@ -117,7 +114,6 @@ export const Toolbar: React.FC = () => {
             Objects
           </TabsTrigger>
         </TabsList>
-
         <TabsContent value="tables" className="flex space-x-2">
           <Button
             variant="outline"
@@ -152,7 +148,6 @@ export const Toolbar: React.FC = () => {
             Oval Table
           </Button>
         </TabsContent>
-
         <TabsContent value="objects" className="flex space-x-2">
           <Button
             variant="outline"

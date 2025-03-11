@@ -37,8 +37,8 @@ const initialState: CanvasState = {
   elements: [],
   canvasConfig: {
     aspectRatio: "1:1",
-    width: 600,
-    height: 600,
+    width: 800, // Increased from 600
+    height: 800, // Increased from 600
   },
   selectedElement: null,
   initialElements: [],
