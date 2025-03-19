@@ -36,8 +36,9 @@ export interface CanvasConfig {
   width: number;
   height: number;
 }
-
 export interface ElementData {
+  customerId?: string;
+  occupied?: boolean;
   id: string;
   tableStatus?: "available" | "occupied" | "reserved" | string;
   type: "table" | "window" | "door" | "separator" | string;
@@ -45,6 +46,7 @@ export interface ElementData {
   rotation: number;
   tableNumber?: number;
   tableLabel?: string;
+  label?: string;
   tableType?: "round" | "square" | "rectangular" | "oval" | string;
   width?: number;
   height?: number;
