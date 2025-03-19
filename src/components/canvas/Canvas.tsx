@@ -18,7 +18,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   tableStatuses = {},
 }) => {
   const { state, dispatch } = useCanvas();
-  const constraintsRef = useRef<HTMLDivElement>(null);
+  const constraintsRef = useRef<HTMLDivElement>(null!);
 
   const handleAspectRatioChange = (newRatio: string) => {
     let width = 800;
