@@ -2,9 +2,9 @@ import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { useCanvas } from "../../context/CanvasContext";
-import { ElementData } from "../../types";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
 import { TableIcon, Square, DoorOpen, Minus } from "lucide-react";
+import { ElementData } from "@/types";
 
 export const Toolbar: React.FC = () => {
   const { state, dispatch } = useCanvas();

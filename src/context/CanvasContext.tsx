@@ -1,3 +1,4 @@
+import { ElementData } from "@/types";
 import React, { createContext, useContext, useReducer } from "react";
 
 export interface CanvasConfig {
@@ -9,21 +10,6 @@ export interface CanvasConfig {
 export interface ElementPosition {
   x: number;
   y: number;
-}
-
-export interface ElementData {
-  id: string;
-  type: string;
-  position: ElementPosition;
-  rotation: number;
-  width?: number;
-  height?: number;
-  color?: string;
-  shape?: string;
-  tableType?: string;
-  tableNumber?: number;
-  tableLabel?: string;
-  tableStatus?: "available" | "occupied" | "reserved";
 }
 
 interface CanvasState {
