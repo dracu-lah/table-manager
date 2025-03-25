@@ -278,7 +278,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             tableSvg = TableIcons.TableSquare4Icon;
             break;
           default:
-            tableSvg = TableIcons.TableRound6Icon; // Fallback
+            tableSvg = TableIcons.TableRound6Icon;
         }
         return (
           <div
@@ -291,7 +291,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
             <img
               src={tableSvg}
               alt={element.tableType || "table"}
-              className="w-full h-full object-contain"
+              className="w-full h-full object-contain "
             />
             <div className="absolute text-white font-bold text-center">
               {element.tableNumber || "?"}
