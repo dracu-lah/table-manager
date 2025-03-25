@@ -1,4 +1,3 @@
-// DraggableElement.tsx
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ElementData } from "../../types";
@@ -15,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import TableIcons from "@/utils/assets";
 
 interface DraggableElementProps {
   element: ElementData;
@@ -38,14 +38,14 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     element.tableNumber?.toString() || "",
   );
   const [tableLabel, setTableLabel] = useState(element.tableLabel || "");
-  const [tableType, setTableType] = useState(element.tableType || "round");
+  const [tableType, setTableType] = useState(element.tableType || "round-6");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
 
   useEffect(() => {
     if (element.type === "table") {
       setTableNumber(element.tableNumber?.toString() || "");
       setTableLabel(element.tableLabel || "");
-      setTableType(element.tableType || "round");
+      setTableType(element.tableType || "round-6");
     }
   }, [element]);
 
@@ -103,25 +103,89 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   const handleSaveProperties = () => {
     if (element.type !== "table") return;
 
-    let color = "bg-amber-700";
-    let shape = "rounded-full";
+    let color = "bg-amber-700"; // Still needed for status indicator compatibility
+    let shape = "rounded-full"; // Kept for consistency, though not directly used with SVG
+    let width = 32;
+    let height = 32;
 
     switch (tableType) {
-      case "round":
+      case "hexagon-6":
         color = "bg-amber-700";
         shape = "rounded-full";
+        width = 36;
+        height = 36;
         break;
-      case "square":
-        color = "bg-blue-600";
-        shape = "rounded-md";
-        break;
-      case "rectangular":
-        color = "bg-green-600";
-        shape = "rounded-md";
-        break;
-      case "oval":
+      case "oval-6":
         color = "bg-purple-600";
         shape = "rounded-full";
+        width = 48;
+        height = 32;
+        break;
+      case "oval-8":
+        color = "bg-purple-600";
+        shape = "rounded-full";
+        width = 56;
+        height = 36;
+        break;
+      case "rectangle-2":
+        color = "bg-green-600";
+        shape = "rounded-md";
+        width = 24;
+        height = 32;
+        break;
+      case "rectangle-4":
+        color = "bg-green-600";
+        shape = "rounded-md";
+        width = 32;
+        height = 32;
+        break;
+      case "rectangle-6":
+        color = "bg-green-600";
+        shape = "rounded-md";
+        width = 48;
+        height = 32;
+        break;
+      case "rectangle-8":
+        color = "bg-green-600";
+        shape = "rounded-md";
+        width = 64;
+        height = 32;
+        break;
+      case "round-3":
+        color = "bg-amber-700";
+        shape = "rounded-full";
+        width = 24;
+        height = 24;
+        break;
+      case "round-6":
+        color = "bg-amber-700";
+        shape = "rounded-full";
+        width = 36;
+        height = 36;
+        break;
+      case "round-8":
+        color = "bg-amber-700";
+        shape = "rounded-full";
+        width = 40;
+        height = 40;
+        break;
+      case "round-9":
+        color = "bg-amber-700";
+        shape = "rounded-full";
+        width = 44;
+        height = 44;
+        break;
+      case "round-10":
+        color = "bg-amber-700";
+        shape = "rounded-full";
+        width = 48;
+        height = 48;
+        break;
+      case "square-4":
+        color = "bg-blue-600";
+        shape = "rounded-md";
+        width = 32;
+        height = 32;
         break;
     }
 
@@ -132,6 +196,8 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
       tableType,
       color,
       shape,
+      width,
+      height,
     };
 
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
@@ -170,20 +236,68 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   const getElementComponent = () => {
     switch (element.type) {
       case "table":
+        let tableSvg;
+        switch (element.tableType) {
+          case "hexagon-6":
+            tableSvg = TableIcons.TableHexagon6Icon;
+            break;
+          case "oval-6":
+            tableSvg = TableIcons.TableOval6Icon;
+            break;
+          case "oval-8":
+            tableSvg = TableIcons.TableOval8Icon;
+            break;
+          case "rectangle-2":
+            tableSvg = TableIcons.TableRectangle2Icon;
+            break;
+          case "rectangle-4":
+            tableSvg = TableIcons.TableRectangle4Icon;
+            break;
+          case "rectangle-6":
+            tableSvg = TableIcons.TableRectangle6Icon;
+            break;
+          case "rectangle-8":
+            tableSvg = TableIcons.TableRectangle8Icon;
+            break;
+          case "round-3":
+            tableSvg = TableIcons.TableRound3Icon;
+            break;
+          case "round-6":
+            tableSvg = TableIcons.TableRound6Icon;
+            break;
+          case "round-8":
+            tableSvg = TableIcons.TableRound8Icon;
+            break;
+          case "round-9":
+            tableSvg = TableIcons.TableRound9Icon;
+            break;
+          case "round-10":
+            tableSvg = TableIcons.TableRound10Icon;
+            break;
+          case "square-4":
+            tableSvg = TableIcons.TableSquare4Icon;
+            break;
+          default:
+            tableSvg = TableIcons.TableRound6Icon; // Fallback
+        }
         return (
           <div
-            className={`flex flex-col items-center justify-center text-white ${element.color || "bg-amber-700"} ${element.shape || "rounded-full"}`}
+            className="relative flex flex-col items-center justify-center"
             style={{
               width: element.width || 32,
               height: element.height || 32,
             }}
           >
-            <div className="font-bold">{element.tableNumber || "?"}</div>
-            {element.tableLabel && (
-              <div className="text-xs">{element.tableLabel}</div>
-            )}
-            <div className="text-xs italic opacity-75">
-              {element.tableType || "table"}
+            <img
+              src={tableSvg}
+              alt={element.tableType || "table"}
+              className="w-full h-full object-contain"
+            />
+            <div className="absolute text-white font-bold text-center">
+              {element.tableNumber || "?"}
+              {element.tableLabel && (
+                <div className="text-xs">{element.tableLabel}</div>
+              )}
             </div>
           </div>
         );
@@ -308,10 +422,19 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                       <SelectValue placeholder="Select table type" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="round">Round</SelectItem>
-                      <SelectItem value="square">Square</SelectItem>
-                      <SelectItem value="rectangular">Rectangular</SelectItem>
-                      <SelectItem value="oval">Oval</SelectItem>
+                      <SelectItem value="hexagon-6">Hexagon 6</SelectItem>
+                      <SelectItem value="oval-6">Oval 6</SelectItem>
+                      <SelectItem value="oval-8">Oval 8</SelectItem>
+                      <SelectItem value="rectangle-2">Rectangle 2</SelectItem>
+                      <SelectItem value="rectangle-4">Rectangle 4</SelectItem>
+                      <SelectItem value="rectangle-6">Rectangle 6</SelectItem>
+                      <SelectItem value="rectangle-8">Rectangle 8</SelectItem>
+                      <SelectItem value="round-3">Round 3</SelectItem>
+                      <SelectItem value="round-6">Round 6</SelectItem>
+                      <SelectItem value="round-8">Round 8</SelectItem>
+                      <SelectItem value="round-9">Round 9</SelectItem>
+                      <SelectItem value="round-10">Round 10</SelectItem>
+                      <SelectItem value="square-4">Square 4</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -322,7 +445,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                     type="number"
                     value={tableNumber}
                     onChange={(e) => setTableNumber(e.target.value)}
-                    onClick={stopPropagation} // Prevent click from closing Popover
+                    onClick={stopPropagation}
                     placeholder="Enter table number"
                   />
                 </div>
@@ -333,7 +456,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                     type="text"
                     value={tableLabel}
                     onChange={(e) => setTableLabel(e.target.value)}
-                    onClick={stopPropagation} // Prevent click from closing Popover
+                    onClick={stopPropagation}
                     placeholder="E.g. VIP, Reserved"
                   />
                 </div>
