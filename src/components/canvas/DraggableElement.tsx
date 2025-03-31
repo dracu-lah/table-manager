@@ -3,7 +3,14 @@ import { motion } from "framer-motion";
 import { ElementData } from "../../types";
 import { useCanvas } from "../../context/CanvasContext";
 import { Button } from "../ui/button";
-import { Edit, X, RotateCcw, RotateCw } from "lucide-react";
+import {
+  Edit,
+  X,
+  RotateCcw,
+  RotateCw,
+  SeparatorHorizontal,
+  SeparatorVertical,
+} from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -32,6 +39,11 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   const { dispatch, state } = useCanvas();
   const isSelected = state.selectedElement === element.id;
   const elementRef = useRef<HTMLDivElement>(null);
+  const resizeStartPosRef = useRef<{ x: number; y: number } | null>(null);
+  const originalSizeRef = useRef<{ width: number; height: number } | null>(
+    null,
+  );
+  const [isResizing, setIsResizing] = useState(false);
 
   // Form state for editing tables
   const [tableNumber, setTableNumber] = useState(
@@ -40,6 +52,11 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   const [tableLabel, setTableLabel] = useState(element.tableLabel || "");
   const [tableType, setTableType] = useState(element.tableType || "round-6");
   const [isPopoverOpen, setIsPopoverOpen] = useState(false);
+
+  // Determine if separator is horizontal (width > height) or vertical (height > width)
+  const isHorizontalSeparator =
+    element.type === "separator" &&
+    (element.width || 0) > (element.height || 0);
 
   useEffect(() => {
     if (element.type === "table") {
@@ -53,7 +70,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     _: MouseEvent | TouchEvent | PointerEvent,
     info: { offset: { x: number; y: number } },
   ) => {
-    if (!isEditable) return;
+    if (!isEditable || isResizing) return;
 
     let newX = element.position.x + info.offset.x;
     let newY = element.position.y + info.offset.y;
@@ -75,6 +92,67 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
 
     dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
   };
+
+  const handleResizeStart = (e: React.MouseEvent) => {
+    if (!isEditable || element.type !== "separator") return;
+
+    e.stopPropagation();
+    setIsResizing(true);
+    resizeStartPosRef.current = { x: e.clientX, y: e.clientY };
+    originalSizeRef.current = {
+      width: element.width || 6,
+      height: element.height || 48,
+    };
+  };
+
+  const handleResizeMove = (e: React.MouseEvent) => {
+    if (!isResizing || !resizeStartPosRef.current || !originalSizeRef.current)
+      return;
+
+    e.stopPropagation();
+    e.preventDefault();
+
+    const deltaX = e.clientX - resizeStartPosRef.current.x;
+    const deltaY = e.clientY - resizeStartPosRef.current.y;
+
+    let newWidth = originalSizeRef.current.width;
+    let newHeight = originalSizeRef.current.height;
+
+    // Only resize width for horizontal separators
+    if (isHorizontalSeparator) {
+      newWidth = Math.max(6, originalSizeRef.current.width + deltaX);
+    }
+    // Only resize height for vertical separators
+    else {
+      newHeight = Math.max(6, originalSizeRef.current.height + deltaY);
+    }
+
+    const updatedElement = {
+      ...element,
+      width: newWidth,
+      height: newHeight,
+    };
+
+    dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
+  };
+
+  const handleResizeEnd = () => {
+    setIsResizing(false);
+    resizeStartPosRef.current = null;
+    originalSizeRef.current = null;
+  };
+
+  useEffect(() => {
+    if (isResizing) {
+      document.addEventListener("mousemove", handleResizeMove as any);
+      document.addEventListener("mouseup", handleResizeEnd);
+
+      return () => {
+        document.removeEventListener("mousemove", handleResizeMove as any);
+        document.removeEventListener("mouseup", handleResizeEnd);
+      };
+    }
+  }, [isResizing]);
 
   const handleRotate = (direction: "clockwise" | "counterclockwise") => {
     const rotationAmount = direction === "clockwise" ? 90 : -90;
@@ -316,11 +394,41 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
           ></div>
         );
       case "separator":
+        const resizeHandle =
+          isSelected && isEditable ? (
+            <button
+              className={`absolute ${isHorizontalSeparator ? "cursor-col-resize" : "cursor-row-resize"} bg-blue-500 text-white rounded-full p-1 hover:bg-blue-600 transition-colors`}
+              style={{
+                right: isHorizontalSeparator ? "-10px" : "50%",
+                bottom: isHorizontalSeparator ? "50%" : "-10px",
+                transform: isHorizontalSeparator
+                  ? "translateY(50%)"
+                  : "translateX(50%)",
+                zIndex: 20,
+              }}
+              onMouseDown={handleResizeStart}
+              onClick={(e) => e.stopPropagation()}
+              title={isHorizontalSeparator ? "Resize width" : "Resize height"}
+            >
+              {isHorizontalSeparator ? (
+                <SeparatorVertical className="size-3" />
+              ) : (
+                <SeparatorHorizontal className="size-3" />
+              )}
+            </button>
+          ) : null;
+
         return (
-          <div
-            className={element.color || "bg-gray-400"}
-            style={{ width: element.width || 6, height: element.height || 48 }}
-          ></div>
+          <div className="relative">
+            <div
+              className={element.color || "bg-gray-400"}
+              style={{
+                width: element.width || 6,
+                height: element.height || 48,
+              }}
+            ></div>
+            {resizeHandle}
+          </div>
         );
       default:
         return (
@@ -340,17 +448,17 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
     <motion.div
       ref={elementRef}
       dragConstraints={constraintsRef}
-      className={`absolute ${isEditable ? "cursor-move" : "cursor-default"} ${isSelected ? "ring-2 ring-blue-500" : ""}`}
+      className={`absolute ${isEditable && !isResizing ? "cursor-move" : "cursor-default"} ${isSelected ? "ring-2 ring-blue-500" : ""}`}
       style={{
         x: element.position.x,
         y: element.position.y,
         rotate: element.rotation,
         zIndex: isSelected ? 10 : 1,
       }}
-      drag={isEditable}
+      drag={isEditable && !isResizing}
       dragMomentum={false}
-      onDragEnd={isEditable ? handleDragEnd : undefined}
-      whileDrag={isEditable ? { scale: 1.05 } : undefined}
+      onDragEnd={isEditable && !isResizing ? handleDragEnd : undefined}
+      whileDrag={isEditable && !isResizing ? { scale: 1.05 } : undefined}
       onClick={handleSelect}
       initial={{ opacity: 0, scale: 0.8 }}
       animate={{ opacity: 1, scale: 1 }}
@@ -477,7 +585,50 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
           </Popover>
         </div>
       )}
-      {isSelected && isEditable && element.type !== "table" && (
+      {isSelected &&
+        isEditable &&
+        element.type !== "table" &&
+        element.type !== "separator" && (
+          <div className="absolute -top-8 left-0 flex space-x-1">
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRotate("counterclockwise");
+              }}
+              title="Rotate counterclockwise"
+            >
+              <RotateCcw className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-blue-500 text-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleRotate("clockwise");
+              }}
+              title="Rotate clockwise"
+            >
+              <RotateCw className="size-3" />
+            </Button>
+            <Button
+              size="icon"
+              variant="outline"
+              className="size-6 rounded-full bg-red-500 text-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }}
+              title="Delete"
+            >
+              <X className="size-3" />
+            </Button>
+          </div>
+        )}
+      {isSelected && isEditable && element.type === "separator" && (
         <div className="absolute -top-8 left-0 flex space-x-1">
           <Button
             size="icon"
