@@ -96,7 +96,8 @@ export const Toolbar: React.FC = () => {
         elementHeight = 32;
         break;
     }
-
+    elementWidth *= 1.8;
+    elementHeight *= 1.8;
     const tableElements = state.elements.filter((el) => el.type === "table");
     const nextTableNumber = tableElements.length + 1;
 
