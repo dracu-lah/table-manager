@@ -73,6 +73,12 @@ const canvasReducer = (
         ...state,
         canvasConfig: action.payload,
       };
+
+    case "SET_CANVAS_IMAGE_CONFIG":
+      return {
+        ...state,
+        canvasConfig: { ...state.canvasConfig, layoutImage: action.payload },
+      };
     case "SET_SELECTED_ELEMENT":
       return {
         ...state,

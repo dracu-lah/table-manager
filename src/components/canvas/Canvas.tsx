@@ -41,8 +41,8 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   const handleLayoutImageChange = (img: string) => {
     dispatch({
-      type: "SET_CANVAS_CONFIG",
-      payload: { layoutImage: img },
+      type: "SET_CANVAS_IMAGE_CONFIG",
+      payload: img,
     });
   };
   const handleReset = () => {
