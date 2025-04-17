@@ -38,10 +38,10 @@ type CanvasAction =
   | { type: "UPDATE_ELEMENT"; payload: ElementData }
   | { type: "REMOVE_ELEMENT"; payload: string }
   | { type: "SET_CANVAS_CONFIG"; payload: CanvasConfig }
+  | { type: "SET_CANVAS_IMAGE_CONFIG"; payload: string | null }
   | { type: "SET_SELECTED_ELEMENT"; payload: string | null }
   | { type: "RESET_CANVAS" }
   | { type: "SET_INITIAL_ELEMENTS" };
-
 const canvasReducer = (
   state: CanvasState,
   action: CanvasAction,
@@ -77,7 +77,10 @@ const canvasReducer = (
     case "SET_CANVAS_IMAGE_CONFIG":
       return {
         ...state,
-        canvasConfig: { ...state.canvasConfig, layoutImage: action.payload },
+        canvasConfig: {
+          ...state.canvasConfig,
+          layoutImage: action.payload || "",
+        },
       };
     case "SET_SELECTED_ELEMENT":
       return {
