@@ -5,6 +5,7 @@ import { DraggableElement } from "./DraggableElement";
 import { Button } from "../ui/button";
 import { ElementData } from "../../types";
 import { Toolbar } from "./Toolbar";
+import { roomLayouts } from "@/utils/constants";
 
 interface CanvasProps {
   isEditable?: boolean;
@@ -38,6 +39,12 @@ export const Canvas: React.FC<CanvasProps> = ({
     });
   };
 
+  const handleLayoutImageChange = (img: string) => {
+    dispatch({
+      type: "SET_CANVAS_CONFIG",
+      payload: { layoutImage: img },
+    });
+  };
   const handleReset = () => {
     dispatch({ type: "RESET_CANVAS" });
   };
@@ -54,36 +61,63 @@ export const Canvas: React.FC<CanvasProps> = ({
       {isEditable && <Toolbar />}
       <div className="flex flex-col gap-4 items-center w-full">
         {isEditable && (
-          <div className="flex space-x-2 self-start">
-            <Button
-              variant={
-                state.canvasConfig.aspectRatio === "1:1" ? "default" : "outline"
-              }
-              onClick={() => handleAspectRatioChange("1:1")}
-            >
-              1:1
-            </Button>
-            <Button
-              variant={
-                state.canvasConfig.aspectRatio === "4:3" ? "default" : "outline"
-              }
-              onClick={() => handleAspectRatioChange("4:3")}
-            >
-              4:3
-            </Button>
-            <Button
-              variant={
-                state.canvasConfig.aspectRatio === "16:9"
-                  ? "default"
-                  : "outline"
-              }
-              onClick={() => handleAspectRatioChange("16:9")}
-            >
-              16:9
-            </Button>
-            <Button variant="outline" onClick={handleReset} className="ml-4">
-              Reset Layout
-            </Button>
+          <div className="flex flex-col gap-4">
+            <div className="flex space-x-2 self-start">
+              <Button
+                variant={
+                  state.canvasConfig.aspectRatio === "1:1"
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() => handleAspectRatioChange("1:1")}
+              >
+                1:1
+              </Button>
+              <Button
+                variant={
+                  state.canvasConfig.aspectRatio === "4:3"
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() => handleAspectRatioChange("4:3")}
+              >
+                4:3
+              </Button>
+              <Button
+                variant={
+                  state.canvasConfig.aspectRatio === "16:9"
+                    ? "default"
+                    : "outline"
+                }
+                onClick={() => handleAspectRatioChange("16:9")}
+              >
+                16:9
+              </Button>
+              <Button variant="outline" onClick={handleReset} className="ml-4">
+                Reset Layout
+              </Button>
+            </div>
+            <div>
+              <div>
+                {roomLayouts.map((item, index) => (
+                  <Button
+                    key={index}
+                    className="p-1 roundend lg w-40 h-28"
+                    variant={
+                      state.canvasConfig.layoutImage === item.img
+                        ? "default"
+                        : "outline"
+                    }
+                    onClick={() => handleLayoutImageChange(item.img)}
+                  >
+                    <img
+                      className="w-full h-full object-contain"
+                      src={item.img}
+                    />
+                  </Button>
+                ))}
+              </div>
+            </div>
           </div>
         )}
         <div
