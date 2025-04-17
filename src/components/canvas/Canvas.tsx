@@ -98,11 +98,11 @@ export const Canvas: React.FC<CanvasProps> = ({
               </Button>
             </div>
             <div>
-              <div>
+              <div className="space-x-2">
                 {roomLayouts.map((item, index) => (
                   <Button
                     key={index}
-                    className="p-1 roundend lg w-40 h-28"
+                    className="p-[2px]  w-40 h-28"
                     variant={
                       state.canvasConfig.layoutImage === item.img
                         ? "default"
@@ -111,7 +111,7 @@ export const Canvas: React.FC<CanvasProps> = ({
                     onClick={() => handleLayoutImageChange(item.img)}
                   >
                     <img
-                      className="w-full h-full object-contain"
+                      className="w-full h-full rounded-lg object-contain"
                       src={item.img}
                     />
                   </Button>
