@@ -1,10 +1,12 @@
 import { ElementData } from "@/types";
+import { RoomLayouts } from "@/utils/assets";
 import React, { createContext, useContext, useReducer } from "react";
 
 export interface CanvasConfig {
   aspectRatio: string;
   width: number;
   height: number;
+  layoutImage: string;
 }
 
 export interface ElementPosition {
@@ -23,6 +25,7 @@ const initialState: CanvasState = {
   elements: [],
   canvasConfig: {
     aspectRatio: "1:1",
+    layoutImage: RoomLayouts.RoomLayout1,
     width: 800, // Increased from 600
     height: 800, // Increased from 600
   },

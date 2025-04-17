@@ -90,6 +90,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           className="relative border-2 border-gray-300 bg-gray-100 canvas-container w-full"
           ref={constraintsRef}
           style={{
+            backgroundImage: `url(${state.canvasConfig.layoutImage})`,
             width: state.canvasConfig.width,
             height: state.canvasConfig.height,
             maxWidth: "100%",

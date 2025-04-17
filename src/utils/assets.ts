@@ -11,6 +11,7 @@ import TableRound8Icon from "@/assets/table-icons/round-8.svg";
 import TableRound9Icon from "@/assets/table-icons/round-9.svg";
 import TableRound10Icon from "@/assets/table-icons/round-10.svg";
 import TableSquare4Icon from "@/assets/table-icons/square-4.svg";
+import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
 
 const TableIcons = {
   TableHexagon6Icon,
@@ -26,6 +27,9 @@ const TableIcons = {
   TableRound9Icon,
   TableRound10Icon,
   TableSquare4Icon,
+};
+export const RoomLayouts = {
+  RoomLayout1,
 };
 
 export default TableIcons;
