@@ -25,7 +25,7 @@ const initialState: CanvasState = {
   elements: [],
   canvasConfig: {
     aspectRatio: "1:1",
-    layoutImage: RoomLayouts.RoomLayout1,
+    // layoutImage: RoomLayouts.RoomLayout1,
     width: 800, // Increased from 600
     height: 800, // Increased from 600
   },
