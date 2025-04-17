@@ -6,7 +6,7 @@ export interface CanvasConfig {
   aspectRatio: string;
   width: number;
   height: number;
-  layoutImage: string;
+  layoutImage?: string;
 }
 
 export interface ElementPosition {
