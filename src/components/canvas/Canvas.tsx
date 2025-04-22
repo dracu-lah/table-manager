@@ -19,7 +19,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   tableStatuses = {},
 }) => {
   const { state, dispatch } = useCanvas();
-  const constraintsRef = useRef<HTMLDivElement>(null);
+  const constraintsRef = useRef<any>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isImageLoading, setIsImageLoading] = useState(false);
 
