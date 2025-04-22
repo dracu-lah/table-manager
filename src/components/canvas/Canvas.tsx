@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useCanvas } from "../../context/CanvasContext";
 import { DraggableElement } from "./DraggableElement";
@@ -19,32 +19,61 @@ export const Canvas: React.FC<CanvasProps> = ({
   tableStatuses = {},
 }) => {
   const { state, dispatch } = useCanvas();
-  const constraintsRef = useRef<HTMLDivElement>(null!);
+  const constraintsRef = useRef<HTMLDivElement>(null);
+  const [containerWidth, setContainerWidth] = useState(800);
+  const [isImageLoading, setIsImageLoading] = useState(false);
 
-  const handleAspectRatioChange = (newRatio: string) => {
-    let width = 800;
-    let height = 800;
+  // Measure available container width on mount and window resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (constraintsRef.current && constraintsRef.current.parentElement) {
+        // Get parent container width
+        const parentWidth = constraintsRef.current.parentElement.clientWidth;
+        setContainerWidth(Math.min(parentWidth, 800)); // Cap at 800px max
+      }
+    };
 
-    if (newRatio === "4:3") {
-      width = 800;
-      height = 600;
-    } else if (newRatio === "16:9") {
-      width = 800;
-      height = 450;
-    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
-    dispatch({
-      type: "SET_CANVAS_CONFIG",
-      payload: { aspectRatio: newRatio, width, height },
-    });
-  };
-
-  const handleLayoutImageChange = (img: string) => {
+  // Handle image change and update dimensions
+  const handleLayoutImageChange = (imgSrc: string) => {
+    // First, update the image source immediately to show something
     dispatch({
       type: "SET_CANVAS_IMAGE_CONFIG",
-      payload: img,
+      payload: imgSrc,
     });
+
+    // Then calculate and update the aspect ratio
+    setIsImageLoading(true);
+    const img = new Image();
+
+    img.onload = () => {
+      const imgAspectRatio = img.width / img.height;
+      const calculatedHeight = containerWidth / imgAspectRatio;
+
+      dispatch({
+        type: "SET_CANVAS_CONFIG",
+        payload: {
+          aspectRatio: `${img.width}:${img.height}`,
+          width: containerWidth,
+          height: calculatedHeight,
+          layoutImage: imgSrc, // Set image again here to ensure it stays
+        },
+      });
+      setIsImageLoading(false);
+    };
+
+    img.onerror = () => {
+      console.error("Failed to load image:", imgSrc);
+      setIsImageLoading(false);
+    };
+
+    img.src = imgSrc;
   };
+
   const handleReset = () => {
     dispatch({ type: "RESET_CANVAS" });
   };
@@ -56,6 +85,10 @@ export const Canvas: React.FC<CanvasProps> = ({
     return element;
   });
 
+  // Default canvas dimensions if not yet calculated
+  const canvasWidth = state.canvasConfig.width || containerWidth;
+  const canvasHeight = state.canvasConfig.height || containerWidth * 0.75; // Default 4:3 aspect ratio
+
   return (
     <div className="flex flex-col w-full gap-4">
       {isEditable && <Toolbar />}
@@ -63,56 +96,28 @@ export const Canvas: React.FC<CanvasProps> = ({
         {isEditable && (
           <div className="flex flex-col gap-4">
             <div className="flex space-x-2 self-start">
-              <Button
-                variant={
-                  state.canvasConfig.aspectRatio === "1:1"
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => handleAspectRatioChange("1:1")}
-              >
-                1:1
-              </Button>
-              <Button
-                variant={
-                  state.canvasConfig.aspectRatio === "4:3"
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => handleAspectRatioChange("4:3")}
-              >
-                4:3
-              </Button>
-              <Button
-                variant={
-                  state.canvasConfig.aspectRatio === "16:9"
-                    ? "default"
-                    : "outline"
-                }
-                onClick={() => handleAspectRatioChange("16:9")}
-              >
-                16:9
-              </Button>
-              <Button variant="outline" onClick={handleReset} className="ml-4">
+              <Button variant="outline" onClick={handleReset}>
                 Reset Layout
               </Button>
             </div>
             <div>
-              <div className="space-x-2">
+              <div className="flex flex-wrap gap-2">
                 {roomLayouts.map((item, index) => (
                   <Button
                     key={index}
-                    className="p-[2px]  w-40 h-28"
+                    className="p-[2px] w-40 h-28"
                     variant={
                       state.canvasConfig.layoutImage === item.img
                         ? "default"
                         : "outline"
                     }
                     onClick={() => handleLayoutImageChange(item.img)}
+                    disabled={isImageLoading}
                   >
                     <img
                       className="w-full h-full rounded-lg object-contain"
                       src={item.img}
+                      alt={`Room layout ${index + 1}`}
                     />
                   </Button>
                 ))}
@@ -121,18 +126,27 @@ export const Canvas: React.FC<CanvasProps> = ({
           </div>
         )}
         <div
-          className="relative border-2 border-gray-300 bg-gray-100  canvas-container w-full"
+          className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto"
           ref={constraintsRef}
           style={{
-            backgroundImage: `url(${state.canvasConfig.layoutImage})`,
+            backgroundImage: state.canvasConfig.layoutImage
+              ? `url(${state.canvasConfig.layoutImage})`
+              : "none",
             backgroundSize: "contain",
             backgroundRepeat: "no-repeat",
             backgroundPosition: "center",
-            width: state.canvasConfig.width,
-            height: state.canvasConfig.height,
+            width: canvasWidth,
+            height: canvasHeight,
             maxWidth: "100%",
+            transition: "height 0.3s ease-in-out",
+            position: "relative",
           }}
         >
+          {isImageLoading && (
+            <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+          )}
           <AnimatePresence>
             {elementsWithStatus.map((element) => (
               <DraggableElement
