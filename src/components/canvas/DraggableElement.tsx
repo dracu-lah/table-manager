@@ -368,6 +368,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
           >
             <img
               src={tableSvg}
+              draggable={false}
               alt={element.tableType || "table"}
               className="w-full h-full object-contain "
             />
