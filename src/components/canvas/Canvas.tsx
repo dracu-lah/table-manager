@@ -219,19 +219,19 @@ export const Canvas: React.FC<CanvasProps> = ({
     return (
       <div
         key={`${side}-${index}`}
-        className="absolute flex items-center text-xs text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+        className="absolute flex items-center text-xs   text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
         style={positionStyle}
         onClick={() => isEditable && startEditingLabel(side, index)}
       >
         {isEditing ? (
           <div
-            className="flex items-center bg-white p-1 rounded border shadow-sm"
+            className={`flex items-center bg-ghost  p-1 rounded  border shadow-sm ${side === "right" || side === "left" ? "h-full" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <Input
               value={editingText}
               onChange={(e) => setEditingText(e.target.value)}
-              className="text-xs px-1 py-0 h-6 min-w-20"
+              className="text-xs px-1 py-0 h-full "
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") saveEditedLabel();
@@ -242,7 +242,7 @@ export const Canvas: React.FC<CanvasProps> = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-5 w-5 p-0"
+                className="h-5 w-5 p-0 "
                 onClick={(e) => {
                   e.stopPropagation();
                   saveEditedLabel();
