@@ -170,10 +170,10 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     // Determine position styles based on side
     let positionStyle: React.CSSProperties = {};
-    const sectionWidth =
-      side === "top" || side === "bottom" ? `${canvasWidth / 4}px` : "20px";
-    const sectionHeight =
-      side === "left" || side === "right" ? `${canvasHeight / 4}px` : "20px";
+    // const sectionWidth =
+    //   side === "top" || side === "bottom" ? `${canvasWidth / 4}px` : "20px";
+    // const sectionHeight =
+    //   side === "left" || side === "right" ? `${canvasHeight / 4}px` : "20px";
 
     switch (side) {
       case "top":
