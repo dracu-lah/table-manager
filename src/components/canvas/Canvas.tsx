@@ -337,57 +337,6 @@ export const Canvas: React.FC<CanvasProps> = ({
     <div className="flex flex-col w-full gap-4">
       {isEditable && <Toolbar />}
       <div className="flex flex-col gap-4 items-center w-full">
-        {isEditable && (
-          <div className="flex flex-col gap-4 mb-8">
-            <div className="flex space-x-2 self-start">
-              <Button variant="outline" onClick={handleSaveLayout}>
-                {" "}
-                {/* Add Save Button */}
-                Save Layout
-              </Button>
-              <Button variant="outline" onClick={handleReset}>
-                Reset Layout
-              </Button>
-              <Button variant="outline" onClick={handleClearCanvas}>
-                <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
-              </Button>
-              <div className="relative">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Upload className="h-4 w-4" /> Upload Custom Image
-                </Button>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="absolute inset-0 opacity-0 cursor-pointer"
-                  onChange={handleImageUpload}
-                />
-              </div>
-            </div>
-            <div>
-              <div className="flex flex-wrap gap-2">
-                {roomLayouts.map((item, index) => (
-                  <Button
-                    key={index}
-                    className="p-[2px] w-40 h-28"
-                    variant={
-                      state.canvasConfig.layoutImage === item.img
-                        ? "default"
-                        : "outline"
-                    }
-                    onClick={() => handleLayoutImageChange(item.img)}
-                    disabled={isImageLoading}
-                  >
-                    <img
-                      className="w-full h-full rounded-lg object-contain"
-                      src={item.img}
-                      alt={`Room layout ${index + 1}`}
-                    />
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
         <div
           className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto"
           ref={constraintsRef}
@@ -440,6 +389,58 @@ export const Canvas: React.FC<CanvasProps> = ({
           </div>
         )}
       </div>
+
+      {isEditable && (
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex space-x-2 self-start">
+            <Button variant="outline" onClick={handleSaveLayout}>
+              {" "}
+              {/* Add Save Button */}
+              Save Layout
+            </Button>
+            <Button variant="outline" onClick={handleReset}>
+              Reset Layout
+            </Button>
+            <Button variant="outline" onClick={handleClearCanvas}>
+              <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
+            </Button>
+            <div className="relative">
+              <Button variant="outline" className="flex items-center gap-2">
+                <Upload className="h-4 w-4" /> Upload Custom Image
+              </Button>
+              <input
+                type="file"
+                accept="image/*"
+                className="absolute inset-0 opacity-0 cursor-pointer"
+                onChange={handleImageUpload}
+              />
+            </div>
+          </div>
+          <div>
+            <div className="flex flex-wrap gap-2">
+              {roomLayouts.map((item, index) => (
+                <Button
+                  key={index}
+                  className="p-[2px] w-40 h-28"
+                  variant={
+                    state.canvasConfig.layoutImage === item.img
+                      ? "default"
+                      : "outline"
+                  }
+                  onClick={() => handleLayoutImageChange(item.img)}
+                  disabled={isImageLoading}
+                >
+                  <img
+                    className="w-full h-full rounded-lg object-contain"
+                    src={item.img}
+                    alt={`Room layout ${index + 1}`}
+                  />
+                </Button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
