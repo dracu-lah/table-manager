@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Button } from "../ui/button";
 import { useAreaCanvas } from "../../context/AreaCanvasContext";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
-import { TableIcon, Square, DoorOpen, Minus } from "lucide-react";
+import { TableIcon, DoorOpen, Minus } from "lucide-react";
 import { ElementData } from "@/types";
 import TableIcons from "@/utils/assets";
 

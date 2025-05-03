@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useReducer,
-  useEffect,
-  useRef,
-} from "react";
+import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { ElementData } from "@/types";
 
 export interface CanvasConfig {

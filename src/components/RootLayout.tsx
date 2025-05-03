@@ -1,7 +1,6 @@
 // src/components/RootLayout.tsx
 import React from "react";
 import { Link } from "react-router";
-import { Button } from "@/components/ui/button"; // Using Shadcn Button for nav links
 
 interface RootLayoutProps {
   children: React.ReactNode;
