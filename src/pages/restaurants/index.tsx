@@ -66,7 +66,19 @@ const RestaurantsPage = () => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {restaurants.map((restaurant) => (
-          <Card key={restaurant.id}>
+          <Card
+            key={restaurant.id}
+            className="pt-0 overflow-hidden flex flex-col"
+          >
+            {" "}
+            {/* Added flex-col for better layout */}
+            {/* Image Placeholder */}
+            <div className="h-48">
+              <img
+                src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?q=80&w=1074&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                className="size-full object-cover"
+              />
+            </div>
             <CardHeader>
               <CardTitle>
                 <Link to={`/restaurants/${restaurant.id}`}>
@@ -74,7 +86,9 @@ const RestaurantsPage = () => {
                 </Link>
               </CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="flex-grow">
+              {" "}
+              {/* Added flex-grow to push footer down */}
               <h3 className="text-lg font-semibold mb-2">Areas:</h3>
               <ul>
                 {restaurant.areas.map((area) => (
