@@ -1,7 +1,9 @@
 // src/pages/AreaCanvasView.tsx
-import React from "react";
+import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
+import { AreaCanvasProvider } from "@/context/AreaCanvasContext";
+import { Canvas } from "@/components/canvas/Canvas";
 
 const AreaCanvasView: React.FC = () => {
   const { restaurantId, areaId } = useParams<{
@@ -10,6 +12,7 @@ const AreaCanvasView: React.FC = () => {
   }>();
   const navigate = useNavigate();
 
+  const [unsavedChanges, setUnsavedChanges] = useState(false);
   // In a real application, fetch the specific area and its tables using restaurantId and areaId
   // const [area, setArea] = useState<Area | null>(null);
   // useEffect(() => {
@@ -30,8 +33,14 @@ const AreaCanvasView: React.FC = () => {
       </p>
 
       {/* Implement your table management canvas here */}
-      <div className="border border-gray-300 h-96 flex items-center justify-center text-gray-500">
-        Table Management Canvas Placeholder
+      <div className="">
+        <AreaCanvasProvider
+          restaurantId={restaurantId}
+          areaId={areaId}
+          onTableUpdate={() => setUnsavedChanges(true)}
+        >
+          <Canvas isEditable={true} onChange={() => setUnsavedChanges(true)} />
+        </AreaCanvasProvider>
       </div>
     </div>
   );
