@@ -130,17 +130,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   };
 
   const handleReset = () => {
-    dispatch({ type: "RESET_CANVAS" });
-    // Also reset corner labels and layout image in local storage
-    localStorage.removeItem("roomCornerLabels");
-    localStorage.removeItem("roomLayoutImage");
-    setCornerLabels({
-      top: ["", "", "", ""],
-      right: ["", "", "", ""],
-      bottom: ["", "", "", ""],
-      left: ["", "", "", ""],
-    });
-    handleLayoutImageChange(""); // Clear the layout image
+    handleLayoutImageChange(roomLayouts[0].img);
   };
 
   // Handle file upload

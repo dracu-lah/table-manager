@@ -39,6 +39,13 @@ const canvasReducer = (
 ): CanvasState => {
   switch (action.type) {
     case "ADD_ELEMENT":
+      // Check if an element with the same ID already exists
+      if (state.elements.some((el) => el.id === action.payload.id)) {
+        console.warn(
+          `Attempted to add element with duplicate ID: ${action.payload.id}`,
+        );
+        return state; // Return current state without adding
+      }
       return { ...state, elements: [...state.elements, action.payload] };
     case "UPDATE_ELEMENT":
       return {
@@ -100,6 +107,7 @@ export const AreaCanvasProvider: React.FC<{
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
+        // When loading from storage, use ADD_ELEMENT which now has the ID check
         parsed.elements?.forEach((el: ElementData) => {
           dispatch({ type: "ADD_ELEMENT", payload: el });
         });
@@ -118,6 +126,9 @@ export const AreaCanvasProvider: React.FC<{
         storageKey,
         JSON.stringify({ elements: state.elements }),
       );
+    } else {
+      // If elements become empty, remove the item from local storage
+      localStorage.removeItem(storageKey);
     }
   }, [state.elements, storageKey]);
 
