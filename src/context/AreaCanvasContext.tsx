@@ -2,6 +2,8 @@ import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { ElementData } from "@/types";
 
 export interface CanvasConfig {
+  restaurantId?: string;
+  areaId?: string;
   aspectRatio: string;
   width: number;
   height: number;

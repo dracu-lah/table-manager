@@ -9,10 +9,10 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateAreaForm from "@/components/CreateAreaForm";
-import AreaCard from "@/components/AreaCard"; // Import AreaCard
-import EditAreaForm from "@/components/EditAreaForm"; // Import EditAreaForm
 import { initialRestaurants, Restaurant, Area } from "@/types";
+import AreaCard from "@/components/AreaCard";
+import EditAreaForm from "@/components/EditAreaForm";
+import CreateAreaForm from "@/components/CreateAreaForm";
 
 const RestaurantDetailsPage = () => {
   const { id } = useParams<{ id: string }>();

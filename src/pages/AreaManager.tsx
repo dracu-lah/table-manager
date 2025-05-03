@@ -28,7 +28,7 @@ const AreaManager = () => {
   const [newAreaName, setNewAreaName] = useState("");
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  const handleAreaSelect = (area) => {
+  const handleAreaSelect = (area: any) => {
     if (unsavedChanges && !confirm("You have unsaved changes. Continue?")) {
       return;
     }
@@ -113,10 +113,7 @@ const AreaManager = () => {
               areaId={selectedArea.id}
               onTableUpdate={() => setUnsavedChanges(true)}
             >
-              <Canvas
-                isEditable={true}
-                onChange={() => setUnsavedChanges(true)}
-              />
+              <Canvas isEditable={true} />
             </AreaCanvasProvider>
           </div>
         </div>

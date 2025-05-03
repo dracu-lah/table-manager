@@ -103,7 +103,7 @@ const CustomerViewContent: React.FC = () => {
   }, [tables, filter]);
 
   // Prepare tableStatuses object for the Canvas component
-  const tableStatusesForCanvas = useMemo(() => {
+  const tableStatusesForCanvas: any = useMemo(() => {
     return Object.fromEntries(
       tables.map((t) => [t.id, t.tableStatus || "available"]),
     );

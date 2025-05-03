@@ -16,9 +16,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import CreateRestaurantForm from "@/components/CreateRestaurantForm";
-import EditRestaurantForm from "@/components/EditRestaurantForm"; // Import EditRestaurantForm
 import { initialRestaurants, Restaurant } from "@/types"; // Import types and initial data
+import CreateRestaurantForm from "@/components/CreateRestaurantForm";
+import EditRestaurantForm from "@/components/EditRestaurantForm";
 
 const RestaurantsPage = () => {
   const navigate = useNavigate();
