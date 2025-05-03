@@ -1,14 +1,17 @@
-// context/AreaCanvasContext.tsx
-import React, { createContext, useContext, useReducer, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useReducer,
+  useEffect,
+  useRef,
+} from "react";
 import { ElementData } from "@/types";
 
-// Interfaces remain the same...
 export interface CanvasConfig {
   aspectRatio: string;
   width: number;
   height: number;
   layoutImage?: string;
-  // Add cornerLabels to CanvasConfig
   cornerLabels?: {
     top: string[];
     right: string[];
@@ -16,6 +19,7 @@ export interface CanvasConfig {
     left: string[];
   };
 }
+
 export interface CanvasState {
   elements: ElementData[];
   canvasConfig: CanvasConfig;
@@ -45,12 +49,12 @@ type CanvasAction =
   | { type: "UPDATE_ELEMENT"; payload: ElementData }
   | { type: "REMOVE_ELEMENT"; payload: string }
   | { type: "SET_CANVAS_CONFIG"; payload: CanvasConfig }
-  | { type: "SET_CANVAS_IMAGE_CONFIG"; payload: string | null } // This action is still useful for immediate image updates
   | { type: "SET_SELECTED_ELEMENT"; payload: string | null }
   | { type: "RESET_CANVAS" }
-  | { type: "CLEAR_CANVAS" } // New action to clear elements and canvas config
+  | { type: "CLEAR_CANVAS" }
   | { type: "SET_INITIAL_ELEMENTS" }
-  | { type: "LOAD_STATE"; payload: CanvasState }; // New action to load state from storage
+  | { type: "LOAD_STATE"; payload: CanvasState }
+  | { type: "SAVE_STATE"; payload: CanvasState }; // New action to explicitly save state
 
 const canvasReducer = (
   state: CanvasState,
@@ -58,15 +62,13 @@ const canvasReducer = (
 ): CanvasState => {
   switch (action.type) {
     case "LOAD_STATE":
-      // When loading, directly set the state from the payload
       return action.payload;
     case "ADD_ELEMENT":
-      // Check if an element with the same ID already exists
       if (state.elements.some((el) => el.id === action.payload.id)) {
         console.warn(
           `Attempted to add element with duplicate ID: ${action.payload.id}`,
         );
-        return state; // Return current state without adding
+        return state;
       }
       return { ...state, elements: [...state.elements, action.payload] };
     case "UPDATE_ELEMENT":
@@ -87,15 +89,6 @@ const canvasReducer = (
       };
     case "SET_CANVAS_CONFIG":
       return { ...state, canvasConfig: action.payload };
-    case "SET_CANVAS_IMAGE_CONFIG":
-      // Update only the layoutImage property of canvasConfig
-      return {
-        ...state,
-        canvasConfig: {
-          ...state.canvasConfig,
-          layoutImage: action.payload || undefined, // Use undefined if null to avoid saving ""
-        },
-      };
     case "SET_SELECTED_ELEMENT":
       return { ...state, selectedElement: action.payload };
     case "RESET_CANVAS":
@@ -105,9 +98,8 @@ const canvasReducer = (
         selectedElement: null,
         canvasConfig: {
           ...state.canvasConfig,
-          layoutImage: undefined, // Reset layout image on reset
+          layoutImage: undefined,
           cornerLabels: {
-            // Reset corner labels on reset
             top: ["", "", "", ""],
             right: ["", "", "", ""],
             bottom: ["", "", "", ""],
@@ -117,15 +109,20 @@ const canvasReducer = (
       };
     case "CLEAR_CANVAS":
       return {
-        ...getInitialState(), // Return the initial state, effectively clearing everything
+        ...getInitialState(),
         canvasConfig: {
           ...getInitialState().canvasConfig,
-          width: state.canvasConfig.width, // Keep the current width
-          height: state.canvasConfig.height, // Keep the current height
+          width: state.canvasConfig.width,
+          height: state.canvasConfig.height,
         },
       };
     case "SET_INITIAL_ELEMENTS":
       return { ...state, initialElements: [...state.elements] };
+    case "SAVE_STATE":
+      // Handle saving to local storage here
+      const storageKey = `tableLayoutState_${action.payload.canvasConfig.restaurantId}_${action.payload.canvasConfig.areaId}`; // Assuming restaurantId and areaId are part of canvasConfig for simplicity here, adjust as needed.
+      localStorage.setItem(storageKey, JSON.stringify(action.payload));
+      return state; // Saving doesn't change the current state
     default:
       return state;
   }
@@ -151,35 +148,23 @@ export const AreaCanvasProvider: React.FC<{
     if (savedState) {
       try {
         const parsed = JSON.parse(savedState);
-        // Dispatch a new action to load the entire state
         dispatch({ type: "LOAD_STATE", payload: parsed });
-        // After loading, set the initial elements
+        // Set initial elements after loading
         setTimeout(() => {
           dispatch({ type: "SET_INITIAL_ELEMENTS" });
-        }, 100);
+        }, 50);
       } catch (err) {
         console.error("Failed to load saved canvas state:", err);
-        // Optionally, reset to initial state if loading fails
-        // dispatch({ type: "RESET_CANVAS" });
+        // If loading fails, still set initial elements to the default empty state
+        dispatch({ type: "SET_INITIAL_ELEMENTS" });
       }
-    }
-  }, [storageKey]); // Depend on storageKey
-
-  // Save state to local storage whenever state changes
-  useEffect(() => {
-    // Only save if elements or canvasConfig have been populated from initial load or changes
-    if (
-      state.elements.length > 0 ||
-      state.canvasConfig.layoutImage ||
-      state.canvasConfig.cornerLabels
-    ) {
-      localStorage.setItem(storageKey, JSON.stringify(state));
     } else {
-      // If state is essentially empty, remove the item from local storage
-      localStorage.removeItem(storageKey);
+      // If no saved state, set initial elements to the default empty state
+      dispatch({ type: "SET_INITIAL_ELEMENTS" });
     }
-  }, [state, storageKey]); // Depend on the entire state and storageKey
+  }, [storageKey]);
 
+  // Effect to call onTableUpdate when elements change
   useEffect(() => {
     if (onTableUpdate) {
       state.elements

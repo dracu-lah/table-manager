@@ -1,4 +1,10 @@
-import React, { useRef, useEffect, useState, ChangeEvent } from "react";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  ChangeEvent,
+  useMemo,
+} from "react";
 import { AnimatePresence } from "framer-motion";
 import { useAreaCanvas } from "../../context/AreaCanvasContext";
 import { DraggableElement } from "./DraggableElement";
@@ -7,15 +13,16 @@ import { ElementData } from "../../types";
 import { Toolbar } from "./Toolbar";
 import { roomLayouts } from "@/utils/constants";
 import { Input } from "../ui/input";
-import { Edit, Save, X, Upload, Trash2 } from "lucide-react"; // Import Trash2 icon
+import { Edit, Save, X, Upload, Trash2 } from "lucide-react";
 
 interface CanvasProps {
   isEditable?: boolean;
   onTableSelect?: (tableData: ElementData) => void;
   tableStatuses?: Record<string, "available" | "occupied" | "reserved">;
+  restaurantId?: string; // Add restaurantId and areaId props for saving
+  areaId?: string;
 }
 
-// Define a type for corner labels
 interface CornerLabels {
   top: string[];
   right: string[];
@@ -27,14 +34,14 @@ export const Canvas: React.FC<CanvasProps> = ({
   isEditable = true,
   onTableSelect,
   tableStatuses = {},
+  restaurantId, // Get these from props
+  areaId,
 }) => {
   const { state, dispatch } = useAreaCanvas();
   const constraintsRef = useRef<any>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isImageLoading, setIsImageLoading] = useState(false);
 
-  // Corner labels state (4 sections for each side)
-  // Initialize with state values if they exist in context
   const [cornerLabels, setCornerLabels] = useState<CornerLabels>(
     state.canvasConfig.cornerLabels || {
       top: ["", "", "", ""],
@@ -44,21 +51,18 @@ export const Canvas: React.FC<CanvasProps> = ({
     },
   );
 
-  // State to manage which label is being edited
   const [editingLabel, setEditingLabel] = useState<{
     side: keyof CornerLabels;
     index: number;
   } | null>(null);
-  // Temporary state for the currently edited label text
   const [editingText, setEditingText] = useState("");
 
   // Measure available container width on mount and window resize
   useEffect(() => {
     const handleResize = () => {
       if (constraintsRef.current && constraintsRef.current.parentElement) {
-        // Get parent container width
         const parentWidth = constraintsRef.current.parentElement.clientWidth;
-        setContainerWidth(Math.min(parentWidth, 800)); // Cap at 800px max
+        setContainerWidth(Math.min(parentWidth, 800));
       }
     };
 
@@ -67,37 +71,39 @@ export const Canvas: React.FC<CanvasProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Update local cornerLabels state when context state changes (e.g., on initial load)
+  // Sync local cornerLabels state when context state changes
   useEffect(() => {
-    if (state.canvasConfig.cornerLabels) {
-      setCornerLabels(state.canvasConfig.cornerLabels);
+    if (
+      JSON.stringify(cornerLabels) !==
+      JSON.stringify(state.canvasConfig.cornerLabels)
+    ) {
+      setCornerLabels(
+        state.canvasConfig.cornerLabels || {
+          top: ["", "", "", ""],
+          right: ["", "", "", ""],
+          bottom: ["", "", "", ""],
+          left: ["", "", "", ""],
+        },
+      );
     }
   }, [state.canvasConfig.cornerLabels]);
 
-  // Save corner labels to context whenever they change
+  // Save local corner labels to context whenever they change locally
   useEffect(() => {
     dispatch({
       type: "SET_CANVAS_CONFIG",
       payload: { ...state.canvasConfig, cornerLabels: cornerLabels },
     });
-  }, [cornerLabels, dispatch, state.canvasConfig]); // Added dispatch and state.canvasConfig to dependencies
+  }, [cornerLabels]);
 
   // Load default layout image on mount if no layout image is in context state
   useEffect(() => {
-    if (!state.canvasConfig.layoutImage) {
+    if (state.canvasConfig.layoutImage === undefined) {
       handleLayoutImageChange(roomLayouts[0].img);
     }
-  }, [state.canvasConfig.layoutImage]); // Added state.canvasConfig.layoutImage to dependencies
+  }, [state.canvasConfig.layoutImage, containerWidth]);
 
-  // Handle image change and update dimensions
   const handleLayoutImageChange = (imgSrc: string) => {
-    // First, update the image source immediately to show something
-    dispatch({
-      type: "SET_CANVAS_IMAGE_CONFIG",
-      payload: imgSrc,
-    });
-
-    // Then calculate and update the aspect ratio
     setIsImageLoading(true);
     const img = new Image();
 
@@ -108,11 +114,11 @@ export const Canvas: React.FC<CanvasProps> = ({
       dispatch({
         type: "SET_CANVAS_CONFIG",
         payload: {
-          ...state.canvasConfig, // Preserve other canvas config properties
+          ...state.canvasConfig,
           aspectRatio: `${img.width}:${img.height}`,
           width: containerWidth,
           height: calculatedHeight,
-          layoutImage: imgSrc, // Set image again here to ensure it stays
+          layoutImage: imgSrc,
         },
       });
       setIsImageLoading(false);
@@ -121,7 +127,6 @@ export const Canvas: React.FC<CanvasProps> = ({
     img.onerror = () => {
       console.error("Failed to load image:", imgSrc);
       setIsImageLoading(false);
-      // Optionally, set a default image or indicate an error visually
     };
 
     img.src = imgSrc;
@@ -129,19 +134,16 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   const handleReset = () => {
     dispatch({ type: "RESET_CANVAS" });
-    // Reset local corner labels state to default as well
     setCornerLabels({
       top: ["", "", "", ""],
       right: ["", "", "", ""],
       bottom: ["", "", "", ""],
       left: ["", "", "", ""],
     });
-    // The canvas config including layoutImage will be reset by the context reducer
   };
 
   const handleClearCanvas = () => {
-    dispatch({ type: "CLEAR_CANVAS" }); // Dispatch the new CLEAR_CANVAS action
-    // Also reset local corner labels state to default
+    dispatch({ type: "CLEAR_CANVAS" });
     setCornerLabels({
       top: ["", "", "", ""],
       right: ["", "", "", ""],
@@ -164,13 +166,11 @@ export const Canvas: React.FC<CanvasProps> = ({
     }
   };
 
-  // Function to start editing a label
   const startEditingLabel = (side: keyof CornerLabels, index: number) => {
     setEditingText(cornerLabels[side][index]);
     setEditingLabel({ side, index });
   };
 
-  // Function to save the edited label
   const saveEditedLabel = () => {
     if (editingLabel) {
       const { side, index } = editingLabel;
@@ -185,30 +185,49 @@ export const Canvas: React.FC<CanvasProps> = ({
     }
   };
 
-  // Function to cancel editing
   const cancelEditing = () => {
     setEditingLabel(null);
     setEditingText("");
   };
 
-  const elementsWithStatus = state.elements.map((element) => {
-    if (element.type === "table" && tableStatuses[element.id]) {
-      return { ...element, tableStatus: tableStatuses[element.id] };
+  // Function to dispatch the SAVE_STATE action
+  const handleSaveLayout = () => {
+    if (restaurantId && areaId) {
+      dispatch({
+        type: "SAVE_STATE",
+        payload: {
+          ...state,
+          canvasConfig: {
+            ...state.canvasConfig,
+            restaurantId: restaurantId, // Include restaurantId and areaId in the state for saving
+            areaId: areaId,
+          } as any, // Type assertion as these are not strictly in CanvasConfig
+        },
+      });
+      alert("Layout saved!"); // Provide feedback to the user
+    } else {
+      console.error("Cannot save layout: restaurantId or areaId is missing.");
+      alert("Error: Cannot save layout.");
     }
-    return element;
-  });
+  };
 
-  // Default canvas dimensions if not yet calculated
+  const elementsWithStatus = useMemo(() => {
+    return state.elements.map((element) => {
+      if (element.type === "table" && tableStatuses[element.id]) {
+        return { ...element, tableStatus: tableStatuses[element.id] };
+      }
+      return element;
+    });
+  }, [state.elements, tableStatuses]);
+
   const canvasWidth = state.canvasConfig.width || containerWidth;
-  const canvasHeight = state.canvasConfig.height || containerWidth * 0.75; // Default 4:3 aspect ratio
+  const canvasHeight = state.canvasConfig.height || containerWidth * 0.75;
 
-  // Render a label section
   const renderLabelSection = (side: keyof CornerLabels, index: number) => {
     const isEditing =
       editingLabel?.side === side && editingLabel?.index === index;
     const label = cornerLabels[side][index];
 
-    // Determine position styles based on side
     let positionStyle: React.CSSProperties = {};
 
     switch (side) {
@@ -258,19 +277,19 @@ export const Canvas: React.FC<CanvasProps> = ({
     return (
       <div
         key={`${side}-${index}`}
-        className="absolute flex items-center text-xs   text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
+        className="absolute flex items-center text-xs text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
         style={positionStyle}
         onClick={() => isEditable && startEditingLabel(side, index)}
       >
         {isEditing ? (
           <div
-            className={`flex items-center bg-ghost  p-1 rounded  border shadow-sm ${side === "right" || side === "left" ? "h-full" : ""}`}
+            className={`flex items-center bg-ghost p-1 rounded border shadow-sm ${side === "right" || side === "left" ? "h-full" : ""}`}
             onClick={(e) => e.stopPropagation()}
           >
             <Input
               value={editingText}
               onChange={(e) => setEditingText(e.target.value)}
-              className="text-xs px-1 py-0 h-full "
+              className="text-xs px-1 py-0 h-full"
               autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter") saveEditedLabel();
@@ -281,7 +300,7 @@ export const Canvas: React.FC<CanvasProps> = ({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-5 w-5 p-0 "
+                className="h-5 w-5 p-0"
                 onClick={(e) => {
                   e.stopPropagation();
                   saveEditedLabel();
@@ -321,13 +340,17 @@ export const Canvas: React.FC<CanvasProps> = ({
         {isEditable && (
           <div className="flex flex-col gap-4 mb-8">
             <div className="flex space-x-2 self-start">
+              <Button variant="outline" onClick={handleSaveLayout}>
+                {" "}
+                {/* Add Save Button */}
+                Save Layout
+              </Button>
               <Button variant="outline" onClick={handleReset}>
                 Reset Layout
               </Button>
               <Button variant="outline" onClick={handleClearCanvas}>
                 <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
               </Button>
-              {/* Custom Image Upload Button */}
               <div className="relative">
                 <Button variant="outline" className="flex items-center gap-2">
                   <Upload className="h-4 w-4" /> Upload Custom Image
@@ -340,7 +363,7 @@ export const Canvas: React.FC<CanvasProps> = ({
                 />
               </div>
             </div>
-            <div className="">
+            <div>
               <div className="flex flex-wrap gap-2">
                 {roomLayouts.map((item, index) => (
                   <Button
@@ -366,7 +389,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           </div>
         )}
         <div
-          className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto "
+          className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto"
           ref={constraintsRef}
           style={{
             backgroundImage: state.canvasConfig.layoutImage
@@ -406,7 +429,6 @@ export const Canvas: React.FC<CanvasProps> = ({
           </AnimatePresence>
         </div>
 
-        {/* Optional: Add a section for corner label management if needed */}
         {isEditable && (
           <div className="w-full max-w-3xl mt-4">
             <div className="text-sm text-gray-500">

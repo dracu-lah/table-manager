@@ -39,7 +39,12 @@ const AreaCanvasView: React.FC = () => {
           areaId={areaId}
           onTableUpdate={() => setUnsavedChanges(true)}
         >
-          <Canvas isEditable={true} onChange={() => setUnsavedChanges(true)} />
+          <Canvas
+            restaurantId={restaurantId}
+            areaId={areaId}
+            isEditable={true}
+            onChange={() => setUnsavedChanges(true)}
+          />
         </AreaCanvasProvider>
       </div>
     </div>
