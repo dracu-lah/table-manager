@@ -7,6 +7,7 @@ export type TableType = "type-1" | "type-2" | "type-3"; // Consider if this shou
 
 // Define CanvasConfig
 export interface CanvasConfig {
+  restaurantId: string;
   aspectRatio: string;
   width: number;
   height: number;
@@ -31,6 +32,7 @@ export interface ElementData {
   height?: number;
   color?: string;
   label?: string; // Could be used for any element type
+  shape?: string;
 
   // Table specific properties (optional)
   tableStatus?: "available" | "occupied" | "reserved" | string; // Allow string for flexibility
