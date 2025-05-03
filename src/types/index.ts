@@ -77,7 +77,7 @@ export interface Table {
 export interface Area {
   id: string;
   name: string;
-  tables: Table[]; // Keep the tables array
+  tables?: Table[];
 }
 
 // Define Restaurant - Ensured 'areas' property with Area type is present
