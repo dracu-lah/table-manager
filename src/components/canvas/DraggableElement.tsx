@@ -559,6 +559,19 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
                   />
                 </div>
                 <div className="space-y-2">
+                  <Label htmlFor="occupancy">Occupancy</Label>
+                  <Input id="occupancy" type="number" placeholder="2" />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="coverCharges">Cover Charges</Label>
+                  <Input
+                    id="coverCharges"
+                    type="text"
+                    placeholder="238 Dollars"
+                  />
+                </div>
+                <div className="space-y-2">
                   <Label htmlFor="tableLabel">Table Label</Label>
                   <Input
                     id="tableLabel"
