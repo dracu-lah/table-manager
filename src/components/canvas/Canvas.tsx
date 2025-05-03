@@ -81,6 +81,9 @@ export const Canvas: React.FC<CanvasProps> = ({
     localStorage.setItem("roomCornerLabels", JSON.stringify(cornerLabels));
   }, [cornerLabels]);
 
+  useEffect(() => {
+    handleLayoutImageChange(roomLayouts[0].img);
+  }, []);
   // Handle image change and update dimensions
   const handleLayoutImageChange = (imgSrc: string) => {
     // First, update the image source immediately to show something
@@ -167,9 +170,9 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     // Determine position styles based on side
     let positionStyle: React.CSSProperties = {};
-    let sectionWidth =
+    const sectionWidth =
       side === "top" || side === "bottom" ? `${canvasWidth / 4}px` : "20px";
-    let sectionHeight =
+    const sectionHeight =
       side === "left" || side === "right" ? `${canvasHeight / 4}px` : "20px";
 
     switch (side) {
@@ -280,13 +283,13 @@ export const Canvas: React.FC<CanvasProps> = ({
       {isEditable && <Toolbar />}
       <div className="flex flex-col gap-4 items-center w-full">
         {isEditable && (
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-8">
             <div className="flex space-x-2 self-start">
               <Button variant="outline" onClick={handleReset}>
                 Reset Layout
               </Button>
             </div>
-            <div>
+            <div className="">
               <div className="flex flex-wrap gap-2">
                 {roomLayouts.map((item, index) => (
                   <Button
@@ -312,7 +315,7 @@ export const Canvas: React.FC<CanvasProps> = ({
           </div>
         )}
         <div
-          className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto"
+          className="relative border-2 border-gray-300 bg-gray-100 canvas-container mx-auto "
           ref={constraintsRef}
           style={{
             backgroundImage: state.canvasConfig.layoutImage

@@ -1,4 +1,5 @@
 import { ElementData } from "@/types";
+import { RoomLayouts } from "@/utils/assets";
 import React, { createContext, useContext, useReducer } from "react";
 
 export interface CanvasConfig {
