@@ -18,7 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import CreateRestaurantForm from "@/components/CreateRestaurantForm";
 import EditRestaurantForm from "@/components/EditRestaurantForm"; // Import EditRestaurantForm
-import { initialRestaurants, Restaurant } from "./types"; // Import types and initial data
+import { initialRestaurants, Restaurant } from "@/types"; // Import types and initial data
 
 const RestaurantsPage = () => {
   const [restaurants, setRestaurants] =
