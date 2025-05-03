@@ -34,11 +34,11 @@ const AreaManager: React.FC = () => {
             <div className="flex flex-wrap gap-2">
               {areas.map((area) => (
                 <Button key={area.id} asChild variant="outline">
-                  <Link to={`/area/${area.id}`}>{area.name}</Link>
+                  <Link to={`#`}>{area.name}</Link>
                 </Button>
               ))}
               <Button asChild variant="default">
-                <Link to="/area/create">+ Create New Area</Link>
+                <Link to="#">+ Create New Area</Link>
               </Button>
             </div>
           </CardContent>
