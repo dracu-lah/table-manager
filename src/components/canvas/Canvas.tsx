@@ -393,16 +393,8 @@ export const Canvas: React.FC<CanvasProps> = ({
       {isEditable && (
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex space-x-2 self-start">
-            <Button variant="outline" onClick={handleSaveLayout}>
-              {" "}
-              {/* Add Save Button */}
-              Save Layout
-            </Button>
             <Button variant="outline" onClick={handleReset}>
               Reset Layout
-            </Button>
-            <Button variant="outline" onClick={handleClearCanvas}>
-              <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
             </Button>
             <div className="relative">
               <Button variant="outline" className="flex items-center gap-2">
@@ -438,6 +430,18 @@ export const Canvas: React.FC<CanvasProps> = ({
                 </Button>
               ))}
             </div>
+          </div>
+        </div>
+      )}
+
+      {isEditable && (
+        <div className="flex flex-col gap-4 mb-8">
+          <div className="flex justify-center items-center gap-2">
+            <Button onClick={handleSaveLayout}>Save Canvas</Button>
+
+            <Button variant="destructive" onClick={handleClearCanvas}>
+              <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
+            </Button>
           </div>
         </div>
       )}
