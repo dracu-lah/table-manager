@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Canvas } from "../components/canvas/Canvas";
 import { Button } from "../components/ui/button";
 import { Link } from "react-router";
