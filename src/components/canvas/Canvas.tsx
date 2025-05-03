@@ -7,7 +7,7 @@ import { ElementData } from "../../types";
 import { Toolbar } from "./Toolbar";
 import { roomLayouts } from "@/utils/constants";
 import { Input } from "../ui/input";
-import { Edit, Save, X, Upload } from "lucide-react"; // Import Upload icon
+import { Edit, Save, X, Upload, Trash2 } from "lucide-react"; // Import Trash2 icon
 
 interface CanvasProps {
   isEditable?: boolean;
@@ -34,12 +34,15 @@ export const Canvas: React.FC<CanvasProps> = ({
   const [isImageLoading, setIsImageLoading] = useState(false);
 
   // Corner labels state (4 sections for each side)
-  const [cornerLabels, setCornerLabels] = useState<CornerLabels>({
-    top: ["", "", "", ""],
-    right: ["", "", "", ""],
-    bottom: ["", "", "", ""],
-    left: ["", "", "", ""],
-  });
+  // Initialize with state values if they exist in context
+  const [cornerLabels, setCornerLabels] = useState<CornerLabels>(
+    state.canvasConfig.cornerLabels || {
+      top: ["", "", "", ""],
+      right: ["", "", "", ""],
+      bottom: ["", "", "", ""],
+      left: ["", "", "", ""],
+    },
+  );
 
   // State to manage which label is being edited
   const [editingLabel, setEditingLabel] = useState<{
@@ -64,32 +67,27 @@ export const Canvas: React.FC<CanvasProps> = ({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Load corner labels from local storage on mount
+  // Update local cornerLabels state when context state changes (e.g., on initial load)
   useEffect(() => {
-    const savedLabels = localStorage.getItem("roomCornerLabels");
-    if (savedLabels) {
-      try {
-        setCornerLabels(JSON.parse(savedLabels));
-      } catch (e) {
-        console.error("Failed to parse saved corner labels:", e);
-      }
+    if (state.canvasConfig.cornerLabels) {
+      setCornerLabels(state.canvasConfig.cornerLabels);
     }
-  }, []);
+  }, [state.canvasConfig.cornerLabels]);
 
-  // Save corner labels to local storage whenever they change
+  // Save corner labels to context whenever they change
   useEffect(() => {
-    localStorage.setItem("roomCornerLabels", JSON.stringify(cornerLabels));
-  }, [cornerLabels]);
+    dispatch({
+      type: "SET_CANVAS_CONFIG",
+      payload: { ...state.canvasConfig, cornerLabels: cornerLabels },
+    });
+  }, [cornerLabels, dispatch, state.canvasConfig]); // Added dispatch and state.canvasConfig to dependencies
 
+  // Load default layout image on mount if no layout image is in context state
   useEffect(() => {
-    // Load default or saved layout image on mount
-    const savedLayoutImage = localStorage.getItem("roomLayoutImage");
-    if (savedLayoutImage) {
-      handleLayoutImageChange(savedLayoutImage);
-    } else {
+    if (!state.canvasConfig.layoutImage) {
       handleLayoutImageChange(roomLayouts[0].img);
     }
-  }, []);
+  }, [state.canvasConfig.layoutImage]); // Added state.canvasConfig.layoutImage to dependencies
 
   // Handle image change and update dimensions
   const handleLayoutImageChange = (imgSrc: string) => {
@@ -110,6 +108,7 @@ export const Canvas: React.FC<CanvasProps> = ({
       dispatch({
         type: "SET_CANVAS_CONFIG",
         payload: {
+          ...state.canvasConfig, // Preserve other canvas config properties
           aspectRatio: `${img.width}:${img.height}`,
           width: containerWidth,
           height: calculatedHeight,
@@ -117,20 +116,38 @@ export const Canvas: React.FC<CanvasProps> = ({
         },
       });
       setIsImageLoading(false);
-      // Save the loaded image source to local storage
-      localStorage.setItem("roomLayoutImage", imgSrc);
     };
 
     img.onerror = () => {
       console.error("Failed to load image:", imgSrc);
       setIsImageLoading(false);
+      // Optionally, set a default image or indicate an error visually
     };
 
     img.src = imgSrc;
   };
 
   const handleReset = () => {
-    handleLayoutImageChange(roomLayouts[0].img);
+    dispatch({ type: "RESET_CANVAS" });
+    // Reset local corner labels state to default as well
+    setCornerLabels({
+      top: ["", "", "", ""],
+      right: ["", "", "", ""],
+      bottom: ["", "", "", ""],
+      left: ["", "", "", ""],
+    });
+    // The canvas config including layoutImage will be reset by the context reducer
+  };
+
+  const handleClearCanvas = () => {
+    dispatch({ type: "CLEAR_CANVAS" }); // Dispatch the new CLEAR_CANVAS action
+    // Also reset local corner labels state to default
+    setCornerLabels({
+      top: ["", "", "", ""],
+      right: ["", "", "", ""],
+      bottom: ["", "", "", ""],
+      left: ["", "", "", ""],
+    });
   };
 
   // Handle file upload
@@ -306,6 +323,9 @@ export const Canvas: React.FC<CanvasProps> = ({
             <div className="flex space-x-2 self-start">
               <Button variant="outline" onClick={handleReset}>
                 Reset Layout
+              </Button>
+              <Button variant="outline" onClick={handleClearCanvas}>
+                <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
               </Button>
               {/* Custom Image Upload Button */}
               <div className="relative">
