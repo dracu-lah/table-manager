@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router";
 import { Canvas } from "../components/canvas/Canvas";
 import { Button } from "../components/ui/button";
-import { useCanvas } from "../context/CanvasContext";
+import { useAreaCanvas } from "../context/AreaCanvasContext";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,7 @@ import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 
 const CustomerView: React.FC = () => {
-  const { state, dispatch } = useCanvas();
+  const { state, dispatch } = useAreaCanvas();
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
   const [customerName, setCustomerName] = useState("");

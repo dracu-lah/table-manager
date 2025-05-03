@@ -12,73 +12,44 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext";
 
 const AreaManager = () => {
-  // Areas state
   const [areas, setAreas] = useState([
-    { id: "indoor", name: "Indoor", canvasData: {} },
-    { id: "outdoor", name: "Outdoor", canvasData: {} },
-    { id: "rooftop", name: "Rooftop", canvasData: {} },
-    { id: "terrace", name: "Terrace", canvasData: {} },
-    { id: "vip-lounge", name: "VIP Lounge", canvasData: {} },
+    { id: "indoor", name: "Indoor" },
+    { id: "outdoor", name: "Outdoor" },
+    { id: "rooftop", name: "Rooftop" },
+    { id: "terrace", name: "Terrace" },
+    { id: "vip-lounge", name: "VIP Lounge" },
   ]);
 
-  // State for currently selected area
   const [selectedArea, setSelectedArea] = useState(areas[0]);
-
-  // State for new area dialog
   const [isNewAreaDialogOpen, setIsNewAreaDialogOpen] = useState(false);
   const [newAreaName, setNewAreaName] = useState("");
-
-  // State for managing area canvas data
   const [unsavedChanges, setUnsavedChanges] = useState(false);
 
-  // Handle area selection
   const handleAreaSelect = (area) => {
-    if (unsavedChanges) {
-      // You might want to add a confirmation dialog here
-      if (!confirm("You have unsaved changes. Continue without saving?")) {
-        return;
-      }
+    if (unsavedChanges && !confirm("You have unsaved changes. Continue?")) {
+      return;
     }
     setSelectedArea(area);
     setUnsavedChanges(false);
   };
 
-  // Handle canvas changes
-  const handleCanvasChange = (newCanvasData) => {
-    setUnsavedChanges(true);
-    // Update the selected area's canvas data
-    setSelectedArea({
-      ...selectedArea,
-      canvasData: newCanvasData,
-    });
-  };
-
-  // Save current layout
   const saveLayout = () => {
-    // Update the area in the areas array
-    const updatedAreas = areas.map((area) =>
-      area.id === selectedArea.id ? selectedArea : area,
-    );
-    setAreas(updatedAreas);
+    const { state } = useAreaCanvas(); // get current canvas state
+    console.log(`Saved layout for ${selectedArea.name}`, state);
     setUnsavedChanges(false);
 
-    // Here you would typically send the data to a backend API
-    console.log(
-      `Saved layout for ${selectedArea.name}`,
-      selectedArea.canvasData,
-    );
+    // Optionally persist to backend or sync with `areas` state if needed
   };
 
-  // Add new area
   const handleAddArea = () => {
     if (!newAreaName.trim()) return;
 
     const newArea = {
       id: newAreaName.toLowerCase().replace(/\s+/g, "-"),
       name: newAreaName.trim(),
-      canvasData: {},
     };
 
     setAreas([...areas, newArea]);
@@ -107,9 +78,9 @@ const AreaManager = () => {
           </div>
         </div>
 
-        {/* Area selection section */}
+        {/* Area selection */}
         <Card className="mb-6">
-          <CardContent className="">
+          <CardContent>
             <h2 className="text-lg font-semibold mb-4">Select Area</h2>
             <div className="flex flex-wrap gap-2">
               {areas.map((area) => (
@@ -137,11 +108,16 @@ const AreaManager = () => {
             {selectedArea.name} Layout
           </div>
           <div className="flex-1 flex items-center justify-center">
-            <Canvas
-              isEditable={true}
-              initialData={selectedArea.canvasData}
-              onChange={handleCanvasChange}
-            />
+            <AreaCanvasProvider
+              restaurantId="demo-restaurant"
+              areaId={selectedArea.id}
+              onTableUpdate={() => setUnsavedChanges(true)}
+            >
+              <Canvas
+                isEditable={true}
+                onChange={() => setUnsavedChanges(true)}
+              />
+            </AreaCanvasProvider>
           </div>
         </div>
       </div>

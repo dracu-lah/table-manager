@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useCanvas } from "../../context/CanvasContext";
+import { useAreaCanvas } from "../../context/AreaCanvasContext";
 import { DraggableElement } from "./DraggableElement";
 import { Button } from "../ui/button";
 import { ElementData } from "../../types";
@@ -28,7 +28,7 @@ export const Canvas: React.FC<CanvasProps> = ({
   onTableSelect,
   tableStatuses = {},
 }) => {
-  const { state, dispatch } = useCanvas();
+  const { state, dispatch } = useAreaCanvas();
   const constraintsRef = useRef<any>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isImageLoading, setIsImageLoading] = useState(false);
