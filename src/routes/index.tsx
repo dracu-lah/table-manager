@@ -13,7 +13,10 @@ const AppRouter: React.FC = () => {
       <RootLayout>
         <Routes>
           <Route path="/" element={<Navigate to="/restaurants" />} />
-          <Route path="/customer-view" element={<CustomerView />} />
+          <Route
+            path="/restaurants/:restaurantId/areas/:areaId/customer-view"
+            element={<CustomerView />}
+          />
           <Route path="/restaurants" element={<RestaurantsPage />} />
           <Route path="/restaurants/:id" element={<RestaurantDetailsPage />} />
           {/* Route for the Area Canvas View */}
