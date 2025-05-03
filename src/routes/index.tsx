@@ -1,7 +1,6 @@
 // src/router/AppRouter.tsx
 import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router";
-import AreaManager from "../pages/AreaManager";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import CustomerView from "../pages/CustomerView";
 import RestaurantsPage from "@/pages/restaurants";
 import RestaurantDetailsPage from "@/pages/RestaurantDetailsPage";
@@ -13,7 +12,7 @@ const AppRouter: React.FC = () => {
     <BrowserRouter>
       <RootLayout>
         <Routes>
-          <Route path="/" element={<AreaManager />} />
+          <Route path="/" element={<Navigate to="/restaurants" />} />
           <Route path="/customer-view" element={<CustomerView />} />
           <Route path="/restaurants" element={<RestaurantsPage />} />
           <Route path="/restaurants/:id" element={<RestaurantDetailsPage />} />

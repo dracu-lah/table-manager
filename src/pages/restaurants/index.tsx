@@ -1,6 +1,6 @@
 // src/pages/restaurants.tsx
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +21,7 @@ import EditRestaurantForm from "@/components/EditRestaurantForm"; // Import Edit
 import { initialRestaurants, Restaurant } from "@/types"; // Import types and initial data
 
 const RestaurantsPage = () => {
+  const navigate = useNavigate();
   const [restaurants, setRestaurants] =
     useState<Restaurant[]>(initialRestaurants);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false); // State for edit dialog
@@ -81,7 +82,10 @@ const RestaurantsPage = () => {
                 ))}
               </ul>
             </CardContent>
-            <CardFooter className="flex justify-end">
+            <CardFooter className="flex gap-2 justify-end">
+              <Button size="sm" onClick={() => navigate(restaurant.id)}>
+                View Areas
+              </Button>
               <Button
                 variant="outline"
                 size="sm"
