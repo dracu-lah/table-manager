@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from "react";
+import React, { useRef, useEffect, useState, ChangeEvent } from "react";
 import { AnimatePresence } from "framer-motion";
 import { useAreaCanvas } from "../../context/AreaCanvasContext";
 import { DraggableElement } from "./DraggableElement";
@@ -7,7 +7,7 @@ import { ElementData } from "../../types";
 import { Toolbar } from "./Toolbar";
 import { roomLayouts } from "@/utils/constants";
 import { Input } from "../ui/input";
-import { Edit, Save, X } from "lucide-react";
+import { Edit, Save, X, Upload } from "lucide-react"; // Import Upload icon
 
 interface CanvasProps {
   isEditable?: boolean;
@@ -82,8 +82,15 @@ export const Canvas: React.FC<CanvasProps> = ({
   }, [cornerLabels]);
 
   useEffect(() => {
-    handleLayoutImageChange(roomLayouts[0].img);
+    // Load default or saved layout image on mount
+    const savedLayoutImage = localStorage.getItem("roomLayoutImage");
+    if (savedLayoutImage) {
+      handleLayoutImageChange(savedLayoutImage);
+    } else {
+      handleLayoutImageChange(roomLayouts[0].img);
+    }
   }, []);
+
   // Handle image change and update dimensions
   const handleLayoutImageChange = (imgSrc: string) => {
     // First, update the image source immediately to show something
@@ -110,6 +117,8 @@ export const Canvas: React.FC<CanvasProps> = ({
         },
       });
       setIsImageLoading(false);
+      // Save the loaded image source to local storage
+      localStorage.setItem("roomLayoutImage", imgSrc);
     };
 
     img.onerror = () => {
@@ -122,6 +131,30 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   const handleReset = () => {
     dispatch({ type: "RESET_CANVAS" });
+    // Also reset corner labels and layout image in local storage
+    localStorage.removeItem("roomCornerLabels");
+    localStorage.removeItem("roomLayoutImage");
+    setCornerLabels({
+      top: ["", "", "", ""],
+      right: ["", "", "", ""],
+      bottom: ["", "", "", ""],
+      left: ["", "", "", ""],
+    });
+    handleLayoutImageChange(""); // Clear the layout image
+  };
+
+  // Handle file upload
+  const handleImageUpload = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        if (typeof reader.result === "string") {
+          handleLayoutImageChange(reader.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   // Function to start editing a label
@@ -170,10 +203,6 @@ export const Canvas: React.FC<CanvasProps> = ({
 
     // Determine position styles based on side
     let positionStyle: React.CSSProperties = {};
-    // const sectionWidth =
-    //   side === "top" || side === "bottom" ? `${canvasWidth / 4}px` : "20px";
-    // const sectionHeight =
-    //   side === "left" || side === "right" ? `${canvasHeight / 4}px` : "20px";
 
     switch (side) {
       case "top":
@@ -288,6 +317,18 @@ export const Canvas: React.FC<CanvasProps> = ({
               <Button variant="outline" onClick={handleReset}>
                 Reset Layout
               </Button>
+              {/* Custom Image Upload Button */}
+              <div className="relative">
+                <Button variant="outline" className="flex items-center gap-2">
+                  <Upload className="h-4 w-4" /> Upload Custom Image
+                </Button>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  onChange={handleImageUpload}
+                />
+              </div>
             </div>
             <div className="">
               <div className="flex flex-wrap gap-2">
