@@ -169,10 +169,10 @@ export const Toolbar: React.FC = () => {
             <TableIcon className="h-4 w-4 mr-2" />
             Tables
           </TabsTrigger>
-          <TabsTrigger value="objects">
-            <Square className="h-4 w-4 mr-2" />
-            Objects
-          </TabsTrigger>
+          {/* <TabsTrigger value="objects"> */}
+          {/*   <Square className="h-4 w-4 mr-2" /> */}
+          {/*   Objects */}
+          {/* </TabsTrigger> */}
         </TabsList>
         <TabsContent value="tables" className="flex space-x-2">
           <Button variant="outline" onClick={() => addTable("hexagon-6")}>
