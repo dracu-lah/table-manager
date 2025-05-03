@@ -20,10 +20,23 @@ const AreaCard: React.FC<AreaCardProps> = ({
 }) => {
   return (
     <Card>
-      <CardContent className="py-4">
+      <CardContent className="">
         <h3 className="text-lg font-semibold">{area.name}</h3>
       </CardContent>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="grid grid-cols-2 gap-2 ">
+        <Button asChild size="sm">
+          <Link to={`/restaurants/${restaurantId}/areas/${area.id}/canvas`}>
+            View Canvas
+          </Link>
+        </Button>
+        <Button asChild size="sm">
+          <Link
+            to={`/restaurants/${restaurantId}/areas/${area.id}/customer-view`}
+          >
+            Customer VIew
+          </Link>
+        </Button>
+
         <Button variant="outline" size="sm" onClick={onEditClick}>
           Edit
         </Button>
@@ -33,11 +46,6 @@ const AreaCard: React.FC<AreaCardProps> = ({
           onClick={() => onDeleteClick(restaurantId, area.id)}
         >
           Delete
-        </Button>
-        <Button asChild size="sm">
-          <Link to={`/restaurants/${restaurantId}/areas/${area.id}/canvas`}>
-            View Canvas
-          </Link>
         </Button>
       </CardFooter>
     </Card>
