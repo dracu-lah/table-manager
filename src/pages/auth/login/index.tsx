@@ -59,14 +59,42 @@ const LoginPage = () => {
     },
   });
   const onSubmit = ({ usernameOrEmail, password }) => {
-    queryClient.invalidateQueries();
-    loginMutation.mutate({
-      userName: usernameOrEmail,
-      password,
-      roleName: "",
-      locationId: 0,
-      finYear: 0,
+    // queryClient.invalidateQueries();
+    // loginMutation.mutate({
+    //   userName: usernameOrEmail,
+    //   password,
+    //   roleName: "",
+    //   locationId: 0,
+    //   finYear: 0,
+    // });
+
+    const data = {
+      status: "Success",
+      message: "Request Succeeded.",
+      data: {
+        userName: "admin01",
+        memberId: 0,
+        roleName: "admin",
+        outletID: 0,
+        allowedReportOutlets: [14, 15, 16],
+        userLocationID: 0,
+        accessToken:
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJTZXNzaW9uSUQiOiJ5c2h3RzhmVjlrQ3c2WDdHb1pQUGciLCJVc2VySUQiOiIxIiwiVXNlck5hbWUiOiJhZG1pbjAxIiwiQXV0aEZpbGVQYXRoIjoiYWRtaW4wMV95c2h3RzhmVjlrQ3c2WDdHb1pQUGcuSlNPTiIsIlJvbGVOYW1lIjoiYWRtaW4iLCJMb2NhdGlvbklkIjoiMSIsIkFwcGxpY2F0aW9uSWQiOiIxIiwiRmluWWVhciI6IjIwMjUiLCJFeHBpcmVEYXRlIjoiMjAyNS0wNS0yMSAxNjo1NzoxMCIsIkV4dGVybmFsVG9rZW4iOiIiLCJNZW1iZXJJZCI6IjAiLCJNZW1iZXJzaGlwUHJvZ3JhbUlkIjoiMSIsIk1lbWJlcnNoaXBUaWVySWQiOiIxIiwiTWVtYmVyc2hpcENhdGVnb3J5SWQiOiIxIiwibmJmIjoxNzQ3ODI2ODMwLCJleHAiOjE3NDc4MzIyMzAsImlhdCI6MTc0NzgyNjgzMCwiaXNzIjoia3JhZnR1c2VyIiwiYXVkIjoia3JhZnR1c2VyIn0.rXm28gO7YAlgIn9c7da8R6mYmCChDx-5e5Vu3aQcRXU",
+        refreshToken: "asegdjnHZHfXsujHuL1ARXYtg8BQ6NTSViPl91CpxmI=",
+      },
+    };
+    setToken({
+      accessToken: data.accessToken,
+      refreshToken: data.refreshToken,
+      data: {
+        userName: data.userName,
+        roleName: data.roleName,
+        userLocationId: data.userLocationID || 0,
+        userOutletId: data.outletID || 0,
+        allowedReportOutlets: data?.allowedReportOutlets || [],
+      },
     });
+    navigate(routePath.dashboard);
   };
   return (
     <Card className="m-auto my-40 w-[350px]">

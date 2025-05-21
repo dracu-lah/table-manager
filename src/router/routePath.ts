@@ -1,6 +1,7 @@
 export default {
   // ========================= GENERAL ROUTES =========================
   login: "/login",
+  dashboard: "/",
   // ========================= PUBLIC ROUTES =========================
   aboutUs: "/about-us",
   // ========================= USERS & ROLES =========================
