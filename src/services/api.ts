@@ -144,3 +144,74 @@ export const GetDashboardAPI = async (params) => {
 
 /* DASHBOARD  END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* USER MANAGEMENT START */
+export const CreateUserAPI = async (params) => {
+  try {
+    const { data } = await api.post(`${endPoint.register}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const AssignUserAPI = async (params) => {
+  try {
+    const { data } = await api.post(`${endPoint.assignUser}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const DeleteUserAPI = async (params) => {
+  try {
+    const { data } = await api.post(`${endPoint.deleteUser}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const UpdateUserPasswordAPI = async (params) => {
+  try {
+    const { data } = await api.post(`${endPoint.updateUserPassword}`, null, {
+      params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const GetUsersAPI = async (params) => {
+  try {
+    const { data } = await api.get(`${endPoint.getUsers}`, { params });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/* ROLE START */
+
+export const CreateRoleAPI = async (params) => {
+  try {
+    const { data } = await api.post(`${endPoint.registerRole}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const GetRolesAPI = async (params) => {
+  try {
+    const { data } = await api.get(`${endPoint.getRoles}`, {
+      params: params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+/* ROLE END */
+
+/* USER MANAGEMENT END */
+/************************************************************************************************************************************************************************************************************************************************************************************************************************/

@@ -19,6 +19,14 @@ const AreaCanvasViewPage = lazy(
     import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),
 );
 
+const UserManagementPage = lazy(
+  () => import("@/pages/private/users/user-management"),
+);
+const RolePage = lazy(() => import("@/pages/private/users/role-management"));
+const ManageRolePage = lazy(
+  () => import("@/pages/private/users/role-management/slug"),
+);
+
 // Private routes definition
 export const privateRoutes = [
   {
@@ -45,6 +53,29 @@ export const privateRoutes = [
       {
         path: routePath.restaurantCanvasView,
         element: <AreaCanvasViewPage />,
+      },
+
+      {
+        path: routePath.userManagement,
+        children: [
+          {
+            index: true,
+            element: <UserManagementPage />,
+          },
+        ],
+      },
+      {
+        path: routePath.roleManagement,
+        children: [
+          {
+            index: true,
+            element: <RolePage />,
+          },
+          {
+            path: ":id",
+            element: <ManageRolePage />,
+          },
+        ],
       },
     ],
   },
