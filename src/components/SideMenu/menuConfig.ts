@@ -6,7 +6,6 @@ import {
   Home,
   MessageCircleHeart,
   UsersRound,
-  ConciergeBell,
   Settings,
   ShieldPlusIcon,
   FileTerminal,
