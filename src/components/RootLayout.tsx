@@ -1,12 +1,6 @@
-// src/components/RootLayout.tsx
-import React from "react";
-import { Link } from "react-router";
+import { Link, Outlet } from "react-router";
 
-interface RootLayoutProps {
-  children: React.ReactNode;
-}
-
-const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
+const RootLayout = () => {
   return (
     <div className="flex flex-col min-h-screen">
       {/* Header */}
@@ -42,7 +36,9 @@ const RootLayout: React.FC<RootLayoutProps> = ({ children }) => {
       </header>
 
       {/* Main Content Area */}
-      <main className="flex-grow">{children}</main>
+      <main className="flex-grow">
+        <Outlet />
+      </main>
 
       {/* Optional: Footer */}
       {/* <footer className="bg-gray-900 text-white py-4 text-center">
