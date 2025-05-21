@@ -1,7 +1,9 @@
 import { lazy } from "react";
+import { Navigate } from "react-router";
 import routePath from "../routePath";
 import { ProtectedRoute } from "../ProtectedRoute";
-import { Navigate } from "react-router";
+
+// Lazy-loaded components
 const CustomerViewPage = lazy(
   () =>
     import(
@@ -16,32 +18,32 @@ const AreaCanvasViewPage = lazy(
   () =>
     import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),
 );
-// Lazy load private route components
+
+// Private routes definition
 export const privateRoutes = [
   {
     path: "/",
     element: <ProtectedRoute />,
     children: [
       { index: true, element: "hello" },
-      // Define nested routes within RootLayout
       {
-        index: true, // This route will match at the root path ("/")
-        element: <Navigate to="/restaurants" replace />, // Redirect to /restaurants
+        index: true,
+        element: <Navigate to={routePath.restaurants} replace />,
       },
       {
-        path: "/restaurants/:restaurantId/areas/:areaId/customer-view",
+        path: routePath.restaurantCustomerView,
         element: <CustomerViewPage />,
       },
       {
-        path: "/restaurants",
+        path: routePath.restaurants,
         element: <RestaurantsPage />,
       },
       {
-        path: "/restaurants/:id",
+        path: routePath.restaurantDetails,
         element: <RestaurantDetailsPage />,
       },
       {
-        path: "/restaurants/:restaurantId/areas/:areaId/canvas",
+        path: routePath.restaurantCanvasView,
         element: <AreaCanvasViewPage />,
       },
     ],
