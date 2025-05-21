@@ -4,14 +4,17 @@ import { ProtectedRoute } from "../ProtectedRoute";
 import { Navigate } from "react-router";
 const CustomerViewPage = lazy(
   () =>
-    import("@/pages/restaurants/[restaurantId]/areas/[areaId]/customer-view"),
+    import(
+      "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/customer-view"
+    ),
 );
-const RestaurantsPage = lazy(() => import("@/pages/restaurants"));
+const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const RestaurantDetailsPage = lazy(
-  () => import("@/pages/restaurants/[restaurantId]"),
+  () => import("@/pages/private/restaurants/[restaurantId]"),
 );
 const AreaCanvasViewPage = lazy(
-  () => import("@/pages/restaurants/[restaurantId]/areas/[areaId]/canvas"),
+  () =>
+    import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),
 );
 // Lazy load private route components
 export const privateRoutes = [
