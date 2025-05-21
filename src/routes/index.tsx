@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import CustomerViewPage from "@/pages/restaurants/[restaurantId]/areas/[areaId]/customer-view";
 import RestaurantsPage from "@/pages/restaurants";
 import RestaurantDetailsPage from "@/pages/restaurants/[restaurantId]";
-import AreaCanvasView from "@/pages/restaurants/[restaurantId]/areas/[areaId]/canvas"; // Import AreaCanvasView
+import AreaCanvasViewPage from "@/pages/restaurants/[restaurantId]/areas/[areaId]/canvas"; // Import AreaCanvasView
 import RootLayout from "@/components/RootLayout";
 
 const AppRouter: React.FC = () => {
@@ -22,7 +22,7 @@ const AppRouter: React.FC = () => {
           {/* Route for the Area Canvas View */}
           <Route
             path="/restaurants/:restaurantId/areas/:areaId/canvas"
-            element={<AreaCanvasView />}
+            element={<AreaCanvasViewPage />}
           />
         </Routes>
       </RootLayout>
