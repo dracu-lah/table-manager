@@ -1,5 +1,5 @@
 import React from "react";
-import AppRouter from "./routes";
+import AppRouter from "./routes-old";
 
 const App: React.FC = () => {
   return <AppRouter />;
