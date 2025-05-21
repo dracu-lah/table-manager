@@ -1,27 +1,24 @@
 import React, { useState, useMemo } from "react";
 import { Link, useParams } from "react-router"; // Import useParams
-import { Canvas } from "../components/canvas/Canvas";
-import { Button } from "../components/ui/button";
-import {
-  AreaCanvasProvider,
-  useAreaCanvas,
-} from "../context/AreaCanvasContext"; // Import AreaCanvasProvider
+import { Canvas } from "@/components/canvas/Canvas";
+import { Button } from "@/components/ui/button";
+import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext"; // Import AreaCanvasProvider
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "../components/ui/dialog";
-import { Input } from "../components/ui/input";
-import { Label } from "../components/ui/label";
-import { ElementData } from "../types"; // Import ElementData
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { ElementData } from "@/types"; // Import ElementData
 
 // Define TableStatus type based on your context
 type TableStatus = "available" | "occupied" | "reserved";
 
 // This is the main CustomerView component that will extract URL params and wrap
 // the content with AreaCanvasProvider.
-const CustomerView: React.FC = () => {
+const CustomerViewPage: React.FC = () => {
   // Extract parameters from the URL
   const { restaurantId, areaId } = useParams<{
     restaurantId: string;
@@ -212,4 +209,4 @@ const CustomerViewContent: React.FC = () => {
   );
 };
 
-export default CustomerView;
+export default CustomerViewPage;

@@ -1,10 +1,10 @@
 // src/router/AppRouter.tsx
 import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router";
-import CustomerView from "../pages/CustomerView";
+import CustomerViewPage from "@/pages/restaurants/[restaurantId]/areas/[areaId]/customer-view";
 import RestaurantsPage from "@/pages/restaurants";
-import RestaurantDetailsPage from "@/pages/RestaurantDetailsPage";
-import AreaCanvasView from "@/pages/AreaCanvasView"; // Import AreaCanvasView
+import RestaurantDetailsPage from "@/pages/restaurants/[restaurantId]";
+import AreaCanvasView from "@/pages/restaurants/[restaurantId]/areas/[areaId]/canvas"; // Import AreaCanvasView
 import RootLayout from "@/components/RootLayout";
 
 const AppRouter: React.FC = () => {
@@ -15,7 +15,7 @@ const AppRouter: React.FC = () => {
           <Route path="/" element={<Navigate to="/restaurants" />} />
           <Route
             path="/restaurants/:restaurantId/areas/:areaId/customer-view"
-            element={<CustomerView />}
+            element={<CustomerViewPage />}
           />
           <Route path="/restaurants" element={<RestaurantsPage />} />
           <Route path="/restaurants/:id" element={<RestaurantDetailsPage />} />
