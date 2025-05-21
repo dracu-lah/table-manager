@@ -1,57 +1,61 @@
-import {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-  ReactNode,
-  JSX,
-} from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 
-type Theme = "light" | "dark" | "system";
+/**
+ * @typedef {Object} ThemeContextType
+ * @property {string} theme - The current theme ('light', 'dark', or 'system').
+ * @property {(theme: string) => void} setTheme - Function to update the theme.
+ */
 
-interface ThemeContextType {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-}
-
-const initialState: ThemeContextType = {
+/**
+ * Initial state for ThemeProvider context.
+ * @type {ThemeContextType}
+ */
+const initialState = {
   theme: "system",
   setTheme: () => {},
 };
 
-const ThemeProviderContext = createContext<ThemeContextType>(initialState);
+const ThemeProviderContext = createContext(initialState);
 
-interface ThemeProviderProps {
-  children: ReactNode;
-  defaultTheme?: Theme;
-  storageKey?: string;
-}
-
+/**
+ * ThemeProvider component to manage light/dark theme settings.
+ *
+ * @param {Object} props - Component props.
+ * @param {React.ReactNode} props.children - Child components.
+ * @param {string} [props.defaultTheme="system"] - Default theme to apply.
+ * @param {string} [props.storageKey="vite-ui-theme"] - Local storage key for persisting theme.
+ * @returns {JSX.Element} Theme provider component.
+ */
 export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
   ...props
-}: ThemeProviderProps): JSX.Element {
-  const [theme, setTheme] = useState<Theme>(() => {
-    return (localStorage.getItem(storageKey) as Theme) || defaultTheme;
+}) {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem(storageKey) || defaultTheme;
   });
 
   useEffect(() => {
     const root = window.document.documentElement;
     root.classList.remove("light", "dark");
 
-    const applyTheme =
-      theme === "system"
-        ? window.matchMedia("(prefers-color-scheme: dark)").matches
-          ? "dark"
-          : "light"
-        : theme;
-
-    root.classList.add(applyTheme);
+    if (theme === "system") {
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+        .matches
+        ? "dark"
+        : "light";
+      root.classList.add(systemTheme);
+    } else {
+      root.classList.add(theme);
+    }
   }, [theme]);
 
-  const updateTheme = (newTheme: Theme) => {
+  /**
+   * Updates the theme and saves it to local storage.
+   * @param {string} newTheme - The new theme to set.
+   */
+  const updateTheme = (newTheme) => {
     localStorage.setItem(storageKey, newTheme);
     setTheme(newTheme);
   };
@@ -66,7 +70,12 @@ export function ThemeProvider({
   );
 }
 
-export const useTheme = (): ThemeContextType => {
+/**
+ * Hook to use the theme context.
+ * @returns {ThemeContextType} The theme context value.
+ * @throws {Error} If used outside of ThemeProvider.
+ */
+export const useTheme = () => {
   const context = useContext(ThemeProviderContext);
   if (!context) {
     throw new Error("useTheme must be used within a ThemeProvider");
