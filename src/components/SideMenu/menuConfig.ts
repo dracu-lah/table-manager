@@ -10,6 +10,13 @@ export const menuConfig = [
     label: "Dashboard ",
     route: routePath.dashboard,
   },
+
+  {
+    key: menuKeys.RESTAURANTS,
+    icon: Home,
+    label: "Restaurants",
+    route: routePath.restaurants,
+  },
   {
     key: menuKeys.USERS,
     icon: CircleUser,

@@ -3,4 +3,5 @@ export default {
   USERS: "users",
   ROLE_MANAGEMENT: "roleManagement",
   USER_MANAGEMENT: "userManagement",
+  RESTAURANTS: "restaurants",
 };
