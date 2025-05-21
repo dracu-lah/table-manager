@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { AreaCanvasProvider } from "@/context/AreaCanvasContext";
-import { Canvas } from "@/components/canvas/Canvas";
+import { Canvas } from "./components/canvas/Canvas";
 
 const AreaCanvasViewPage: React.FC = () => {
   const { restaurantId, areaId } = useParams<{

@@ -1,8 +1,13 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
-import { Button } from "../ui/button";
-import { useAreaCanvas } from "../../context/AreaCanvasContext";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "../ui/tabs";
+import { Button } from "@/components/ui/button";
+import { useAreaCanvas } from "@/context/AreaCanvasContext";
+import {
+  Tabs,
+  TabsList,
+  TabsTrigger,
+  TabsContent,
+} from "@/components/ui/tabs";
 import { TableIcon, DoorOpen, Minus } from "lucide-react";
 import { ElementData } from "@/types";
 import TableIcons from "@/utils/assets";

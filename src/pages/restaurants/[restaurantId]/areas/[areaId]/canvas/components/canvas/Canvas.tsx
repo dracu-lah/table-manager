@@ -6,13 +6,13 @@ import React, {
   useMemo,
 } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useAreaCanvas } from "../../context/AreaCanvasContext";
+import { useAreaCanvas } from "@/context/AreaCanvasContext";
 import { DraggableElement } from "./DraggableElement";
-import { Button } from "../ui/button";
-import { ElementData } from "../../types";
+import { Button } from "@/components/ui/button";
+import { ElementData } from "@/types";
 import { Toolbar } from "./Toolbar";
 import { roomLayouts } from "@/utils/constants";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import { Edit, Save, X, Upload, Trash2 } from "lucide-react";
 
 interface CanvasProps {

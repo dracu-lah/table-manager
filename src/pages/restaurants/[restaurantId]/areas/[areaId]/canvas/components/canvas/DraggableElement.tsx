@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { ElementData } from "../../types";
-import { useAreaCanvas } from "../../context/AreaCanvasContext";
-import { Button } from "../ui/button";
+import { ElementData } from "@/types";
+import { useAreaCanvas } from "@/context/AreaCanvasContext";
+import { Button } from "@/components/ui/button";
 import {
   Edit,
   X,
@@ -11,16 +11,20 @@ import {
   SeparatorHorizontal,
   SeparatorVertical,
 } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import TableIcons from "@/utils/assets";
 
 interface DraggableElementProps {
