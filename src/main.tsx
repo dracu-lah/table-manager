@@ -1,10 +1,23 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.tsx'
+import { StrictMode } from "react";
+// import Routes from "@/router/routes";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-createRoot(document.getElementById('root')!).render(
+import ReactDOM from "react-dom/client";
+import { ThemeProvider } from "./components/theme-provider";
+import "./global.css";
+import "./global.custom.css";
+import { Toaster } from "sonner";
+const queryClient = new QueryClient();
+
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App />
+    <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
+      <QueryClientProvider client={queryClient}>
+        {/* <Routes /> */}
+        <ReactQueryDevtools initialIsOpen={false} />
+      </QueryClientProvider>
+      <Toaster richColors closeButton expand />
+    </ThemeProvider>
   </StrictMode>,
-)
+);
