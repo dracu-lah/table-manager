@@ -41,11 +41,6 @@ export const privateRoutes = [
         path: "/restaurants/:restaurantId/areas/:areaId/canvas",
         element: <AreaCanvasViewPage />,
       },
-      // Add a catch-all route for 404 (optional)
-      {
-        path: "*",
-        element: <div>404 Not Found</div>,
-      },
     ],
   },
 ];
