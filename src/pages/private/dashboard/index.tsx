@@ -150,9 +150,9 @@ const Dashboard = () => {
   );
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen ">
       {/* Header */}
-      <header className="bg-white border-b border-gray-200 px-6 py-4">
+      <header className=" border-b  px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Table Manager</h1>
@@ -168,7 +168,7 @@ const Dashboard = () => {
       </header>
 
       {/* Navigation */}
-      <nav className="bg-white border-b border-gray-200 px-6 py-3">
+      <nav className=" border-b  px-6 py-3">
         <div className="flex gap-2">
           <TabButton id="overview" label="Overview" icon={Layout} />
           <TabButton id="restaurants" label="Restaurants" icon={Building2} />
@@ -258,7 +258,7 @@ const Dashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-4 p-3  rounded-lg">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">New canvas created</p>
@@ -268,7 +268,7 @@ const Dashboard = () => {
                     </div>
                     <span className="text-sm text-gray-500">2 hours ago</span>
                   </div>
-                  <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-4 p-3  rounded-lg">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">Area modified</p>
@@ -278,7 +278,7 @@ const Dashboard = () => {
                     </div>
                     <span className="text-sm text-gray-500">1 day ago</span>
                   </div>
-                  <div className="flex items-center gap-4 p-3 bg-gray-50 rounded-lg">
+                  <div className="flex items-center gap-4 p-3  rounded-lg">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">Restaurant status changed</p>
@@ -317,9 +317,9 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div className=" rounded-lg border  overflow-hidden">
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className=" border-b ">
                   <tr>
                     <th className="text-left py-3 px-4 font-medium text-gray-900">
                       Name
@@ -348,7 +348,7 @@ const Dashboard = () => {
                   {restaurants.map((restaurant) => (
                     <tr
                       key={restaurant.id}
-                      className="border-b border-gray-100 hover:bg-gray-50"
+                      className="border-b border-gray-100 hover:"
                     >
                       <td className="py-3 px-4 font-medium">
                         {restaurant.name}
