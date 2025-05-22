@@ -68,7 +68,7 @@ const LoginPage = () => {
     //   finYear: 0,
     // });
 
-    const data = {
+    const { data } = {
       status: "Success",
       message: "Request Succeeded.",
       data: {
