@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Link, useParams } from "react-router"; // Import useParams
-import { Canvas } from "@/pages/restaurants/[restaurantId]/areas/[areaId]/canvas/components/canvas/Canvas";
+import { Canvas } from "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas/components/canvas/Canvas";
 import { Button } from "@/components/ui/button";
 import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext"; // Import AreaCanvasProvider
 import {
