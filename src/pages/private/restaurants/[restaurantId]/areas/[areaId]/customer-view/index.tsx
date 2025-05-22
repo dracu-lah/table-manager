@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
-import { Link, useParams } from "react-router"; // Import useParams
+import { Link, useParams } from "react-router";
 import { Canvas } from "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas/components/canvas/Canvas";
 import { Button } from "@/components/ui/button";
-import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext"; // Import AreaCanvasProvider
+import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext";
 import {
   Dialog,
   DialogContent,
@@ -11,10 +11,19 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ElementData } from "@/types"; // Import ElementData
+import { ElementData } from "@/types";
 
-// Define TableStatus type based on your context
+// Define TableStatus type
 type TableStatus = "available" | "occupied" | "reserved";
+
+// Define ReservationDetails interface
+interface ReservationDetails {
+  name: string;
+  phone: string;
+  email: string;
+  time: string;
+  guests: number;
+}
 
 // This is the main CustomerView component that will extract URL params and wrap
 // the content with AreaCanvasProvider.
@@ -44,7 +53,14 @@ const CustomerViewContent: React.FC = () => {
   const { state, dispatch } = useAreaCanvas();
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
-  const [customerName, setCustomerName] = useState("");
+  const [reservationDetails, setReservationDetails] =
+    useState<ReservationDetails>({
+      name: "",
+      phone: "",
+      email: "",
+      time: "",
+      guests: 1,
+    });
   const [filter, setFilter] = useState<
     "all" | "available" | "occupied" | "reserved"
   >("all");
@@ -69,22 +85,39 @@ const CustomerViewContent: React.FC = () => {
     }
   };
 
+  // Handle input changes in the reservation form
+  const handleReservationInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    const { id, value } = e.target;
+    setReservationDetails((prevDetails) => ({
+      ...prevDetails,
+      [id]: value,
+    }));
+  };
+
   // Handle reservation logic
   const handleReservation = () => {
-    if (selectedTableId && customerName) {
+    if (selectedTableId && reservationDetails.name) {
       const tableElement = tables.find((el) => el.id === selectedTableId);
       if (tableElement) {
         const updatedElement: ElementData = {
           ...tableElement,
-          tableStatus: "occupied" as TableStatus, // Set status directly
-          customerId: customerName, // Store customer identifier
+          tableStatus: "reserved" as TableStatus, // Set status to 'reserved' for new reservations
+          reservationDetails: reservationDetails, // Store reservation details
         };
         dispatch({ type: "UPDATE_ELEMENT", payload: updatedElement });
       }
     }
     // Reset state and close dialog
     setIsReservationOpen(false);
-    setCustomerName("");
+    setReservationDetails({
+      name: "",
+      phone: "",
+      email: "",
+      time: "",
+      guests: 1,
+    });
     setSelectedTableId(null);
   };
 
@@ -155,6 +188,9 @@ const CustomerViewContent: React.FC = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
           {filteredTables.map((table) => {
             const status = table.tableStatus || "available";
+            const reservationDetails = table.reservationDetails as
+              | ReservationDetails
+              | undefined;
             return (
               <div
                 key={table.id}
@@ -176,8 +212,19 @@ const CustomerViewContent: React.FC = () => {
                 <p>
                   Status: {status.charAt(0).toUpperCase() + status.slice(1)}
                 </p>
-                {(status === "occupied" || status === "reserved") &&
-                  table.customerId && <p>Reserved by: {table.customerId}</p>}
+                {reservationDetails && (
+                  <>
+                    <p>Reserved by: {reservationDetails.name}</p>
+                    <p>Time: {reservationDetails.time}</p>
+                    <p>Guests: {reservationDetails.guests}</p>
+                    {reservationDetails.phone && (
+                      <p>Phone: {reservationDetails.phone}</p>
+                    )}
+                    {reservationDetails.email && (
+                      <p>Email: {reservationDetails.email}</p>
+                    )}
+                  </>
+                )}
               </div>
             );
           })}
@@ -191,15 +238,57 @@ const CustomerViewContent: React.FC = () => {
           </DialogHeader>
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="customerName">Your Name</Label>
+              <Label htmlFor="name">Your Name</Label>
               <Input
-                id="customerName"
-                value={customerName}
-                onChange={(e) => setCustomerName(e.target.value)}
+                id="name"
+                value={reservationDetails.name}
+                onChange={handleReservationInputChange}
                 placeholder="Enter your name"
               />
             </div>
-            <Button onClick={handleReservation} disabled={!customerName}>
+            <div className="space-y-2">
+              <Label htmlFor="phone">Phone Number</Label>
+              <Input
+                id="phone"
+                value={reservationDetails.phone}
+                onChange={handleReservationInputChange}
+                placeholder="Enter your phone number"
+                type="tel"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input
+                id="email"
+                value={reservationDetails.email}
+                onChange={handleReservationInputChange}
+                placeholder="Enter your email"
+                type="email"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="time">Reservation Time</Label>
+              <Input
+                id="time"
+                value={reservationDetails.time}
+                onChange={handleReservationInputChange}
+                type="time"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="guests">Number of Guests</Label>
+              <Input
+                id="guests"
+                value={reservationDetails.guests}
+                onChange={handleReservationInputChange}
+                type="number"
+                min="1"
+              />
+            </div>
+            <Button
+              onClick={handleReservation}
+              disabled={!reservationDetails.name || !reservationDetails.time}
+            >
               Reserve Table
             </Button>
           </div>
