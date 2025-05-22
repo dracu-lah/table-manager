@@ -4,6 +4,7 @@ import routePath from "../routePath";
 import { ProtectedRoute } from "../ProtectedRoute";
 
 // Lazy-loaded components
+const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
 const CustomerViewPage = lazy(
   () =>
     import(
@@ -33,7 +34,7 @@ export const privateRoutes = [
     path: "/",
     element: <ProtectedRoute />,
     children: [
-      { index: true, element: "hello" },
+      { index: true, element: <DashboardPage /> },
       {
         index: true,
         element: <Navigate to={routePath.restaurants} replace />,
