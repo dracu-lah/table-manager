@@ -55,7 +55,7 @@ export const GetPermissionsAPI = async ({ roles }) => {
       {
         id: 2,
         key: "restaurants",
-        routeName: "restaurants",
+        routeName: "Restaurants",
         isEnabled: true,
         availablePermissions: ["create", "edit", "delete"],
         permissions: [],
