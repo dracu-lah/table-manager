@@ -20,9 +20,6 @@ import { toast } from "sonner";
 import ComboboxFormField from "@/components/FormElements/ComboboxFormField";
 import { useState } from "react";
 import { Label } from "@/components/ui/label";
-import OutletSelector from "@/components/rewardsProCommon/OutletSelector";
-import OutletSelect from "@/components/rewardsProCommon/select/OutletSelect";
-import PropertySelect from "@/components/rewardsProCommon/select/PropertySelect";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 
 // Define the validation schema with zod
@@ -154,30 +151,6 @@ const CreateUserDialog = () => {
               placeholder="Select role"
               items={userRoles}
             />
-            {/* {form.watch("userRole") === "OutletManager" && ( */}
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex flex-col gap-1 w-full max-w-[220px]">
-                <Label>Select Property</Label>
-                <PropertySelect
-                  buttonClassName="w-full  "
-                  property={property}
-                  enableAll={true}
-                  setProperty={setProperty}
-                />
-              </div>
-
-              <div className="flex flex-col gap-1 w-full">
-                <Label>Select Outlet</Label>
-                <OutletSelect
-                  buttonClassName="w-full"
-                  outlet={outlet}
-                  enableAll={true}
-                  setOutlet={setOutlet}
-                  property={property}
-                />
-              </div>
-            </div>
-            {/* )} */}
 
             <BasicFormField
               name="phoneNumber"

@@ -1,12 +1,12 @@
-// import UsersList from "./UsersList";
-// import CreateUserDialog from "./CreateUserDialog";
-// import { GetUsersAPI } from "@/services/api";
-// import { useSearchParams } from "react-router";
-// import { useQuery } from "@tanstack/react-query";
-// import { withPageAccess } from "@/hooks/usePagePermisssions";
-// import menuKeys from "@/utils/constants/menuKeys";
-// import PaginationButtons from "@/components/PaginationButtons";
-// import SearchBar from "@/components/SearchBar";
+import UsersList from "./UsersList";
+import CreateUserDialog from "./CreateUserDialog";
+import { GetUsersAPI } from "@/services/api";
+import { useSearchParams } from "react-router";
+import { useQuery } from "@tanstack/react-query";
+import { withPageAccess } from "@/hooks/usePagePermisssions";
+import menuKeys from "@/utils/constants/menuKeys";
+import PaginationButtons from "@/components/PaginationButtons";
+import SearchBar from "@/components/SearchBar";
 const UserManagementPage = () => {
   // const [searchParams, setSearchParams] = useSearchParams();
   // const page = searchParams.get("page");
@@ -25,8 +25,8 @@ const UserManagementPage = () => {
       <div>
         <div className="flex justify-between p-8">
           <h1 className="text-2xl font-semibold">Users</h1>
-          {/* <SearchBar /> */}
-          {/* <CreateUserDialog /> */}
+          <SearchBar />
+          <CreateUserDialog />
         </div>
       </div>
       <div className="my-4 mb-24 space-y-2 px-4">
