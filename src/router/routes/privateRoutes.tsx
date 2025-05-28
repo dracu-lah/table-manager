@@ -11,6 +11,13 @@ const CustomerViewPage = lazy(
       "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/customer-view"
     ),
 );
+
+const EmployeeViewPage = lazy(
+  () =>
+    import(
+      "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/employee-view"
+    ),
+);
 const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const RestaurantDetailsPage = lazy(
   () => import("@/pages/private/restaurants/[restaurantId]"),
@@ -42,6 +49,11 @@ export const privateRoutes = [
       {
         path: routePath.restaurantCustomerView,
         element: <CustomerViewPage />,
+      },
+
+      {
+        path: routePath.restaurantEmployeeView,
+        element: <EmployeeViewPage />,
       },
       {
         path: routePath.restaurants,
