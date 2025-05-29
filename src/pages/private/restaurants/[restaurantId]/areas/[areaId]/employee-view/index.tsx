@@ -474,7 +474,7 @@ const EmployeeView: React.FC = () => {
                       {table.needsCleaning ? "Needs Cleaning" : table.status}
                     </div>
 
-                    <div className="flex gap-1">
+                    <div className="flex overflow-x-scroll no-scrollbar gap-1">
                       {table.status === "occupied" && (
                         <>
                           <Button
