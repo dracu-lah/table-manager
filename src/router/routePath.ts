@@ -5,6 +5,7 @@ export default {
 
   // ========================= PUBLIC ROUTES =========================
   aboutUs: "/about-us",
+  customerBooking: "/customer-booking",
 
   // ========================= USERS & ROLES =========================
   userManagement: "/users/user-management",
