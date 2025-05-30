@@ -12,21 +12,38 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, Clock, Users, MapPin, Edit2 } from "lucide-react";
+import { Calendar, Clock, Users, MapPin, Edit2, Eye } from "lucide-react";
 
 const CustomerBookingPage = () => {
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTime, setSelectedTime] = useState("");
-  const [selectedDate, setSelectedDate] = useState("29 May");
-  const [selectedPeople, setSelectedPeople] = useState("2 people");
+  const [selectedDate, setSelectedDate] = useState("");
+  const [numberOfGuests, setNumberOfGuests] = useState(2);
   const [timeLeft, setTimeLeft] = useState(255); // 4:15 minutes in seconds
 
   const availableTimes = [
+    "6:00 pm",
+    "6:15 pm",
     "6:30 pm",
     "6:45 pm",
     "7:00 pm",
     "7:15 pm",
     "7:30 pm",
+    "7:45 pm",
+    "8:00 pm",
+    "8:15 pm",
+    "8:30 pm",
+  ];
+
+  const viewPreferences = [
+    "Window View",
+    "Waterfall View",
+    "Garden View",
+    "City View",
+    "Beach View",
+    "Private Booth",
+    "Bar Area",
+    "Terrace",
   ];
 
   // Timer countdown
@@ -44,9 +61,32 @@ const CustomerBookingPage = () => {
   };
 
   const handleFindTable = () => {
-    if (selectedTime) {
+    if (selectedTime && selectedDate) {
       setCurrentStep(2);
     }
+  };
+
+  const getTodaysDate = () => {
+    const today = new Date();
+    return today.toISOString().split("T")[0];
+  };
+
+  const getDateOptions = () => {
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < 30; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() + i);
+      dates.push({
+        value: date.toISOString().split("T")[0],
+        label: date.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "short",
+          day: "numeric",
+        }),
+      });
+    }
+    return dates;
   };
 
   if (currentStep === 1) {
@@ -80,66 +120,101 @@ const CustomerBookingPage = () => {
 
             {/* Booking form */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-              <Select value={selectedPeople} onValueChange={setSelectedPeople}>
-                <SelectTrigger>
-                  <SelectValue placeholder="2 people" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="1 people">1 person</SelectItem>
-                  <SelectItem value="2 people">2 people</SelectItem>
-                  <SelectItem value="3 people">3 people</SelectItem>
-                  <SelectItem value="4 people">4 people</SelectItem>
-                  <SelectItem value="5 people">5 people</SelectItem>
-                  <SelectItem value="6 people">6 people</SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <Label
+                  htmlFor="guests"
+                  className="text-sm font-medium mb-2 block"
+                >
+                  Number of Guests
+                </Label>
+                <Input
+                  id="guests"
+                  type="number"
+                  min="1"
+                  max="20"
+                  value={numberOfGuests}
+                  onChange={(e) =>
+                    setNumberOfGuests(parseInt(e.target.value) || 1)
+                  }
+                  className="w-full"
+                />
+              </div>
 
-              <Select value={selectedDate} onValueChange={setSelectedDate}>
-                <SelectTrigger>
-                  <SelectValue placeholder="29 May" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="29 May">29 May</SelectItem>
-                  <SelectItem value="30 May">30 May</SelectItem>
-                  <SelectItem value="31 May">31 May</SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <Label
+                  htmlFor="date"
+                  className="text-sm font-medium mb-2 block"
+                >
+                  Date
+                </Label>
+                <Select value={selectedDate} onValueChange={setSelectedDate}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select date" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {getDateOptions().map((date) => (
+                      <SelectItem key={date.value} value={date.value}>
+                        {date.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Select>
-                <SelectTrigger>
-                  <SelectValue placeholder="7:00 pm" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="6:00 pm">6:00 pm</SelectItem>
-                  <SelectItem value="6:30 pm">6:30 pm</SelectItem>
-                  <SelectItem value="7:00 pm">7:00 pm</SelectItem>
-                  <SelectItem value="7:30 pm">7:30 pm</SelectItem>
-                  <SelectItem value="8:00 pm">8:00 pm</SelectItem>
-                </SelectContent>
-              </Select>
+              <div>
+                <Label
+                  htmlFor="time"
+                  className="text-sm font-medium mb-2 block"
+                >
+                  Preferred Time
+                </Label>
+                <Select value={selectedTime} onValueChange={setSelectedTime}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select time" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {availableTimes.map((time) => (
+                      <SelectItem key={time} value={time}>
+                        {time}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
 
-              <Button className="bg-primary hover:bg-red-600 text-white">
+              <Button
+                className="bg-primary hover:bg-red-600 text-white mt-6"
+                onClick={() => {
+                  // This could trigger a search for available tables
+                  console.log("Searching for tables...");
+                }}
+              >
                 Find a table
               </Button>
             </div>
 
-            {/* Available times */}
-            <div className="flex flex-wrap gap-3 mb-6">
-              {availableTimes.map((time) => (
-                <Button
-                  key={time}
-                  variant={selectedTime === time ? "default" : "outline"}
-                  className={`${
-                    selectedTime === time
-                      ? "bg-primary hover:bg-red-600 text-white"
-                      : "border-primary text-red-500 hover:bg-red-50"
-                  }`}
-                  onClick={() => setSelectedTime(time)}
-                >
-                  {time}
-                </Button>
-              ))}
-            </div>
+            {/* Available times - only show if date is selected */}
+            {selectedDate && (
+              <div className="mb-6">
+                <h3 className="text-lg font-medium mb-4">Available Times</h3>
+                <div className="flex flex-wrap gap-3">
+                  {availableTimes.map((time) => (
+                    <Button
+                      key={time}
+                      variant={selectedTime === time ? "default" : "outline"}
+                      className={`${
+                        selectedTime === time
+                          ? "bg-primary hover:bg-red-600 text-white"
+                          : "border-primary text-red-500 hover:bg-red-50"
+                      }`}
+                      onClick={() => setSelectedTime(time)}
+                    >
+                      {time}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="flex items-center gap-2 mb-6">
               <Button
@@ -156,7 +231,7 @@ const CustomerBookingPage = () => {
               </Button>
             </div>
 
-            {selectedTime && (
+            {selectedTime && selectedDate && (
               <div className="mb-8">
                 <Button
                   onClick={handleFindTable}
@@ -280,6 +355,28 @@ const CustomerBookingPage = () => {
                 </Select>
               </div>
 
+              {/* View Preference Section */}
+              <div>
+                <Label htmlFor="view-preference">
+                  View Preference (optional)
+                </Label>
+                <Select>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select your preferred view" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {viewPreferences.map((view) => (
+                      <SelectItem
+                        key={view}
+                        value={view.toLowerCase().replace(" ", "-")}
+                      >
+                        {view}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
               <div>
                 <Label htmlFor="special-request">
                   Add a special request (optional)
@@ -362,7 +459,15 @@ const CustomerBookingPage = () => {
                 <CardContent className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Calendar className="w-5 h-5 text-gray-500" />
-                    <span>Thursday, {selectedDate}</span>
+                    <span>
+                      {selectedDate
+                        ? new Date(selectedDate).toLocaleDateString("en-US", {
+                            weekday: "long",
+                            month: "long",
+                            day: "numeric",
+                          })
+                        : "Date not selected"}
+                    </span>
                   </div>
 
                   <div className="flex items-center gap-3">
@@ -372,7 +477,10 @@ const CustomerBookingPage = () => {
 
                   <div className="flex items-center gap-3">
                     <Users className="w-5 h-5 text-gray-500" />
-                    <span>{selectedPeople}</span>
+                    <span>
+                      {numberOfGuests}{" "}
+                      {numberOfGuests === 1 ? "guest" : "guests"}
+                    </span>
                   </div>
 
                   <div className="flex items-start gap-3">
@@ -395,10 +503,14 @@ const CustomerBookingPage = () => {
                     <div className="flex justify-between items-center mt-2">
                       <div>
                         <p className="font-medium">Themed Nights</p>
-                        <p className="text-sm text-gray-500">2x AED 195.00</p>
+                        <p className="text-sm text-gray-500">
+                          {numberOfGuests}x AED 195.00
+                        </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-medium">AED 390.00</p>
+                        <p className="font-medium">
+                          AED {(numberOfGuests * 195).toFixed(2)}
+                        </p>
                         <Button
                           variant="ghost"
                           size="sm"
@@ -414,30 +526,20 @@ const CustomerBookingPage = () => {
                   <div className="border-t pt-4">
                     <div className="flex justify-between">
                       <p>Subtotal</p>
-                      <p>AED 390.00</p>
+                      <p>AED {(numberOfGuests * 195).toFixed(2)}</p>
                     </div>
                   </div>
 
                   <div className="border-t pt-4">
                     <div className="flex justify-between font-bold">
                       <p>Total</p>
-                      <p>AED 390.00</p>
+                      <p>AED {(numberOfGuests * 195).toFixed(2)}</p>
                     </div>
                   </div>
                 </CardContent>
               </Card>
             </div>
           </div>
-
-          {/* Table Manager branding */}
-          {/* <div className="border-t pt-6 mt-8"> */}
-          {/*   <div className="flex items-center gap-2"> */}
-          {/*     <div className="w-8 h-8 bg-primary rounded-full flex items-center justify-center"> */}
-          {/*       <span className="text-white font-bold text-sm">O</span> */}
-          {/*     </div> */}
-          {/*     <span className="font-semibold text-gray-800">Table Manager</span> */}
-          {/*   </div> */}
-          {/* </div> */}
         </div>
       </div>
     </div>
