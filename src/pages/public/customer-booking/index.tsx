@@ -13,8 +13,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, Users, MapPin, Edit2, Eye } from "lucide-react";
+import routePath from "@/router/routePath";
+import { useNavigate } from "react-router";
 
 const CustomerBookingPage = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [selectedTime, setSelectedTime] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
@@ -419,8 +422,10 @@ const CustomerBookingPage = () => {
               </div>
 
               <Button
-                className="w-full bg-gray-300 text-gray-600 cursor-not-allowed"
-                disabled
+                // className="w-full bg-gray-300 text-gray-600 cursor-not-allowed"
+                className="w-full "
+                onClick={() => navigate(routePath.bookingConfirmed)}
+                // disabled
               >
                 Confirm booking
               </Button>
