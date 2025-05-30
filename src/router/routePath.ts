@@ -6,6 +6,7 @@ export default {
   // ========================= PUBLIC ROUTES =========================
   aboutUs: "/about-us",
   customerBooking: "/:restaurantId/customer-booking",
+  bookingConfirmed: "/:restaurantId/customer-booking/booking-confirmed",
 
   // ========================= USERS & ROLES =========================
   userManagement: "/users/user-management",

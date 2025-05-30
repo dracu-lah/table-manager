@@ -4,6 +4,10 @@ import routePath from "../routePath";
 const CustomerBookingPage = lazy(
   () => import("@/pages/public/customer-booking"),
 );
+
+const BookingConfirmPage = lazy(
+  () => import("@/pages/public/customer-booking/booking-confirmed"),
+);
 export const publicRoutes = [
   {
     path: "/",
@@ -15,6 +19,11 @@ export const publicRoutes = [
       {
         path: routePath.customerBooking,
         element: <CustomerBookingPage />,
+      },
+
+      {
+        path: routePath.bookingConfirmed,
+        element: <BookingConfirmPage />,
       },
     ],
   },
