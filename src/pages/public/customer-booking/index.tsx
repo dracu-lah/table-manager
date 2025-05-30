@@ -504,27 +504,27 @@ const CustomerBookingPage = () => {
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div>
-                    <p className="font-medium">Experience</p>
+                    {/* <p className="font-medium">Experience</p> */}
                     <div className="flex justify-between items-center mt-2">
-                      <div>
-                        <p className="font-medium">Themed Nights</p>
-                        <p className="text-sm text-gray-500">
-                          {numberOfGuests}x AED 195.00
-                        </p>
-                      </div>
-                      <div className="text-right">
-                        <p className="font-medium">
-                          AED {(numberOfGuests * 195).toFixed(2)}
-                        </p>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="text-primary p-0 h-auto"
-                        >
-                          <Edit2 className="w-4 h-4 mr-1" />
-                          Edit
-                        </Button>
-                      </div>
+                      {/* <div> */}
+                      {/* <p className="font-medium">Themed Nights</p> */}
+                      {/* <p className="text-sm text-gray-500"> */}
+                      {/*   {numberOfGuests}x AED 195.00 */}
+                      {/* </p> */}
+                      {/* </div> */}
+                      {/* <div className="text-right"> */}
+                      {/*   <p className="font-medium"> */}
+                      {/*     AED {(numberOfGuests * 195).toFixed(2)} */}
+                      {/*   </p> */}
+                      {/*   <Button */}
+                      {/*     variant="ghost" */}
+                      {/*     size="sm" */}
+                      {/*     className="text-primary p-0 h-auto" */}
+                      {/*   > */}
+                      {/*     <Edit2 className="w-4 h-4 mr-1" /> */}
+                      {/*     Edit */}
+                      {/*   </Button> */}
+                      {/* </div> */}
                     </div>
                   </div>
 

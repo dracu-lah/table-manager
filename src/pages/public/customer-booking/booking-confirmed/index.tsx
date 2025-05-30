@@ -250,22 +250,22 @@ const BookingConfirmationPage = () => {
                   <CardTitle className="text-lg">Billing Summary</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div>
-                    <p className="font-medium">Experience</p>
-                    <div className="flex justify-between items-center mt-2">
-                      <div>
-                        <p className="font-medium">Themed Nights</p>
-                        <p className="text-sm text-gray-500">
-                          {bookingDetails.guests}x AED 195.00
-                        </p>
-                      </div>
-                      <div>
-                        <p className="font-medium">
-                          AED {bookingDetails.totalAmount.toFixed(2)}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
+                  {/* <div> */}
+                  {/*   <p className="font-medium">Experience</p> */}
+                  {/*   <div className="flex justify-between items-center mt-2"> */}
+                  {/*     <div> */}
+                  {/*       <p className="font-medium">Themed Nights</p> */}
+                  {/*       <p className="text-sm text-gray-500"> */}
+                  {/*         {bookingDetails.guests}x AED 195.00 */}
+                  {/*       </p> */}
+                  {/*     </div> */}
+                  {/*     <div> */}
+                  {/*       <p className="font-medium"> */}
+                  {/*         AED {bookingDetails.totalAmount.toFixed(2)} */}
+                  {/*       </p> */}
+                  {/*     </div> */}
+                  {/*   </div> */}
+                  {/* </div> */}
 
                   <div className="border-t pt-4">
                     <div className="flex justify-between font-bold text-lg">
