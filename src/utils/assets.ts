@@ -13,7 +13,7 @@ import TableRound10Icon from "@/assets/table-icons/round-10.svg?react";
 import TableSquare4Icon from "@/assets/table-icons/square-4.svg?react";
 import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
 import RoomLayout2 from "@/assets/room-layouts/layout-2.png";
-const TableIcons = {
+export const TableIcons = {
   TableHexagon6Icon,
   TableOval6Icon,
   TableOval8Icon,

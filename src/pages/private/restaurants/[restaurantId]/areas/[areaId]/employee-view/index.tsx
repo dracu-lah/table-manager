@@ -12,36 +12,23 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-// Table Icons
-import TableHexagon6Icon from "@/assets/table-icons/hexagon-6.svg?react";
-import TableOval6Icon from "@/assets/table-icons/oval-6.svg?react";
-import TableOval8Icon from "@/assets/table-icons/oval-8.svg?react";
-import TableRectangle2Icon from "@/assets/table-icons/rectangle-2.svg?react";
-import TableRectangle4Icon from "@/assets/table-icons/rectangle-4.svg?react";
-import TableRectangle6Icon from "@/assets/table-icons/rectangle-6.svg?react";
-import TableRectangle8Icon from "@/assets/table-icons/rectangle-8.svg?react";
-import TableRound3Icon from "@/assets/table-icons/round-3.svg?react";
-import TableRound6Icon from "@/assets/table-icons/round-6.svg?react";
-import TableRound8Icon from "@/assets/table-icons/round-8.svg?react";
-import TableRound9Icon from "@/assets/table-icons/round-9.svg?react";
-import TableRound10Icon from "@/assets/table-icons/round-10.svg?react";
-import TableSquare4Icon from "@/assets/table-icons/square-4.svg?react";
 import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
+import { TableIcons as Tables } from "@/utils/assets";
 
 const TableIcons = {
-  "hexagon-6": TableHexagon6Icon,
-  "oval-6": TableOval6Icon,
-  "oval-8": TableOval8Icon,
-  "rectangle-2": TableRectangle2Icon,
-  "rectangle-4": TableRectangle4Icon,
-  "rectangle-6": TableRectangle6Icon,
-  "rectangle-8": TableRectangle8Icon,
-  "round-3": TableRound3Icon,
-  "round-6": TableRound6Icon,
-  "round-8": TableRound8Icon,
-  "round-9": TableRound9Icon,
-  "round-10": TableRound10Icon,
-  "square-4": TableSquare4Icon,
+  "hexagon-6": Tables.TableHexagon6Icon,
+  "oval-6": Tables.TableOval6Icon,
+  "oval-8": Tables.TableOval8Icon,
+  "rectangle-2": Tables.TableRectangle2Icon,
+  "rectangle-4": Tables.TableRectangle4Icon,
+  "rectangle-6": Tables.TableRectangle6Icon,
+  "rectangle-8": Tables.TableRectangle8Icon,
+  "round-3": Tables.TableRound3Icon,
+  "round-6": Tables.TableRound6Icon,
+  "round-8": Tables.TableRound8Icon,
+  "round-9": Tables.TableRound9Icon,
+  "round-10": Tables.TableRound10Icon,
+  "square-4": Tables.TableSquare4Icon,
 };
 
 // Table status configurations
