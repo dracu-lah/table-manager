@@ -12,8 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
-import { TableIcons as Tables } from "@/utils/assets";
+import { RoomLayouts, TableIcons as Tables } from "@/utils/assets";
 
 // Table status configurations
 const TABLE_STATUSES = {
@@ -125,18 +124,19 @@ const RestaurantTableLayout = () => {
       height: 57.6,
       shape: "rounded-md",
     },
+
     {
-      id: "25e172be-1163-4e23-8264-7bfda817a177",
+      id: "4bf13f9f-45a5-4848-bd0b-077253508890",
       type: "table",
-      tableType: "round-6",
-      tableNumber: 2,
+      tableType: "square-4",
+      tableNumber: 1,
       tableLabel: "",
-      tableStatus: "occupied",
-      position: { x: 638.4675183506878, y: 45.91232063489896 },
+      tableStatus: "available",
+      position: { x: 223.97380743547745, y: 56.24417462532478 },
       rotation: 0,
-      width: 64.8,
-      height: 64.8,
-      shape: "rounded-full",
+      width: 86.4,
+      height: 57.6,
+      shape: "rounded-md",
     },
   ]);
 
@@ -242,7 +242,7 @@ const RestaurantTableLayout = () => {
                     height: canvasConfig.height,
                     maxWidth: "100%",
                     aspectRatio: canvasConfig.aspectRatio,
-                    backgroundImage: `url(${RoomLayout1})`,
+                    backgroundImage: `url(${RoomLayouts.RoomLayout1})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
@@ -272,7 +272,7 @@ const RestaurantTableLayout = () => {
                           </span>
                         </div>
                         {selectedTable?.id === element.id && (
-                          <div className="absolute -top-2 -right-2 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
+                          <div className="absolute -top-1 right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
                         )}
                       </div>
                     </div>
