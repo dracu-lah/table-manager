@@ -75,15 +75,11 @@ const TableIcon = ({ tableType, color, width, height }) => {
   }
 
   return (
-    <div
-      className={`${color} p-1 rounded-md`}
+    <IconComponent
+      className={`w-full h-full ${color}`}
       style={{ width: `${width}px`, height: `${height}px` }}
-    >
-      <IconComponent
-        className="w-full h-full text-white"
-        style={{ filter: "brightness(0) invert(1)" }}
-      />
-    </div>
+      // style={{ filter: "brightness(0) invert(1)" }}
+    />
   );
 };
 
@@ -100,7 +96,7 @@ const RestaurantTableLayout = () => {
       rotation: 0,
       width: 86.4,
       height: 57.6,
-      color: "bg-green-600",
+      color: "text-green-600",
       shape: "rounded-md",
     },
     {
@@ -114,7 +110,7 @@ const RestaurantTableLayout = () => {
       rotation: 0,
       width: 64.8,
       height: 64.8,
-      color: "bg-amber-700",
+      color: "text-amber-700",
       shape: "rounded-full",
     },
   ]);
