@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,8 +11,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-
-import { RoomLayouts } from "@/utils/assets";
 import getTableIcon from "./getTableIcon";
 
 // Table status configurations
@@ -56,7 +54,7 @@ const TABLE_STATUSES = {
 };
 
 // Table Icon Component with Switch Case
-const TableIcon = ({ tableType, status, width, height }) => {
+const TableIcon = ({ tableType, status, width, height, scale = 1 }) => {
   const IconComponent = getTableIcon(tableType);
   const textColor = TABLE_STATUSES[status]?.textColor || "text-gray-600";
 
@@ -64,7 +62,7 @@ const TableIcon = ({ tableType, status, width, height }) => {
     return (
       <div
         className={`${textColor} border-2 border-gray-300 rounded-md flex items-center justify-center`}
-        style={{ width: `${width}px`, height: `${height}px` }}
+        style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
       />
     );
   }
@@ -72,12 +70,22 @@ const TableIcon = ({ tableType, status, width, height }) => {
   return (
     <IconComponent
       className={`w-full h-full ${textColor}`}
-      style={{ width: `${width}px`, height: `${height}px` }}
+      style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
     />
   );
 };
 
 const RestaurantTableLayout = () => {
+  const canvasRef = useRef(null);
+  const [canvasScale, setCanvasScale] = useState(1);
+
+  // Original canvas dimensions
+  const originalCanvasConfig = {
+    width: 800,
+    height: 493.7573616018846,
+    aspectRatio: "849:524",
+  };
+
   const [elements, setElements] = useState([
     {
       id: "4af13f9f-45a5-4848-bd0b-077253508890",
@@ -92,18 +100,30 @@ const RestaurantTableLayout = () => {
       height: 57.6,
       shape: "rounded-md",
     },
-
     {
       id: "4bf13f9f-45a5-4848-bd0b-077253508890",
       type: "table",
-      tableType: "square-4",
-      tableNumber: 1,
+      tableType: "round-4",
+      tableNumber: 2,
       tableLabel: "",
-      tableStatus: "available",
-      position: { x: 223.97380743547745, y: 56.24417462532478 },
+      tableStatus: "occupied",
+      position: { x: 400, y: 200 },
       rotation: 0,
       width: 86.4,
       height: 57.6,
+      shape: "rounded-md",
+    },
+    {
+      id: "5cf13f9f-45a5-4848-bd0b-077253508890",
+      type: "table",
+      tableType: "rectangle-6",
+      tableNumber: 3,
+      tableLabel: "",
+      tableStatus: "reserved",
+      position: { x: 150, y: 300 },
+      rotation: 0,
+      width: 120,
+      height: 60,
       shape: "rounded-md",
     },
   ]);
@@ -117,10 +137,27 @@ const RestaurantTableLayout = () => {
 
   const [selectedTable, setSelectedTable] = useState(null);
 
-  const canvasConfig = {
-    width: 800,
-    height: 493.7573616018846,
-    aspectRatio: "849:524",
+  // Calculate responsive scale
+  useEffect(() => {
+    const updateScale = () => {
+      if (canvasRef.current) {
+        const containerWidth = canvasRef.current.parentElement.clientWidth;
+        const availableWidth = containerWidth - 32; // Account for padding
+        const scale = Math.min(1, availableWidth / originalCanvasConfig.width);
+        setCanvasScale(scale);
+      }
+    };
+
+    updateScale();
+    window.addEventListener("resize", updateScale);
+    return () => window.removeEventListener("resize", updateScale);
+  }, []);
+
+  // Scaled canvas dimensions
+  const scaledCanvasConfig = {
+    width: originalCanvasConfig.width * canvasScale,
+    height: originalCanvasConfig.height * canvasScale,
+    aspectRatio: originalCanvasConfig.aspectRatio,
   };
 
   const updateTableStatus = (tableId, newStatus) => {
@@ -174,11 +211,21 @@ const RestaurantTableLayout = () => {
           <Card>
             <CardContent className="pt-6">
               {/* Top Labels */}
-              <div className="flex justify-between mb-2 mx-8">
+              <div
+                className="flex justify-between mb-2"
+                style={{
+                  marginLeft: `${32 * canvasScale}px`,
+                  marginRight: `${32 * canvasScale}px`,
+                }}
+              >
                 {cornerLabels.top.map((label, index) => (
                   <div
                     key={`top-${index}`}
-                    className="text-xs bg-gray-200 px-2 py-1 rounded min-w-[80px] text-center"
+                    className="text-xs bg-gray-200 px-2 py-1 rounded text-center"
+                    style={{
+                      minWidth: `${80 * canvasScale}px`,
+                      fontSize: `${12 * canvasScale}px`,
+                    }}
                   >
                     {label || `Top ${index + 1}`}
                   </div>
@@ -188,14 +235,18 @@ const RestaurantTableLayout = () => {
               <div className="flex">
                 {/* Left Labels */}
                 <div
-                  className="flex flex-col justify-between mr-2 h-full"
-                  style={{ height: canvasConfig.height }}
+                  className="flex flex-col justify-between mr-2"
+                  style={{ height: scaledCanvasConfig.height }}
                 >
                   {cornerLabels.left.map((label, index) => (
                     <div
                       key={`left-${index}`}
-                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
-                      style={{ writingMode: "vertical-rl" }}
+                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
+                      style={{
+                        writingMode: "vertical-rl",
+                        minHeight: `${60 * canvasScale}px`,
+                        fontSize: `${12 * canvasScale}px`,
+                      }}
                     >
                       {label || `L${index + 1}`}
                     </div>
@@ -204,25 +255,39 @@ const RestaurantTableLayout = () => {
 
                 {/* Main Canvas */}
                 <div
-                  className="relative border-2 border-gray-300 bg-gray-50 overflow-hidden flex-1"
+                  ref={canvasRef}
+                  className="relative border-2 border-gray-300 bg-gray-50 overflow-hidden"
                   style={{
-                    width: canvasConfig.width,
-                    height: canvasConfig.height,
-                    maxWidth: "100%",
-                    aspectRatio: canvasConfig.aspectRatio,
-                    backgroundImage: `url(${RoomLayouts.RoomLayout1})`,
+                    width: scaledCanvasConfig.width,
+                    height: scaledCanvasConfig.height,
+                    minWidth: scaledCanvasConfig.width,
+                    minHeight: scaledCanvasConfig.height,
+                    backgroundImage:
+                      "linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)",
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
                 >
+                  {/* Grid pattern for visual reference */}
+                  <div
+                    className="absolute inset-0 opacity-10"
+                    style={{
+                      backgroundImage: `
+                        linear-gradient(to right, #000 1px, transparent 1px),
+                        linear-gradient(to bottom, #000 1px, transparent 1px)
+                      `,
+                      backgroundSize: `${50 * canvasScale}px ${50 * canvasScale}px`,
+                    }}
+                  />
+
                   {/* Tables */}
                   {elements.map((element) => (
                     <div
                       key={element.id}
                       className="absolute cursor-pointer transition-all duration-200 hover:scale-105"
                       style={{
-                        left: `${element.position.x}px`,
-                        top: `${element.position.y}px`,
+                        left: `${element.position.x * canvasScale}px`,
+                        top: `${element.position.y * canvasScale}px`,
                         transform: `rotate(${element.rotation}deg)`,
                       }}
                       onClick={() => setSelectedTable(element)}
@@ -233,14 +298,26 @@ const RestaurantTableLayout = () => {
                           status={element.tableStatus}
                           width={element.width}
                           height={element.height}
+                          scale={canvasScale}
                         />
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <span className="text-white font-bold text-sm drop-shadow-lg">
+                        <div
+                          className="absolute inset-0 flex items-center justify-center"
+                          style={{
+                            fontSize: `${14 * canvasScale}px`,
+                          }}
+                        >
+                          <span className="text-white font-bold drop-shadow-lg">
                             T-{element.tableNumber}
                           </span>
                         </div>
                         {selectedTable?.id === element.id && (
-                          <div className="absolute -top-1 right-1 w-4 h-4 bg-blue-500 rounded-full border-2 border-white"></div>
+                          <div
+                            className="absolute -top-1 right-1 bg-blue-500 rounded-full border-2 border-white"
+                            style={{
+                              width: `${16 * canvasScale}px`,
+                              height: `${16 * canvasScale}px`,
+                            }}
+                          ></div>
                         )}
                       </div>
                     </div>
@@ -249,14 +326,18 @@ const RestaurantTableLayout = () => {
 
                 {/* Right Labels */}
                 <div
-                  className="flex flex-col justify-between ml-2 h-full"
-                  style={{ height: canvasConfig.height }}
+                  className="flex flex-col justify-between ml-2"
+                  style={{ height: scaledCanvasConfig.height }}
                 >
                   {cornerLabels.right.map((label, index) => (
                     <div
                       key={`right-${index}`}
-                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
-                      style={{ writingMode: "vertical-rl" }}
+                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
+                      style={{
+                        writingMode: "vertical-rl",
+                        minHeight: `${60 * canvasScale}px`,
+                        fontSize: `${12 * canvasScale}px`,
+                      }}
                     >
                       {label || `R${index + 1}`}
                     </div>
@@ -265,11 +346,21 @@ const RestaurantTableLayout = () => {
               </div>
 
               {/* Bottom Labels */}
-              <div className="flex justify-between mt-2 mx-8">
+              <div
+                className="flex justify-between mt-2"
+                style={{
+                  marginLeft: `${32 * canvasScale}px`,
+                  marginRight: `${32 * canvasScale}px`,
+                }}
+              >
                 {cornerLabels.bottom.map((label, index) => (
                   <div
                     key={`bottom-${index}`}
-                    className="text-xs bg-gray-200 px-2 py-1  rounded min-w-[80px] text-center"
+                    className="text-xs bg-gray-200 px-2 py-1 rounded text-center"
+                    style={{
+                      minWidth: `${80 * canvasScale}px`,
+                      fontSize: `${12 * canvasScale}px`,
+                    }}
                   >
                     {label || `Bottom ${index + 1}`}
                   </div>
@@ -281,6 +372,19 @@ const RestaurantTableLayout = () => {
 
         {/* Controls */}
         <div className="space-y-4">
+          {/* Scale Info */}
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-sm text-gray-600">
+                <p>Canvas Scale: {(canvasScale * 100).toFixed(0)}%</p>
+                <p>
+                  Dimensions: {Math.round(scaledCanvasConfig.width)} ×{" "}
+                  {Math.round(scaledCanvasConfig.height)}
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Table Controls */}
           <Card>
             <CardHeader>
