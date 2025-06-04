@@ -372,7 +372,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
           >
             <TableSvg
               draggable={false}
-              className="w-full h-full  text-red-500 "
+              className="w-full h-full   text-gray-300"
             />
 
             <div className="absolute text-white font-bold text-center">
