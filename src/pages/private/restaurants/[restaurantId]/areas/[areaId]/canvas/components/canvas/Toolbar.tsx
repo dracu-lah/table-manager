@@ -197,7 +197,7 @@ export const Toolbar: React.FC = () => {
       <Tabs defaultValue="tables" className="w-full">
         <TabsList className="mb-2">
           <TabsTrigger value="tables">
-            <TableIcon className="h-4 w-4 mr-2" />
+            <TableIcon className="h-4 w-4 mr-2 " />
             Tables
           </TabsTrigger>
         </TabsList>
@@ -209,7 +209,7 @@ export const Toolbar: React.FC = () => {
               onClick={() => addTable(config)}
               className="flex items-center"
             >
-              <config.icon className="h-4 w-4 mr-2" />
+              <config.icon className="h-4 w-4 mr-2 text-red-500" />
               {config.label}
             </Button>
           ))}
