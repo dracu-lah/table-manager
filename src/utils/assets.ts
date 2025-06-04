@@ -1,19 +1,18 @@
-import TableHexagon6Icon from "@/assets/table-icons/hexagon-6.svg";
-import TableOval6Icon from "@/assets/table-icons/oval-6.svg";
-import TableOval8Icon from "@/assets/table-icons/oval-8.svg";
-import TableRectangle2Icon from "@/assets/table-icons/rectangle-2.svg";
-import TableRectangle4Icon from "@/assets/table-icons/rectangle-4.svg";
-import TableRectangle6Icon from "@/assets/table-icons/rectangle-6.svg";
-import TableRectangle8Icon from "@/assets/table-icons/rectangle-8.svg";
-import TableRound3Icon from "@/assets/table-icons/round-3.svg";
-import TableRound6Icon from "@/assets/table-icons/round-6.svg";
-import TableRound8Icon from "@/assets/table-icons/round-8.svg";
-import TableRound9Icon from "@/assets/table-icons/round-9.svg";
-import TableRound10Icon from "@/assets/table-icons/round-10.svg";
-import TableSquare4Icon from "@/assets/table-icons/square-4.svg";
+import TableHexagon6Icon from "@/assets/table-icons/hexagon-6.svg?react";
+import TableOval6Icon from "@/assets/table-icons/oval-6.svg?react";
+import TableOval8Icon from "@/assets/table-icons/oval-8.svg?react";
+import TableRectangle2Icon from "@/assets/table-icons/rectangle-2.svg?react";
+import TableRectangle4Icon from "@/assets/table-icons/rectangle-4.svg?react";
+import TableRectangle6Icon from "@/assets/table-icons/rectangle-6.svg?react";
+import TableRectangle8Icon from "@/assets/table-icons/rectangle-8.svg?react";
+import TableRound3Icon from "@/assets/table-icons/round-3.svg?react";
+import TableRound6Icon from "@/assets/table-icons/round-6.svg?react";
+import TableRound8Icon from "@/assets/table-icons/round-8.svg?react";
+import TableRound9Icon from "@/assets/table-icons/round-9.svg?react";
+import TableRound10Icon from "@/assets/table-icons/round-10.svg?react";
+import TableSquare4Icon from "@/assets/table-icons/square-4.svg?react";
 import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
 import RoomLayout2 from "@/assets/room-layouts/layout-2.png";
-
 const TableIcons = {
   TableHexagon6Icon,
   TableOval6Icon,
