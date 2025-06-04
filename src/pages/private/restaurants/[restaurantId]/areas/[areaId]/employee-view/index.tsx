@@ -92,7 +92,7 @@ const RestaurantTableLayout = () => {
     {
       id: "4af13f9f-45a5-4848-bd0b-077253508890",
       type: "table",
-      tableType: "rectangle-6",
+      tableType: "square-4",
       tableNumber: 1,
       tableLabel: "",
       tableStatus: "available",
@@ -186,11 +186,11 @@ const RestaurantTableLayout = () => {
           <Card>
             <CardContent className="pt-6">
               {/* Top Labels */}
-              <div className="flex justify-between mb-2">
+              <div className="flex justify-between mb-2 mx-8">
                 {cornerLabels.top.map((label, index) => (
                   <div
                     key={`top-${index}`}
-                    className="text-xs bg-blue-100 px-2 py-1 rounded min-w-[80px] text-center"
+                    className="text-xs bg-gray-200 px-2 py-1 rounded min-w-[80px] text-center"
                   >
                     {label || `Top ${index + 1}`}
                   </div>
@@ -206,7 +206,7 @@ const RestaurantTableLayout = () => {
                   {cornerLabels.left.map((label, index) => (
                     <div
                       key={`left-${index}`}
-                      className="text-xs bg-blue-100 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
+                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
                       style={{ writingMode: "vertical-rl" }}
                     >
                       {label || `L${index + 1}`}
@@ -267,7 +267,7 @@ const RestaurantTableLayout = () => {
                   {cornerLabels.right.map((label, index) => (
                     <div
                       key={`right-${index}`}
-                      className="text-xs bg-blue-100 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
+                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 writing-mode-vertical text-center min-h-[60px] flex items-center justify-center"
                       style={{ writingMode: "vertical-rl" }}
                     >
                       {label || `R${index + 1}`}
@@ -277,11 +277,11 @@ const RestaurantTableLayout = () => {
               </div>
 
               {/* Bottom Labels */}
-              <div className="flex justify-between mt-2">
+              <div className="flex justify-between mt-2 mx-8">
                 {cornerLabels.bottom.map((label, index) => (
                   <div
                     key={`bottom-${index}`}
-                    className="text-xs bg-blue-100 px-2 py-1 rounded min-w-[80px] text-center"
+                    className="text-xs bg-gray-200 px-2 py-1  rounded min-w-[80px] text-center"
                   >
                     {label || `Bottom ${index + 1}`}
                   </div>
