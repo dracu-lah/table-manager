@@ -318,49 +318,49 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   const getElementComponent = () => {
     switch (element.type) {
       case "table":
-        let tableSvg;
+        let TableSvg;
         switch (element.tableType) {
           case "hexagon-6":
-            tableSvg = TableIcons.TableHexagon6Icon;
+            TableSvg = TableIcons.TableHexagon6Icon;
             break;
           case "oval-6":
-            tableSvg = TableIcons.TableOval6Icon;
+            TableSvg = TableIcons.TableOval6Icon;
             break;
           case "oval-8":
-            tableSvg = TableIcons.TableOval8Icon;
+            TableSvg = TableIcons.TableOval8Icon;
             break;
           case "rectangle-2":
-            tableSvg = TableIcons.TableRectangle2Icon;
+            TableSvg = TableIcons.TableRectangle2Icon;
             break;
           case "rectangle-4":
-            tableSvg = TableIcons.TableRectangle4Icon;
+            TableSvg = TableIcons.TableRectangle4Icon;
             break;
           case "rectangle-6":
-            tableSvg = TableIcons.TableRectangle6Icon;
+            TableSvg = TableIcons.TableRectangle6Icon;
             break;
           case "rectangle-8":
-            tableSvg = TableIcons.TableRectangle8Icon;
+            TableSvg = TableIcons.TableRectangle8Icon;
             break;
           case "round-3":
-            tableSvg = TableIcons.TableRound3Icon;
+            TableSvg = TableIcons.TableRound3Icon;
             break;
           case "round-6":
-            tableSvg = TableIcons.TableRound6Icon;
+            TableSvg = TableIcons.TableRound6Icon;
             break;
           case "round-8":
-            tableSvg = TableIcons.TableRound8Icon;
+            TableSvg = TableIcons.TableRound8Icon;
             break;
           case "round-9":
-            tableSvg = TableIcons.TableRound9Icon;
+            TableSvg = TableIcons.TableRound9Icon;
             break;
           case "round-10":
-            tableSvg = TableIcons.TableRound10Icon;
+            TableSvg = TableIcons.TableRound10Icon;
             break;
           case "square-4":
-            tableSvg = TableIcons.TableSquare4Icon;
+            TableSvg = TableIcons.TableSquare4Icon;
             break;
           default:
-            tableSvg = TableIcons.TableRound6Icon;
+            TableSvg = TableIcons.TableRound6Icon;
         }
         return (
           <div
@@ -370,12 +370,8 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
               height: element.height || 32,
             }}
           >
-            <img
-              src={tableSvg}
-              draggable={false}
-              alt={element.tableType || "table"}
-              className="w-full h-full object-contain "
-            />
+            <TableSvg draggable={false} className="w-full h-full   " />
+
             <div className="absolute text-white font-bold text-center">
               {element.tableNumber || "?"}
               {element.tableLabel && (

@@ -209,11 +209,7 @@ export const Toolbar: React.FC = () => {
               onClick={() => addTable(config)}
               className="flex items-center"
             >
-              <img
-                src={config.icon}
-                alt={config.label}
-                className="h-4 w-4 mr-2"
-              />
+              <config.icon className="h-4 w-4 mr-2" />
               {config.label}
             </Button>
           ))}
