@@ -15,60 +15,88 @@ import {
 import RoomLayout1 from "@/assets/room-layouts/layout-1.png";
 import { TableIcons as Tables } from "@/utils/assets";
 
-const TableIcons = {
-  "hexagon-6": Tables.TableHexagon6Icon,
-  "oval-6": Tables.TableOval6Icon,
-  "oval-8": Tables.TableOval8Icon,
-  "rectangle-2": Tables.TableRectangle2Icon,
-  "rectangle-4": Tables.TableRectangle4Icon,
-  "rectangle-6": Tables.TableRectangle6Icon,
-  "rectangle-8": Tables.TableRectangle8Icon,
-  "round-3": Tables.TableRound3Icon,
-  "round-6": Tables.TableRound6Icon,
-  "round-8": Tables.TableRound8Icon,
-  "round-9": Tables.TableRound9Icon,
-  "round-10": Tables.TableRound10Icon,
-  "square-4": Tables.TableSquare4Icon,
-};
-
 // Table status configurations
 const TABLE_STATUSES = {
   available: {
     color: "bg-green-600",
+    textColor: "text-green-600",
     label: "Available",
-    textColor: "text-white",
+    badgeTextColor: "text-white",
   },
-  occupied: { color: "bg-red-600", label: "Occupied", textColor: "text-white" },
+  occupied: {
+    color: "bg-red-600",
+    textColor: "text-red-600",
+    label: "Occupied",
+    badgeTextColor: "text-white",
+  },
   cleaning: {
     color: "bg-blue-600",
+    textColor: "text-blue-600",
     label: "Cleaning",
-    textColor: "text-white",
+    badgeTextColor: "text-white",
   },
   reserved: {
     color: "bg-purple-600",
+    textColor: "text-purple-600",
     label: "Reserved",
-    textColor: "text-white",
+    badgeTextColor: "text-white",
   },
   maintenance: {
     color: "bg-gray-600",
+    textColor: "text-gray-600",
     label: "Maintenance",
-    textColor: "text-white",
+    badgeTextColor: "text-white",
   },
   "available-soon": {
     color: "bg-amber-500",
+    textColor: "text-amber-500",
     label: "Available Soon",
-    textColor: "text-white",
+    badgeTextColor: "text-white",
   },
 };
 
-// Table Icon Component
-const TableIcon = ({ tableType, color, width, height }) => {
-  const IconComponent = TableIcons[tableType];
+// Table Icon Component with Switch Case
+const TableIcon = ({ tableType, status, width, height }) => {
+  const getTableIcon = (type) => {
+    switch (type) {
+      case "hexagon-6":
+        return Tables.TableHexagon6Icon;
+      case "oval-6":
+        return Tables.TableOval6Icon;
+      case "oval-8":
+        return Tables.TableOval8Icon;
+      case "rectangle-2":
+        return Tables.TableRectangle2Icon;
+      case "rectangle-4":
+        return Tables.TableRectangle4Icon;
+      case "rectangle-6":
+        return Tables.TableRectangle6Icon;
+      case "rectangle-8":
+        return Tables.TableRectangle8Icon;
+      case "round-3":
+        return Tables.TableRound3Icon;
+      case "round-6":
+        return Tables.TableRound6Icon;
+      case "round-8":
+        return Tables.TableRound8Icon;
+      case "round-9":
+        return Tables.TableRound9Icon;
+      case "round-10":
+        return Tables.TableRound10Icon;
+      case "square-4":
+        return Tables.TableSquare4Icon;
+      default:
+        return null;
+    }
+  };
+
+  const IconComponent = getTableIcon(tableType);
+  const textColor = TABLE_STATUSES[status]?.textColor || "text-gray-600";
 
   if (!IconComponent) {
     return (
       <div
-        className={`${color} border-2 border-gray-300 rounded-md flex items-center justify-center`}
+        className={`${textColor} border-2 border-gray-300 rounded-md flex items-center justify-center`}
         style={{ width: `${width}px`, height: `${height}px` }}
       />
     );
@@ -76,9 +104,8 @@ const TableIcon = ({ tableType, color, width, height }) => {
 
   return (
     <IconComponent
-      className={`w-full h-full ${color}`}
+      className={`w-full h-full ${textColor}`}
       style={{ width: `${width}px`, height: `${height}px` }}
-      // style={{ filter: "brightness(0) invert(1)" }}
     />
   );
 };
@@ -96,7 +123,6 @@ const RestaurantTableLayout = () => {
       rotation: 0,
       width: 86.4,
       height: 57.6,
-      color: "text-green-600",
       shape: "rounded-md",
     },
     {
@@ -105,12 +131,11 @@ const RestaurantTableLayout = () => {
       tableType: "round-6",
       tableNumber: 2,
       tableLabel: "",
-      tableStatus: "available",
+      tableStatus: "occupied",
       position: { x: 638.4675183506878, y: 45.91232063489896 },
       rotation: 0,
       width: 64.8,
       height: 64.8,
-      color: "text-amber-700",
       shape: "rounded-full",
     },
   ]);
@@ -137,7 +162,6 @@ const RestaurantTableLayout = () => {
           ? {
               ...element,
               tableStatus: newStatus,
-              color: TABLE_STATUSES[newStatus].color,
             }
           : element,
       ),
@@ -167,7 +191,7 @@ const RestaurantTableLayout = () => {
             {Object.entries(TABLE_STATUSES).map(([status, config]) => (
               <Badge
                 key={status}
-                className={`${config.color} ${config.textColor}`}
+                className={`${config.color} ${config.badgeTextColor}`}
               >
                 {config.label}
               </Badge>
@@ -238,7 +262,7 @@ const RestaurantTableLayout = () => {
                       <div className="relative">
                         <TableIcon
                           tableType={element.tableType}
-                          color={element.color}
+                          status={element.tableStatus}
                           width={element.width}
                           height={element.height}
                         />
@@ -329,7 +353,7 @@ const RestaurantTableLayout = () => {
 
                   <div className="pt-2">
                     <Badge
-                      className={`${TABLE_STATUSES[selectedTable.tableStatus].color} ${TABLE_STATUSES[selectedTable.tableStatus].textColor}`}
+                      className={`${TABLE_STATUSES[selectedTable.tableStatus].color} ${TABLE_STATUSES[selectedTable.tableStatus].badgeTextColor}`}
                     >
                       {TABLE_STATUSES[selectedTable.tableStatus].label}
                     </Badge>
