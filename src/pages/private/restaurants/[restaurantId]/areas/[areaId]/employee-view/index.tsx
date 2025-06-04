@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import getTableIcon from "./getTableIcon";
+import { RoomLayouts } from "@/utils/assets";
 
 // Table status configurations
 const TABLE_STATUSES = {
@@ -53,15 +54,15 @@ const TABLE_STATUSES = {
   },
 };
 
-// Table Icon Component with Switch Case
+// Table Icon Component
 const TableIcon = ({ tableType, status, width, height, scale = 1 }) => {
   const IconComponent = getTableIcon(tableType);
-  const textColor = TABLE_STATUSES[status]?.textColor || "text-gray-600";
+  const statusConfig = TABLE_STATUSES[status] || TABLE_STATUSES.available;
 
   if (!IconComponent) {
     return (
       <div
-        className={`${textColor} border-2 border-gray-300 rounded-md flex items-center justify-center`}
+        className={`${statusConfig.textColor} border-2 border-gray-300 rounded-md flex items-center justify-center`}
         style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
       />
     );
@@ -69,7 +70,7 @@ const TableIcon = ({ tableType, status, width, height, scale = 1 }) => {
 
   return (
     <IconComponent
-      className={`w-full h-full ${textColor}`}
+      className={`w-full h-full ${statusConfig.textColor} border-current  bg-opacity-80`}
       style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
     />
   );
@@ -77,13 +78,14 @@ const TableIcon = ({ tableType, status, width, height, scale = 1 }) => {
 
 const RestaurantTableLayout = () => {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
   const [canvasScale, setCanvasScale] = useState(1);
 
   // Original canvas dimensions
   const originalCanvasConfig = {
     width: 800,
-    height: 493.7573616018846,
-    aspectRatio: "849:524",
+    height: 494,
+    aspectRatio: "800:494",
   };
 
   const [elements, setElements] = useState([
@@ -94,23 +96,23 @@ const RestaurantTableLayout = () => {
       tableNumber: 1,
       tableLabel: "",
       tableStatus: "available",
-      position: { x: 223.97380743547745, y: 56.24417462532478 },
+      position: { x: 224, y: 56 },
       rotation: 0,
-      width: 86.4,
-      height: 57.6,
+      width: 86,
+      height: 58,
       shape: "rounded-md",
     },
     {
       id: "4bf13f9f-45a5-4848-bd0b-077253508890",
       type: "table",
-      tableType: "round-4",
+      tableType: "round-6",
       tableNumber: 2,
       tableLabel: "",
       tableStatus: "occupied",
-      position: { x: 400, y: 200 },
+      position: { x: 400, y: 218 },
       rotation: 0,
-      width: 86.4,
-      height: 57.6,
+      width: 86,
+      height: 58,
       shape: "rounded-md",
     },
     {
@@ -136,14 +138,21 @@ const RestaurantTableLayout = () => {
   });
 
   const [selectedTable, setSelectedTable] = useState(null);
+  const [backgroundImage, setBackgroundImage] = useState(
+    RoomLayouts.RoomLayout1,
+  );
 
   // Calculate responsive scale
   useEffect(() => {
     const updateScale = () => {
-      if (canvasRef.current) {
-        const containerWidth = canvasRef.current.parentElement.clientWidth;
-        const availableWidth = containerWidth - 32; // Account for padding
-        const scale = Math.min(1, availableWidth / originalCanvasConfig.width);
+      if (containerRef.current) {
+        const containerWidth = containerRef.current.clientWidth;
+        const availableWidth = containerWidth - 100; // Account for labels and padding
+        const maxScale = Math.min(
+          1.2,
+          availableWidth / originalCanvasConfig.width,
+        );
+        const scale = Math.max(0.3, maxScale);
         setCanvasScale(scale);
       }
     };
@@ -181,7 +190,7 @@ const RestaurantTableLayout = () => {
   };
 
   return (
-    <div className="w-full max-w-6xl mx-auto p-4 space-y-6">
+    <div className="w-full  mx-auto p-4 space-y-6">
       {/* Header */}
       <Card>
         <CardHeader>
@@ -205,166 +214,174 @@ const RestaurantTableLayout = () => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Canvas Container with Corner Labels */}
-        <div className="lg:col-span-2">
+        <div className="xl:col-span-3">
           <Card>
             <CardContent className="pt-6">
-              {/* Top Labels */}
-              <div
-                className="flex justify-between mb-2"
-                style={{
-                  marginLeft: `${32 * canvasScale}px`,
-                  marginRight: `${32 * canvasScale}px`,
-                }}
-              >
-                {cornerLabels.top.map((label, index) => (
-                  <div
-                    key={`top-${index}`}
-                    className="text-xs bg-gray-200 px-2 py-1 rounded text-center"
-                    style={{
-                      minWidth: `${80 * canvasScale}px`,
-                      fontSize: `${12 * canvasScale}px`,
-                    }}
-                  >
-                    {label || `Top ${index + 1}`}
-                  </div>
-                ))}
-              </div>
-
-              <div className="flex">
-                {/* Left Labels */}
+              <div ref={containerRef} className="w-full">
+                {/* Top Labels */}
                 <div
-                  className="flex flex-col justify-between mr-2"
-                  style={{ height: scaledCanvasConfig.height }}
-                >
-                  {cornerLabels.left.map((label, index) => (
-                    <div
-                      key={`left-${index}`}
-                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
-                      style={{
-                        writingMode: "vertical-rl",
-                        minHeight: `${60 * canvasScale}px`,
-                        fontSize: `${12 * canvasScale}px`,
-                      }}
-                    >
-                      {label || `L${index + 1}`}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Main Canvas */}
-                <div
-                  ref={canvasRef}
-                  className="relative border-2 border-gray-300 bg-gray-50 overflow-hidden"
+                  className="flex justify-between mb-2 px-8"
                   style={{
-                    width: scaledCanvasConfig.width,
-                    height: scaledCanvasConfig.height,
-                    minWidth: scaledCanvasConfig.width,
-                    minHeight: scaledCanvasConfig.height,
-                    backgroundImage:
-                      "linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
+                    width: scaledCanvasConfig.width + 64,
+                    margin: "0 auto",
                   }}
                 >
-                  {/* Grid pattern for visual reference */}
-                  <div
-                    className="absolute inset-0 opacity-10"
-                    style={{
-                      backgroundImage: `
-                        linear-gradient(to right, #000 1px, transparent 1px),
-                        linear-gradient(to bottom, #000 1px, transparent 1px)
-                      `,
-                      backgroundSize: `${50 * canvasScale}px ${50 * canvasScale}px`,
-                    }}
-                  />
-
-                  {/* Tables */}
-                  {elements.map((element) => (
+                  {cornerLabels.top.map((label, index) => (
                     <div
-                      key={element.id}
-                      className="absolute cursor-pointer transition-all duration-200 hover:scale-105"
+                      key={`top-${index}`}
+                      className="text-xs bg-gray-200 px-2 py-1 mb-2 rounded text-center flex-shrink-0"
                       style={{
-                        left: `${element.position.x * canvasScale}px`,
-                        top: `${element.position.y * canvasScale}px`,
-                        transform: `rotate(${element.rotation}deg)`,
+                        minWidth: `${Math.max(60, 80 * canvasScale)}px`,
+                        fontSize: `${Math.max(10, 12 * canvasScale)}px`,
                       }}
-                      onClick={() => setSelectedTable(element)}
                     >
-                      <div className="relative">
-                        <TableIcon
-                          tableType={element.tableType}
-                          status={element.tableStatus}
-                          width={element.width}
-                          height={element.height}
-                          scale={canvasScale}
-                        />
+                      {label || `Top ${index + 1}`}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="flex justify-center">
+                  <div className="flex items-start">
+                    {/* Left Labels */}
+                    <div
+                      className="flex flex-col justify-between mr-2 flex-shrink-0"
+                      style={{ height: scaledCanvasConfig.height }}
+                    >
+                      {cornerLabels.left.map((label, index) => (
                         <div
-                          className="absolute inset-0 flex items-center justify-center"
+                          key={`left-${index}`}
+                          className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
                           style={{
-                            fontSize: `${14 * canvasScale}px`,
+                            writingMode: "vertical-rl",
+                            minHeight: `${Math.max(40, 60 * canvasScale)}px`,
+                            fontSize: `${Math.max(10, 12 * canvasScale)}px`,
+                            width: "32px",
                           }}
                         >
-                          <span className="text-white font-bold drop-shadow-lg">
-                            T-{element.tableNumber}
-                          </span>
+                          {label || `L${index + 1}`}
                         </div>
-                        {selectedTable?.id === element.id && (
-                          <div
-                            className="absolute -top-1 right-1 bg-blue-500 rounded-full border-2 border-white"
-                            style={{
-                              width: `${16 * canvasScale}px`,
-                              height: `${16 * canvasScale}px`,
-                            }}
-                          ></div>
-                        )}
-                      </div>
+                      ))}
                     </div>
-                  ))}
-                </div>
 
-                {/* Right Labels */}
-                <div
-                  className="flex flex-col justify-between ml-2"
-                  style={{ height: scaledCanvasConfig.height }}
-                >
-                  {cornerLabels.right.map((label, index) => (
+                    {/* Main Canvas */}
                     <div
-                      key={`right-${index}`}
-                      className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
+                      ref={canvasRef}
+                      className="relative border-2 border-gray-300 bg-gray-50 overflow-hidden flex-shrink-0"
                       style={{
-                        writingMode: "vertical-rl",
-                        minHeight: `${60 * canvasScale}px`,
-                        fontSize: `${12 * canvasScale}px`,
+                        width: scaledCanvasConfig.width,
+                        height: scaledCanvasConfig.height,
+                        backgroundImage: backgroundImage
+                          ? `url(${backgroundImage})`
+                          : `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
+                        backgroundSize: backgroundImage ? "cover" : "auto",
+                        backgroundPosition: "center",
+                        backgroundRepeat: "no-repeat",
                       }}
                     >
-                      {label || `R${index + 1}`}
+                      {/* Grid pattern for visual reference - only show when no background image */}
+                      {!backgroundImage && (
+                        <div
+                          className="absolute inset-0 opacity-20"
+                          style={{
+                            backgroundImage: `
+                              linear-gradient(to right, #666 1px, transparent 1px),
+                              linear-gradient(to bottom, #666 1px, transparent 1px)
+                            `,
+                            backgroundSize: `${Math.max(20, 40 * canvasScale)}px ${Math.max(20, 40 * canvasScale)}px`,
+                          }}
+                        />
+                      )}
+
+                      {/* Tables */}
+                      {elements.map((element) => (
+                        <div
+                          key={element.id}
+                          className="absolute cursor-pointer transition-all duration-200 hover:scale-105"
+                          style={{
+                            left: `${element.position.x * canvasScale}px`,
+                            top: `${element.position.y * canvasScale}px`,
+                            transform: `rotate(${element.rotation}deg)`,
+                          }}
+                          onClick={() => setSelectedTable(element)}
+                        >
+                          <div className="relative">
+                            <TableIcon
+                              tableType={element.tableType}
+                              status={element.tableStatus}
+                              width={element.width}
+                              height={element.height}
+                              scale={canvasScale}
+                            />
+                            <div
+                              className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                              style={{
+                                fontSize: `${Math.max(10, 14 * canvasScale)}px`,
+                              }}
+                            >
+                              <span className="text-gray-800 font-bold drop-shadow-sm">
+                                T-{element.tableNumber}
+                              </span>
+                            </div>
+                            {selectedTable?.id === element.id && (
+                              <div
+                                className="absolute -top-1 -right-1 bg-blue-500 rounded-full border-2 border-white"
+                                style={{
+                                  width: `${Math.max(12, 16 * canvasScale)}px`,
+                                  height: `${Math.max(12, 16 * canvasScale)}px`,
+                                }}
+                              ></div>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Right Labels */}
+                    <div
+                      className="flex flex-col justify-between ml-2 flex-shrink-0"
+                      style={{ height: scaledCanvasConfig.height }}
+                    >
+                      {cornerLabels.right.map((label, index) => (
+                        <div
+                          key={`right-${index}`}
+                          className="text-xs bg-gray-200 px-2 py-1 rounded mb-2 text-center flex items-center justify-center"
+                          style={{
+                            writingMode: "vertical-rl",
+                            minHeight: `${Math.max(40, 60 * canvasScale)}px`,
+                            fontSize: `${Math.max(10, 12 * canvasScale)}px`,
+                            width: "32px",
+                          }}
+                        >
+                          {label || `R${index + 1}`}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bottom Labels */}
+                <div
+                  className="flex justify-between mt-2 px-8"
+                  style={{
+                    width: scaledCanvasConfig.width + 64,
+                    margin: "0 auto",
+                  }}
+                >
+                  {cornerLabels.bottom.map((label, index) => (
+                    <div
+                      key={`bottom-${index}`}
+                      className="text-xs mt-2 bg-gray-200 px-2 py-1 rounded text-center flex-shrink-0"
+                      style={{
+                        minWidth: `${Math.max(60, 80 * canvasScale)}px`,
+                        fontSize: `${Math.max(10, 12 * canvasScale)}px`,
+                      }}
+                    >
+                      {label || `Bottom ${index + 1}`}
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Bottom Labels */}
-              <div
-                className="flex justify-between mt-2"
-                style={{
-                  marginLeft: `${32 * canvasScale}px`,
-                  marginRight: `${32 * canvasScale}px`,
-                }}
-              >
-                {cornerLabels.bottom.map((label, index) => (
-                  <div
-                    key={`bottom-${index}`}
-                    className="text-xs bg-gray-200 px-2 py-1 rounded text-center"
-                    style={{
-                      minWidth: `${80 * canvasScale}px`,
-                      fontSize: `${12 * canvasScale}px`,
-                    }}
-                  >
-                    {label || `Bottom ${index + 1}`}
-                  </div>
-                ))}
               </div>
             </CardContent>
           </Card>
@@ -382,6 +399,44 @@ const RestaurantTableLayout = () => {
                   {Math.round(scaledCanvasConfig.height)}
                 </p>
               </div>
+            </CardContent>
+          </Card>
+
+          {/* Background Image Upload */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Background</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <Label htmlFor="background-upload">
+                  Upload Background Image
+                </Label>
+                <Input
+                  id="background-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                      const reader = new FileReader();
+                      reader.onload = (e) =>
+                        setBackgroundImage(e.target.result);
+                      reader.readAsDataURL(file);
+                    }
+                  }}
+                  className="mt-1"
+                />
+              </div>
+              {backgroundImage && (
+                <Button
+                  variant="outline"
+                  onClick={() => setBackgroundImage(null)}
+                  className="w-full"
+                >
+                  Remove Background
+                </Button>
+              )}
             </CardContent>
           </Card>
 
