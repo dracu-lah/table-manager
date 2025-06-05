@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, Clock, MapPin, UserPlus } from "lucide-react";
 import getTableIcon from "./getTableIcon";
+import { RoomLayouts } from "@/utils/assets";
 
 // Mock API Data
 const MOCK_USERS = [
@@ -464,6 +465,7 @@ const RestaurantTableManager = () => {
       .filter(Boolean);
   };
 
+  const bgImage = RoomLayouts.RoomLayout1;
   return (
     <div className="w-full mx-auto p-4 space-y-6">
       {/* Header */}
@@ -505,6 +507,12 @@ const RestaurantTableManager = () => {
                     style={{
                       width: scaledCanvasConfig.width,
                       height: scaledCanvasConfig.height,
+                      backgroundImage: bgImage
+                        ? `url(${bgImage})`
+                        : `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
+                      backgroundSize: bgImage ? "cover" : "auto",
+                      backgroundPosition: "center",
+                      backgroundRepeat: "no-repeat",
                     }}
                   >
                     {/* Grid pattern */}
