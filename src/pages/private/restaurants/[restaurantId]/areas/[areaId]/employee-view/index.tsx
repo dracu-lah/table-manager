@@ -478,25 +478,9 @@ const RestaurantTableManager = () => {
         </CardHeader>
       </Card>
 
-      {/* Status Legend */}
-      <Card>
-        <CardContent className="pt-6">
-          <div className="flex flex-wrap gap-2">
-            {Object.entries(TABLE_STATUSES).map(([status, config]) => (
-              <Badge
-                key={status}
-                className={`${config.color} ${config.badgeTextColor}`}
-              >
-                {config.label}
-              </Badge>
-            ))}
-          </div>
-        </CardContent>
-      </Card>
-
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Canvas Container */}
-        <div className="xl:col-span-2">
+        <div className="xl:col-span-2 space-y-4">
           <Card>
             <CardContent className="pt-6">
               <div ref={containerRef} className="w-full">
@@ -585,6 +569,25 @@ const RestaurantTableManager = () => {
                     </p>
                   </div>
                 )}
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Status Legend */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Legend</CardTitle>
+            </CardHeader>
+            <CardContent className="">
+              <div className="flex flex-wrap gap-2">
+                {Object.entries(TABLE_STATUSES).map(([status, config]) => (
+                  <Badge
+                    key={status}
+                    className={`${config.color} ${config.badgeTextColor}`}
+                  >
+                    {config.label}
+                  </Badge>
+                ))}
               </div>
             </CardContent>
           </Card>
