@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -156,7 +156,7 @@ ${statusConfig.textColor} border-current  bg-opacity-80`}
 const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
   return (
     <Card
-      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+      className={`cursor-pointer transition-all p-0 duration-200 hover:shadow-md ${
         isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
       }`}
       onClick={() => onSelect(user.id)}
@@ -301,74 +301,6 @@ const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
     </div>
   );
 };
-
-// User Card Component
-// const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
-//   const getStatusColor = (status) => {
-//     switch (status) {
-//       case "waiting":
-//         return "bg-yellow-100 text-yellow-800";
-//       case "confirmed":
-//         return "bg-green-100 text-green-800";
-//       case "seated":
-//         return "bg-blue-100 text-blue-800";
-//       default:
-//         return "bg-gray-100 text-gray-800";
-//     }
-//   };
-//
-//   return (
-//     <Card
-//       className={`cursor-pointer  transition-all duration-200 hover:shadow-md ${
-//         isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
-//       }`}
-//       onClick={() => onSelect(user.id)}
-//     >
-//       <CardContent className="">
-//         <div className="flex items-start gap-3">
-//           <Avatar className="h-10 w-10">
-//             <AvatarImage src={user.avatar} />
-//             <AvatarFallback>
-//               {user.name
-//                 .split(" ")
-//                 .map((n) => n[0])
-//                 .join("")}
-//             </AvatarFallback>
-//           </Avatar>
-//
-//           <div className="flex-1 min-w-0">
-//             <h4 className="font-semibold text-sm truncate">{user.name}</h4>
-//             <p className="text-xs text-gray-600 truncate">{user.email}</p>
-//
-//             <div className="flex items-center gap-2 mt-2">
-//               <div className="flex items-center gap-1">
-//                 <Users size={12} className="text-gray-500" />
-//                 <span className="text-xs">{user.party_size}</span>
-//               </div>
-//
-//               <div className="flex items-center gap-1">
-//                 <Clock size={12} className="text-gray-500" />
-//                 <span className="text-xs">{user.reservation_time}</span>
-//               </div>
-//             </div>
-//
-//             <div className="flex items-center justify-between mt-2">
-//               <Badge className={`text-xs ${getStatusColor(user.status)}`}>
-//                 {user.status}
-//               </Badge>
-//
-//               {seatedTables.length > 0 && (
-//                 <Badge variant="outline" className="text-xs">
-//                   Table {seatedTables.join(", ")}
-//                 </Badge>
-//               )}
-//             </div>
-//           </div>
-//         </div>
-//       </CardContent>
-//     </Card>
-//   );
-// };
 
 // Main Component
 const RestaurantTableManager = () => {
@@ -709,15 +641,6 @@ const RestaurantTableManager = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3 p-1 max-h-[440px]  overflow-y-auto">
-              {/* {users.map((user) => ( */}
-              {/*   <UserCard */}
-              {/*     key={user.id} */}
-              {/*     user={user} */}
-              {/*     isSelected={selectedUser === user.id} */}
-              {/*     onSelect={setSelectedUser} */}
-              {/*     seatedTables={getUserSeatedTables(user.id)} */}
-              {/*   /> */}
-              {/* ))} */}
               <UserAccordion
                 users={users}
                 selectedUser={selectedUser}
@@ -726,39 +649,38 @@ const RestaurantTableManager = () => {
               />
             </CardContent>
           </Card>
-
-          {/* Assignment Controls */}
-          {/* <Card> */}
-          {/*   <CardHeader> */}
-          {/*     <CardTitle>Table Assignment</CardTitle> */}
-          {/*   </CardHeader> */}
-          {/*   <CardContent className="space-y-4"> */}
-          {/*     {selectedUser && selectedTables.length > 0 ? ( */}
-          {/*       <div className="space-y-3"> */}
-          {/*         <div className="p-3 bg-green-50 rounded-lg border border-green-200"> */}
-          {/*           <p className="text-sm text-green-800"> */}
-          {/*             Assign Table(s){" "} */}
-          {/*             {selectedTables */}
-          {/*               .map((tableId) => { */}
-          {/*                 const table = tables.find((t) => t.id === tableId); */}
-          {/*                 return table?.tableNumber; */}
-          {/*               }) */}
-          {/*               .join(", ")}{" "} */}
-          {/*             to {users.find((u) => u.id === selectedUser)?.name} */}
-          {/*           </p> */}
-          {/*         </div> */}
-          {/*         <Button onClick={assignTablesToUser} className="w-full"> */}
-          {/*           <UserPlus className="h-4 w-4 mr-2" /> */}
-          {/*           Make Guest Seated */}
-          {/*         </Button> */}
-          {/*       </div> */}
-          {/*     ) : ( */}
-          {/*       <p className="text-sm text-gray-500"> */}
-          {/*         Select a customer and table(s) to assign */}
-          {/*       </p> */}
-          {/*     )} */}
-          {/*   </CardContent> */}
-          {/* </Card> */}
+          Assignment Controls
+          <Card>
+            <CardHeader>
+              <CardTitle>Table Assignment</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {selectedUser && selectedTables.length > 0 ? (
+                <div className="space-y-3">
+                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
+                    <p className="text-sm text-green-800">
+                      Assign Table(s){" "}
+                      {selectedTables
+                        .map((tableId) => {
+                          const table = tables.find((t) => t.id === tableId);
+                          return table?.tableNumber;
+                        })
+                        .join(", ")}{" "}
+                      to {users.find((u) => u.id === selectedUser)?.name}
+                    </p>
+                  </div>
+                  <Button onClick={assignTablesToUser} className="w-full">
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Make Guest Seated
+                  </Button>
+                </div>
+              ) : (
+                <p className="text-sm text-gray-500">
+                  Select a customer and table(s) to assign
+                </p>
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
 
@@ -814,69 +736,6 @@ const RestaurantTableManager = () => {
             </Button>
           </CardContent>
         </Card>
-
-        {/* Table Controls */}
-        {/* <Card> */}
-        {/*   <CardHeader> */}
-        {/*     <CardTitle>Table Controls</CardTitle> */}
-        {/*   </CardHeader> */}
-        {/*   <CardContent className="space-y-4"> */}
-        {/*     {selectedTables.length === 1 ? ( */}
-        {/*       (() => { */}
-        {/*         const table = tables.find((t) => t.id === selectedTables[0]); */}
-        {/*         const assignment = tableAssignments[selectedTables[0]]; */}
-        {/*         return ( */}
-        {/*           <div className="space-y-4"> */}
-        {/*             <div> */}
-        {/*               <Label>Table {table?.tableNumber}</Label> */}
-        {/*               <p className="text-sm text-gray-600"> */}
-        {/*                 Capacity: {table?.capacity} people */}
-        {/*               </p> */}
-        {/*               {assignment && ( */}
-        {/*                 <p className="text-sm text-blue-600"> */}
-        {/*                   Seated By: {assignment.name} */}
-        {/*                 </p> */}
-        {/*               )} */}
-        {/*             </div> */}
-        {/**/}
-        {/*             <div> */}
-        {/*               <Label>Status</Label> */}
-        {/*               <Select */}
-        {/*                 value={table?.tableStatus} */}
-        {/*                 onValueChange={(value) => */}
-        {/*                   updateTableStatus(selectedTables[0], value) */}
-        {/*                 } */}
-        {/*               > */}
-        {/*                 <SelectTrigger> */}
-        {/*                   <SelectValue /> */}
-        {/*                 </SelectTrigger> */}
-        {/*                 <SelectContent> */}
-        {/*                   {Object.entries(TABLE_STATUSES).map( */}
-        {/*                     ([status, config]) => ( */}
-        {/*                       <SelectItem key={status} value={status}> */}
-        {/*                         {config.label} */}
-        {/*                       </SelectItem> */}
-        {/*                     ), */}
-        {/*                   )} */}
-        {/*                 </SelectContent> */}
-        {/*               </Select> */}
-        {/*             </div> */}
-        {/**/}
-        {/*             <Badge */}
-        {/*               className={`${TABLE_STATUSES[table?.tableStatus]?.color} ${TABLE_STATUSES[table?.tableStatus]?.badgeTextColor}`} */}
-        {/*             > */}
-        {/*               {TABLE_STATUSES[table?.tableStatus]?.label} */}
-        {/*             </Badge> */}
-        {/*           </div> */}
-        {/*         ); */}
-        {/*       })() */}
-        {/*     ) : ( */}
-        {/*       <p className="text-gray-500"> */}
-        {/*         Select a single table to modify its status */}
-        {/*       </p> */}
-        {/*     )} */}
-        {/*   </CardContent> */}
-        {/* </Card> */}
 
         {/* Statistics */}
         <Card>
