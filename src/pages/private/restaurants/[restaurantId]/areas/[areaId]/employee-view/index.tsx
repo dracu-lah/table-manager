@@ -15,9 +15,15 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Users, Clock, UserPlus } from "lucide-react";
+import {
+  Users,
+  Clock,
+  UserPlus,
+  X,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 import getTableIcon from "./getTableIcon";
-import { RoomLayouts } from "@/utils/assets";
 
 // Mock API Data
 const MOCK_USERS = [
@@ -153,14 +159,54 @@ ${statusConfig.textColor} border-current  bg-opacity-80`}
     />
   );
 };
-const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
+
+const UserCard = ({
+  user,
+  seatedTables = [],
+  onSeatUser,
+  onCancelUser,
+  onUnseatUser,
+}) => {
+  const getStatusBadge = () => {
+    switch (user.status) {
+      case "waiting":
+        return (
+          <Badge
+            variant="outline"
+            className="text-yellow-600 border-yellow-600"
+          >
+            Waiting
+          </Badge>
+        );
+      case "confirmed":
+        return (
+          <Badge variant="outline" className="text-green-600 border-green-600">
+            Confirmed
+          </Badge>
+        );
+      case "seated":
+        return (
+          <Badge variant="default" className="bg-blue-600">
+            Seated
+          </Badge>
+        );
+      case "cancelled":
+        return (
+          <Badge variant="outline" className="text-red-600 border-red-600">
+            Cancelled
+          </Badge>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const canSeat = user.status === "waiting" || user.status === "confirmed";
+  const canCancel = user.status !== "cancelled";
+  const canUnseat = user.status === "seated";
+
   return (
-    <Card
-      className={`cursor-pointer transition-all p-0 duration-200 hover:shadow-md ${
-        isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
-      }`}
-      onClick={() => onSelect(user.id)}
-    >
+    <Card className="transition-all p-0 duration-200 hover:shadow-md">
       <CardContent className="p-3">
         <div className="flex items-start gap-3">
           <Avatar className="h-10 w-10">
@@ -173,7 +219,10 @@ const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-sm truncate">{user.name}</h4>
+            <div className="flex items-center justify-between">
+              <h4 className="font-semibold text-sm truncate">{user.name}</h4>
+              {getStatusBadge()}
+            </div>
             <p className="text-xs text-gray-600 truncate">{user.email}</p>
             <div className="flex items-center gap-2 mt-2">
               <div className="flex items-center gap-1">
@@ -185,6 +234,7 @@ const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
                 <span className="text-xs">{user.reservation_time}</span>
               </div>
             </div>
+
             {seatedTables.length > 0 && (
               <div className="mt-2">
                 <Badge variant="outline" className="text-xs">
@@ -192,6 +242,45 @@ const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
                 </Badge>
               </div>
             )}
+
+            {/* Action Buttons */}
+            <div className="flex gap-2 mt-3">
+              {canSeat && (
+                <Button
+                  size="sm"
+                  variant="default"
+                  className="h-7 text-xs"
+                  onClick={() => onSeatUser(user)}
+                >
+                  <UserPlus size={12} className="mr-1" />
+                  Seat
+                </Button>
+              )}
+
+              {canUnseat && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs"
+                  onClick={() => onUnseatUser(user)}
+                >
+                  <AlertCircle size={12} className="mr-1" />
+                  Unseat
+                </Button>
+              )}
+
+              {canCancel && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs text-red-600 border-red-300 hover:bg-red-50"
+                  onClick={() => onCancelUser(user)}
+                >
+                  <X size={12} className="mr-1" />
+                  Cancel
+                </Button>
+              )}
+            </div>
           </div>
         </div>
       </CardContent>
@@ -214,17 +303,18 @@ const groupUsersByStatus = (users) => {
 const statusConfig = {
   waiting: {
     label: "Waiting",
-    // icon: "⏰",
     color: "text-yellow-600",
+  },
+  confirmed: {
+    label: "Confirmed",
+    color: "text-green-600",
   },
   seated: {
     label: "Seated",
-    // icon: "🪑",
     color: "text-blue-600",
   },
   cancelled: {
     label: "Cancelled",
-    // icon: "❌",
     color: "text-red-600",
   },
 };
@@ -232,17 +322,18 @@ const statusConfig = {
 // Main component usage
 const UserAccordion = ({
   users,
-  selectedUser,
-  setSelectedUser,
   getUserSeatedTables,
+  onSeatUser,
+  onCancelUser,
+  onUnseatUser,
 }) => {
   const groupedUsers = groupUsersByStatus(users);
-  const orderedStatuses = ["waiting", "seated", "cancelled"];
+  const orderedStatuses = ["waiting", "confirmed", "seated", "cancelled"];
 
   return (
     <Accordion
       type="multiple"
-      defaultValue={["waiting", "seated"]}
+      defaultValue={["waiting", "confirmed", "seated"]}
       className="w-full"
     >
       {orderedStatuses.map((status) => {
@@ -255,7 +346,6 @@ const UserAccordion = ({
           <AccordionItem key={status} value={status}>
             <AccordionTrigger className="hover:no-underline">
               <div className="flex items-center gap-2">
-                <span className="text-lg">{config.icon}</span>
                 <span className={`font-semibold ${config.color}`}>
                   {config.label}
                 </span>
@@ -270,9 +360,10 @@ const UserAccordion = ({
                   <UserCard
                     key={user.id}
                     user={user}
-                    isSelected={selectedUser === user.id}
-                    onSelect={setSelectedUser}
                     seatedTables={getUserSeatedTables(user.id)}
+                    onSeatUser={onSeatUser}
+                    onCancelUser={onCancelUser}
+                    onUnseatUser={onUnseatUser}
                   />
                 ))}
               </div>
@@ -283,6 +374,7 @@ const UserAccordion = ({
     </Accordion>
   );
 };
+
 // Table Assignment Badge Component
 const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
   if (!assignment) return null;
@@ -310,9 +402,9 @@ const RestaurantTableManager = () => {
 
   // State management
   const [users, setUsers] = useState(MOCK_USERS);
-  const [selectedUser, setSelectedUser] = useState(null);
   const [selectedTables, setSelectedTables] = useState([]);
   const [tableAssignments, setTableAssignments] = useState({});
+  const [pendingUser, setPendingUser] = useState(null);
 
   // Original canvas dimensions
   const originalCanvasConfig = {
@@ -381,7 +473,6 @@ const RestaurantTableManager = () => {
       height: 50,
       capacity: 2,
     },
-
     {
       id: "table-8",
       tableNumber: 8,
@@ -422,6 +513,8 @@ const RestaurantTableManager = () => {
 
   // Table management functions
   const handleTableClick = (tableId) => {
+    if (!pendingUser) return;
+
     setSelectedTables((prev) => {
       if (prev.includes(tableId)) {
         return prev.filter((id) => id !== tableId);
@@ -431,22 +524,75 @@ const RestaurantTableManager = () => {
     });
   };
 
-  const assignTablesToUser = () => {
-    if (!selectedUser || selectedTables.length === 0) return;
+  // User management functions
+  const handleSeatUser = (user) => {
+    setPendingUser(user);
+    setSelectedTables([]);
+  };
+
+  const handleCancelUser = (user) => {
+    // Update user status to cancelled
+    setUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, status: "cancelled" } : u)),
+    );
+
+    // Remove any table assignments for this user
+    const newAssignments = { ...tableAssignments };
+    Object.keys(newAssignments).forEach((tableId) => {
+      if (newAssignments[tableId]?.id === user.id) {
+        delete newAssignments[tableId];
+      }
+    });
+    setTableAssignments(newAssignments);
+
+    // Update table statuses
+    setTables((prev) =>
+      prev.map((table) => ({
+        ...table,
+        tableStatus: newAssignments[table.id] ? "seated" : "available",
+      })),
+    );
+  };
+
+  const handleUnseatUser = (user) => {
+    // Remove table assignments for this user
+    const newAssignments = { ...tableAssignments };
+    Object.keys(newAssignments).forEach((tableId) => {
+      if (newAssignments[tableId]?.id === user.id) {
+        delete newAssignments[tableId];
+      }
+    });
+    setTableAssignments(newAssignments);
+
+    // Update table statuses
+    setTables((prev) =>
+      prev.map((table) => ({
+        ...table,
+        tableStatus: newAssignments[table.id] ? "seated" : "available",
+      })),
+    );
+
+    // Update user status back to confirmed
+    setUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, status: "confirmed" } : u)),
+    );
+  };
+
+  const confirmSeating = () => {
+    if (!pendingUser || selectedTables.length === 0) return;
 
     const newAssignments = { ...tableAssignments };
 
     // Remove previous assignments for this user
     Object.keys(newAssignments).forEach((tableId) => {
-      if (newAssignments[tableId]?.id === selectedUser) {
+      if (newAssignments[tableId]?.id === pendingUser.id) {
         delete newAssignments[tableId];
       }
     });
 
     // Add new assignments
     selectedTables.forEach((tableId) => {
-      const user = users.find((u) => u.id === selectedUser);
-      newAssignments[tableId] = user;
+      newAssignments[tableId] = pendingUser;
     });
 
     setTableAssignments(newAssignments);
@@ -467,13 +613,18 @@ const RestaurantTableManager = () => {
     setUsers((prev) =>
       prev.map((user) => ({
         ...user,
-        status: user.id === selectedUser ? "seated" : user.status,
+        status: user.id === pendingUser.id ? "seated" : user.status,
       })),
     );
 
     // Clear selections
     setSelectedTables([]);
-    setSelectedUser(null);
+    setPendingUser(null);
+  };
+
+  const cancelSeating = () => {
+    setPendingUser(null);
+    setSelectedTables([]);
   };
 
   const updateTableStatus = (tableId, newStatus) => {
@@ -503,7 +654,7 @@ const RestaurantTableManager = () => {
       })),
     );
     setSelectedTables([]);
-    setSelectedUser(null);
+    setPendingUser(null);
   };
 
   const getUserSeatedTables = (userId) => {
@@ -516,7 +667,6 @@ const RestaurantTableManager = () => {
       .filter(Boolean);
   };
 
-  const bgImage = RoomLayouts.RoomLayout1;
   return (
     <div className="w-full mx-auto p-4 space-y-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
@@ -532,10 +682,8 @@ const RestaurantTableManager = () => {
                     style={{
                       width: scaledCanvasConfig.width,
                       height: scaledCanvasConfig.height,
-                      backgroundImage: bgImage
-                        ? `url(${bgImage})`
-                        : `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
-                      backgroundSize: bgImage ? "cover" : "auto",
+                      backgroundImage: `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
+                      backgroundSize: "auto",
                       backgroundPosition: "center",
                       backgroundRepeat: "no-repeat",
                     }}
@@ -556,7 +704,9 @@ const RestaurantTableManager = () => {
                     {tables.map((table) => (
                       <div
                         key={table.id}
-                        className="absolute cursor-pointer transition-all duration-200 hover:scale-105"
+                        className={`absolute transition-all duration-200 hover:scale-105 ${
+                          pendingUser ? "cursor-pointer" : ""
+                        }`}
                         style={{
                           left: `${table.position.x * canvasScale}px`,
                           top: `${table.position.y * canvasScale}px`,
@@ -596,27 +746,57 @@ const RestaurantTableManager = () => {
                   </div>
                 </div>
 
-                {/* Selection Info */}
-                {selectedTables.length > 0 && (
-                  <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
-                    <p className="text-sm text-blue-800">
-                      Selected Tables:{" "}
-                      {selectedTables
-                        .map((tableId) => {
-                          const table = tables.find((t) => t.id === tableId);
-                          return table?.tableNumber;
-                        })
-                        .join(", ")}
-                    </p>
+                {/* Seating Instructions */}
+                {pendingUser && (
+                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-sm text-blue-800 font-semibold">
+                          Seating: {pendingUser.name} (Party of{" "}
+                          {pendingUser.party_size})
+                        </p>
+                        <p className="text-xs text-blue-600">
+                          Click on available tables to select them
+                        </p>
+                        {selectedTables.length > 0 && (
+                          <p className="text-xs text-blue-600 mt-1">
+                            Selected: Table{" "}
+                            {selectedTables
+                              .map((tableId) => {
+                                const table = tables.find(
+                                  (t) => t.id === tableId,
+                                );
+                                return table?.tableNumber;
+                              })
+                              .join(", ")}
+                          </p>
+                        )}
+                      </div>
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onClick={confirmSeating}
+                          disabled={selectedTables.length === 0}
+                        >
+                          <CheckCircle size={14} className="mr-1" />
+                          Confirm
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={cancelSeating}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
             </CardContent>
             <CardFooter className="flex flex-col items-start gap-4">
               {/* Status Legend */}
-
               <h1 className="text-2xl underline font-semibold">Legend</h1>
-
               <div className="flex flex-wrap gap-2">
                 {Object.entries(TABLE_STATUSES).map(([status, config]) => (
                   <Badge
@@ -640,58 +820,27 @@ const RestaurantTableManager = () => {
                 Customers ({users.length})
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 p-1 max-h-[440px]  overflow-y-auto">
+            <CardContent className="space-y-3 p-1 max-h-[500px] overflow-y-auto">
               <UserAccordion
                 users={users}
-                selectedUser={selectedUser}
-                setSelectedUser={setSelectedUser}
                 getUserSeatedTables={getUserSeatedTables}
+                onSeatUser={handleSeatUser}
+                onCancelUser={handleCancelUser}
+                onUnseatUser={handleUnseatUser}
               />
-            </CardContent>
-          </Card>
-          Assignment Controls
-          <Card>
-            <CardHeader>
-              <CardTitle>Table Assignment</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selectedUser && selectedTables.length > 0 ? (
-                <div className="space-y-3">
-                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-sm text-green-800">
-                      Assign Table(s){" "}
-                      {selectedTables
-                        .map((tableId) => {
-                          const table = tables.find((t) => t.id === tableId);
-                          return table?.tableNumber;
-                        })
-                        .join(", ")}{" "}
-                      to {users.find((u) => u.id === selectedUser)?.name}
-                    </p>
-                  </div>
-                  <Button onClick={assignTablesToUser} className="w-full">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Make Guest Seated
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">
-                  Select a customer and table(s) to assign
-                </p>
-              )}
             </CardContent>
           </Card>
         </div>
       </div>
 
       {/* Quick Actions & Controls */}
-      <div className="grid grid-cols-2  gap-4">
+      <div className="grid grid-cols-2 gap-4">
         {/* Quick Actions */}
         <Card>
           <CardHeader>
             <CardTitle>Quick Actions</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-2">
+          <CardContent className="grid grid-cols-2 gap-2">
             <Button
               variant="outline"
               className="w-full"
@@ -743,23 +892,29 @@ const RestaurantTableManager = () => {
             <CardTitle className="text-xl">Statistics</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-6">
+            <div className="grid grid-cols-2  gap-6">
               <div>
                 <p className="text-gray-500 text-base mb-2">Available Tables</p>
-                <p className="font-semibold text-green-600 text-2xl">
+                <p className="font-semibold text-green-600 ">
                   {tables.filter((t) => t.tableStatus === "available").length}
                 </p>
               </div>
               <div>
                 <p className="text-gray-500 text-base mb-2">Seated Guests</p>
-                <p className="font-semibold text-blue-600 text-2xl">
+                <p className="font-semibold text-blue-600 ">
                   {Object.keys(tableAssignments).length}
                 </p>
               </div>
               <div>
                 <p className="text-gray-500 text-base mb-2">Waiting Guests</p>
-                <p className="font-semibold text-yellow-600 text-2xl">
+                <p className="font-semibold text-yellow-600">
                   {users.filter((u) => u.status === "waiting").length}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500 text-base mb-2">Cancelled</p>
+                <p className="font-semibold text-red-600 ">
+                  {users.filter((u) => u.status === "cancelled").length}
                 </p>
               </div>
             </div>
