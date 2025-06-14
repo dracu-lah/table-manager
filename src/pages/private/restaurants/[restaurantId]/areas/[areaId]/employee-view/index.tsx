@@ -673,7 +673,7 @@ const RestaurantTableManager = () => {
         {/* Canvas Container */}
         <div className="xl:col-span-2 space-y-4">
           <Card>
-            <CardContent className="pt-6">
+            <CardContent className="pt-4">
               <div ref={containerRef} className="w-full">
                 <div className="flex justify-center">
                   <div
@@ -834,7 +834,7 @@ const RestaurantTableManager = () => {
       </div>
 
       {/* Quick Actions & Controls */}
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4">
         {/* Quick Actions */}
         <Card>
           <CardHeader>
@@ -892,7 +892,7 @@ const RestaurantTableManager = () => {
             <CardTitle className="text-xl">Statistics</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="grid grid-cols-2  gap-6">
+            <div className="grid grid-cols-4   text-center gap-6">
               <div>
                 <p className="text-gray-500 text-base mb-2">Available Tables</p>
                 <p className="font-semibold text-green-600 ">
