@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -561,14 +567,11 @@ const RestaurantTableManager = () => {
                 )}
               </div>
             </CardContent>
-          </Card>
+            <CardFooter className="flex flex-col items-start gap-4">
+              {/* Status Legend */}
 
-          {/* Status Legend */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Legend</CardTitle>
-            </CardHeader>
-            <CardContent className="">
+              <h1 className="text-2xl underline font-semibold">Legend</h1>
+
               <div className="flex flex-wrap gap-2">
                 {Object.entries(TABLE_STATUSES).map(([status, config]) => (
                   <Badge
@@ -579,7 +582,7 @@ const RestaurantTableManager = () => {
                   </Badge>
                 ))}
               </div>
-            </CardContent>
+            </CardFooter>
           </Card>
         </div>
 
