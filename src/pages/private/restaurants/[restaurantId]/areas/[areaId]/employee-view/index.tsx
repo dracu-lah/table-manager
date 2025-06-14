@@ -85,28 +85,16 @@ const TABLE_STATUSES = {
     label: "Available",
     badgeTextColor: "text-white",
   },
-  occupied: {
-    color: "bg-red-600",
-    textColor: "text-red-600",
-    label: "Occupied",
-    badgeTextColor: "text-white",
-  },
-  assigned: {
+  seated: {
     color: "bg-blue-600",
     textColor: "text-blue-600",
-    label: "Assigned",
+    label: "Seated",
     badgeTextColor: "text-white",
   },
   cleaning: {
     color: "bg-yellow-600",
     textColor: "text-yellow-600",
     label: "Cleaning",
-    badgeTextColor: "text-white",
-  },
-  reserved: {
-    color: "bg-purple-600",
-    textColor: "text-purple-600",
-    label: "Reserved",
     badgeTextColor: "text-white",
   },
   maintenance: {
@@ -461,7 +449,7 @@ const RestaurantTableManager = () => {
     setSelectedUser(null);
   };
 
-  const getUserAssignedTables = (userId) => {
+  const getUserSeatedTables = (userId) => {
     return Object.entries(tableAssignments)
       .filter(([_, user]) => user?.id === userId)
       .map(([tableId, _]) => {
@@ -602,7 +590,7 @@ const RestaurantTableManager = () => {
                   user={user}
                   isSelected={selectedUser === user.id}
                   onSelect={setSelectedUser}
-                  assignedTables={getUserAssignedTables(user.id)}
+                  assignedTables={getUserSeatedTables(user.id)}
                 />
               ))}
             </CardContent>
@@ -701,7 +689,7 @@ const RestaurantTableManager = () => {
                         </p>
                         {assignment && (
                           <p className="text-sm text-blue-600">
-                            Assigned to: {assignment.name}
+                            Seated By: {assignment.name}
                           </p>
                         )}
                       </div>
@@ -759,13 +747,7 @@ const RestaurantTableManager = () => {
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Occupied</p>
-                  <p className="font-semibold text-red-600">
-                    {tables.filter((t) => t.tableStatus === "occupied").length}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Assigned</p>
+                  <p className="text-gray-500">Seated</p>
                   <p className="font-semibold text-blue-600">
                     {Object.keys(tableAssignments).length}
                   </p>
