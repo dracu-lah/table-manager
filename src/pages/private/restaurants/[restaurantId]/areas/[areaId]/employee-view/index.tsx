@@ -24,6 +24,7 @@ import {
   AlertCircle,
 } from "lucide-react";
 import getTableIcon from "./getTableIcon";
+import BookingDialogForm from "./BookingDialogForm";
 
 // Mock API Data
 const MOCK_USERS = [
@@ -829,6 +830,9 @@ const RestaurantTableManager = () => {
                 onUnseatUser={handleUnseatUser}
               />
             </CardContent>
+            <CardFooter className="">
+              <BookingDialogForm />
+            </CardFooter>
           </Card>
         </div>
       </div>
