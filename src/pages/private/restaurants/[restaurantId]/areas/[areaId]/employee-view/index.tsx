@@ -296,7 +296,7 @@ const RestaurantTableManager = () => {
       tableType: "rectangle-6",
       tableStatus: "available",
       position: { x: 480, y: 80 },
-      width: 120,
+      width: 60,
       height: 60,
       capacity: 6,
     },
@@ -468,16 +468,6 @@ const RestaurantTableManager = () => {
   const bgImage = RoomLayouts.RoomLayout1;
   return (
     <div className="w-full mx-auto p-4 space-y-6">
-      {/* Header */}
-      <Card>
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <MapPin className="h-5 w-5" />
-            Restaurant Table Management System
-          </CardTitle>
-        </CardHeader>
-      </Card>
-
       <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
         {/* Canvas Container */}
         <div className="xl:col-span-2 space-y-4">
