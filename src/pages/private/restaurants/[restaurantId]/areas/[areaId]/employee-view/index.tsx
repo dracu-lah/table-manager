@@ -1,5 +1,11 @@
 import React, { useState, useEffect, useRef } from "react";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Card,
   CardContent,
   CardFooter,
@@ -147,7 +153,136 @@ ${statusConfig.textColor} border-current  bg-opacity-80`}
     />
   );
 };
+const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
+  return (
+    <Card
+      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+        isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
+      }`}
+      onClick={() => onSelect(user.id)}
+    >
+      <CardContent className="p-3">
+        <div className="flex items-start gap-3">
+          <Avatar className="h-10 w-10">
+            <AvatarImage src={user.avatar} />
+            <AvatarFallback>
+              {user.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1 min-w-0">
+            <h4 className="font-semibold text-sm truncate">{user.name}</h4>
+            <p className="text-xs text-gray-600 truncate">{user.email}</p>
+            <div className="flex items-center gap-2 mt-2">
+              <div className="flex items-center gap-1">
+                <Users size={12} className="text-gray-500" />
+                <span className="text-xs">{user.party_size}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Clock size={12} className="text-gray-500" />
+                <span className="text-xs">{user.reservation_time}</span>
+              </div>
+            </div>
+            {seatedTables.length > 0 && (
+              <div className="mt-2">
+                <Badge variant="outline" className="text-xs">
+                  Table {seatedTables.join(", ")}
+                </Badge>
+              </div>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
 
+// Helper function to group users by status
+const groupUsersByStatus = (users) => {
+  return users.reduce((acc, user) => {
+    if (!acc[user.status]) {
+      acc[user.status] = [];
+    }
+    acc[user.status].push(user);
+    return acc;
+  }, {});
+};
+
+// Status display configuration
+const statusConfig = {
+  waiting: {
+    label: "Waiting",
+    // icon: "⏰",
+    color: "text-yellow-600",
+  },
+  seated: {
+    label: "Seated",
+    // icon: "🪑",
+    color: "text-blue-600",
+  },
+  cancelled: {
+    label: "Cancelled",
+    // icon: "❌",
+    color: "text-red-600",
+  },
+};
+
+// Main component usage
+const UserAccordion = ({
+  users,
+  selectedUser,
+  setSelectedUser,
+  getUserSeatedTables,
+}) => {
+  const groupedUsers = groupUsersByStatus(users);
+  const orderedStatuses = ["waiting", "seated", "cancelled"];
+
+  return (
+    <Accordion
+      type="multiple"
+      defaultValue={["waiting", "seated"]}
+      className="w-full"
+    >
+      {orderedStatuses.map((status) => {
+        const statusUsers = groupedUsers[status] || [];
+        const config = statusConfig[status];
+
+        if (statusUsers.length === 0) return null;
+
+        return (
+          <AccordionItem key={status} value={status}>
+            <AccordionTrigger className="hover:no-underline">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">{config.icon}</span>
+                <span className={`font-semibold ${config.color}`}>
+                  {config.label}
+                </span>
+                <Badge variant="secondary" className="ml-2">
+                  {statusUsers.length}
+                </Badge>
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="space-y-2 pt-2 px-1 max-h-96 overflow-y-auto">
+                {statusUsers.map((user) => (
+                  <UserCard
+                    key={user.id}
+                    user={user}
+                    isSelected={selectedUser === user.id}
+                    onSelect={setSelectedUser}
+                    seatedTables={getUserSeatedTables(user.id)}
+                  />
+                ))}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        );
+      })}
+    </Accordion>
+  );
+};
 // Table Assignment Badge Component
 const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
   if (!assignment) return null;
@@ -168,72 +303,72 @@ const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
 };
 
 // User Card Component
-const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "waiting":
-        return "bg-yellow-100 text-yellow-800";
-      case "confirmed":
-        return "bg-green-100 text-green-800";
-      case "seated":
-        return "bg-blue-100 text-blue-800";
-      default:
-        return "bg-gray-100 text-gray-800";
-    }
-  };
-
-  return (
-    <Card
-      className={`cursor-pointer  transition-all duration-200 hover:shadow-md ${
-        isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
-      }`}
-      onClick={() => onSelect(user.id)}
-    >
-      <CardContent className="">
-        <div className="flex items-start gap-3">
-          <Avatar className="h-10 w-10">
-            <AvatarImage src={user.avatar} />
-            <AvatarFallback>
-              {user.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
-
-          <div className="flex-1 min-w-0">
-            <h4 className="font-semibold text-sm truncate">{user.name}</h4>
-            <p className="text-xs text-gray-600 truncate">{user.email}</p>
-
-            <div className="flex items-center gap-2 mt-2">
-              <div className="flex items-center gap-1">
-                <Users size={12} className="text-gray-500" />
-                <span className="text-xs">{user.party_size}</span>
-              </div>
-
-              <div className="flex items-center gap-1">
-                <Clock size={12} className="text-gray-500" />
-                <span className="text-xs">{user.reservation_time}</span>
-              </div>
-            </div>
-
-            <div className="flex items-center justify-between mt-2">
-              <Badge className={`text-xs ${getStatusColor(user.status)}`}>
-                {user.status}
-              </Badge>
-
-              {seatedTables.length > 0 && (
-                <Badge variant="outline" className="text-xs">
-                  Table {seatedTables.join(", ")}
-                </Badge>
-              )}
-            </div>
-          </div>
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
+// const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
+//   const getStatusColor = (status) => {
+//     switch (status) {
+//       case "waiting":
+//         return "bg-yellow-100 text-yellow-800";
+//       case "confirmed":
+//         return "bg-green-100 text-green-800";
+//       case "seated":
+//         return "bg-blue-100 text-blue-800";
+//       default:
+//         return "bg-gray-100 text-gray-800";
+//     }
+//   };
+//
+//   return (
+//     <Card
+//       className={`cursor-pointer  transition-all duration-200 hover:shadow-md ${
+//         isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
+//       }`}
+//       onClick={() => onSelect(user.id)}
+//     >
+//       <CardContent className="">
+//         <div className="flex items-start gap-3">
+//           <Avatar className="h-10 w-10">
+//             <AvatarImage src={user.avatar} />
+//             <AvatarFallback>
+//               {user.name
+//                 .split(" ")
+//                 .map((n) => n[0])
+//                 .join("")}
+//             </AvatarFallback>
+//           </Avatar>
+//
+//           <div className="flex-1 min-w-0">
+//             <h4 className="font-semibold text-sm truncate">{user.name}</h4>
+//             <p className="text-xs text-gray-600 truncate">{user.email}</p>
+//
+//             <div className="flex items-center gap-2 mt-2">
+//               <div className="flex items-center gap-1">
+//                 <Users size={12} className="text-gray-500" />
+//                 <span className="text-xs">{user.party_size}</span>
+//               </div>
+//
+//               <div className="flex items-center gap-1">
+//                 <Clock size={12} className="text-gray-500" />
+//                 <span className="text-xs">{user.reservation_time}</span>
+//               </div>
+//             </div>
+//
+//             <div className="flex items-center justify-between mt-2">
+//               <Badge className={`text-xs ${getStatusColor(user.status)}`}>
+//                 {user.status}
+//               </Badge>
+//
+//               {seatedTables.length > 0 && (
+//                 <Badge variant="outline" className="text-xs">
+//                   Table {seatedTables.join(", ")}
+//                 </Badge>
+//               )}
+//             </div>
+//           </div>
+//         </div>
+//       </CardContent>
+//     </Card>
+//   );
+// };
 
 // Main Component
 const RestaurantTableManager = () => {
@@ -573,51 +708,57 @@ const RestaurantTableManager = () => {
                 Customers ({users.length})
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 p-1 max-h-96  overflow-y-auto">
-              {users.map((user) => (
-                <UserCard
-                  key={user.id}
-                  user={user}
-                  isSelected={selectedUser === user.id}
-                  onSelect={setSelectedUser}
-                  seatedTables={getUserSeatedTables(user.id)}
-                />
-              ))}
+            <CardContent className="space-y-3 p-1 max-h-[440px]  overflow-y-auto">
+              {/* {users.map((user) => ( */}
+              {/*   <UserCard */}
+              {/*     key={user.id} */}
+              {/*     user={user} */}
+              {/*     isSelected={selectedUser === user.id} */}
+              {/*     onSelect={setSelectedUser} */}
+              {/*     seatedTables={getUserSeatedTables(user.id)} */}
+              {/*   /> */}
+              {/* ))} */}
+              <UserAccordion
+                users={users}
+                selectedUser={selectedUser}
+                setSelectedUser={setSelectedUser}
+                getUserSeatedTables={getUserSeatedTables}
+              />
             </CardContent>
           </Card>
 
           {/* Assignment Controls */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Table Assignment</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selectedUser && selectedTables.length > 0 ? (
-                <div className="space-y-3">
-                  <div className="p-3 bg-green-50 rounded-lg border border-green-200">
-                    <p className="text-sm text-green-800">
-                      Assign Table(s){" "}
-                      {selectedTables
-                        .map((tableId) => {
-                          const table = tables.find((t) => t.id === tableId);
-                          return table?.tableNumber;
-                        })
-                        .join(", ")}{" "}
-                      to {users.find((u) => u.id === selectedUser)?.name}
-                    </p>
-                  </div>
-                  <Button onClick={assignTablesToUser} className="w-full">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Make Guest Seated
-                  </Button>
-                </div>
-              ) : (
-                <p className="text-sm text-gray-500">
-                  Select a customer and table(s) to assign
-                </p>
-              )}
-            </CardContent>
-          </Card>
+          {/* <Card> */}
+          {/*   <CardHeader> */}
+          {/*     <CardTitle>Table Assignment</CardTitle> */}
+          {/*   </CardHeader> */}
+          {/*   <CardContent className="space-y-4"> */}
+          {/*     {selectedUser && selectedTables.length > 0 ? ( */}
+          {/*       <div className="space-y-3"> */}
+          {/*         <div className="p-3 bg-green-50 rounded-lg border border-green-200"> */}
+          {/*           <p className="text-sm text-green-800"> */}
+          {/*             Assign Table(s){" "} */}
+          {/*             {selectedTables */}
+          {/*               .map((tableId) => { */}
+          {/*                 const table = tables.find((t) => t.id === tableId); */}
+          {/*                 return table?.tableNumber; */}
+          {/*               }) */}
+          {/*               .join(", ")}{" "} */}
+          {/*             to {users.find((u) => u.id === selectedUser)?.name} */}
+          {/*           </p> */}
+          {/*         </div> */}
+          {/*         <Button onClick={assignTablesToUser} className="w-full"> */}
+          {/*           <UserPlus className="h-4 w-4 mr-2" /> */}
+          {/*           Make Guest Seated */}
+          {/*         </Button> */}
+          {/*       </div> */}
+          {/*     ) : ( */}
+          {/*       <p className="text-sm text-gray-500"> */}
+          {/*         Select a customer and table(s) to assign */}
+          {/*       </p> */}
+          {/*     )} */}
+          {/*   </CardContent> */}
+          {/* </Card> */}
         </div>
       </div>
 
