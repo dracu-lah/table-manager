@@ -649,6 +649,7 @@ const RestaurantTableManager = () => {
               >
                 Set All Available
               </Button>
+
               <Button
                 variant="outline"
                 className="w-full"
@@ -659,6 +660,18 @@ const RestaurantTableManager = () => {
                 }
               >
                 Set All Cleaning
+              </Button>
+
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() =>
+                  tables.forEach((table) =>
+                    updateTableStatus(table.id, "maintenance"),
+                  )
+                }
+              >
+                Set All Under Maintenance
               </Button>
               <Button
                 variant="destructive"
