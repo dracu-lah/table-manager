@@ -184,12 +184,12 @@ const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
 
   return (
     <Card
-      className={`cursor-pointer transition-all duration-200 hover:shadow-md ${
+      className={`cursor-pointer  transition-all duration-200 hover:shadow-md ${
         isSelected ? "ring-2 ring-blue-500 bg-blue-50" : ""
       }`}
       onClick={() => onSelect(user.id)}
     >
-      <CardContent className="p-4">
+      <CardContent className="">
         <div className="flex items-start gap-3">
           <Avatar className="h-10 w-10">
             <AvatarImage src={user.avatar} />
@@ -566,14 +566,14 @@ const RestaurantTableManager = () => {
 
         {/* User Management */}
         <div className="space-y-4">
-          <Card>
+          <Card className="px-2">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-4 w-4" />
                 Customers ({users.length})
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 max-h-96 overflow-y-auto">
+            <CardContent className="space-y-3 p-1 max-h-96  overflow-y-auto">
               {users.map((user) => (
                 <UserCard
                   key={user.id}
