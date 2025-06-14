@@ -741,19 +741,19 @@ const RestaurantTableManager = () => {
             <CardContent className="space-y-2">
               <div className="grid grid-cols-2 gap-4 text-sm">
                 <div>
-                  <p className="text-gray-500">Available</p>
+                  <p className="text-gray-500">Available Tables</p>
                   <p className="font-semibold text-green-600">
                     {tables.filter((t) => t.tableStatus === "available").length}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Seated</p>
+                  <p className="text-gray-500">Seated Guests</p>
                   <p className="font-semibold text-blue-600">
                     {Object.keys(tableAssignments).length}
                   </p>
                 </div>
                 <div>
-                  <p className="text-gray-500">Waiting</p>
+                  <p className="text-gray-500">Waiting Guests</p>
                   <p className="font-semibold text-yellow-600">
                     {users.filter((u) => u.status === "waiting").length}
                   </p>
