@@ -178,7 +178,7 @@ const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
 };
 
 // User Card Component
-const UserCard = ({ user, isSelected, onSelect, assignedTables = [] }) => {
+const UserCard = ({ user, isSelected, onSelect, seatedTables = [] }) => {
   const getStatusColor = (status) => {
     switch (status) {
       case "waiting":
@@ -232,9 +232,9 @@ const UserCard = ({ user, isSelected, onSelect, assignedTables = [] }) => {
                 {user.status}
               </Badge>
 
-              {assignedTables.length > 0 && (
+              {seatedTables.length > 0 && (
                 <Badge variant="outline" className="text-xs">
-                  Table {assignedTables.join(", ")}
+                  Table {seatedTables.join(", ")}
                 </Badge>
               )}
             </div>
@@ -399,9 +399,9 @@ const RestaurantTableManager = () => {
       prev.map((table) => ({
         ...table,
         tableStatus: selectedTables.includes(table.id)
-          ? "assigned"
+          ? "seated"
           : newAssignments[table.id]
-            ? "assigned"
+            ? "seated"
             : "available",
       })),
     );
@@ -462,7 +462,7 @@ const RestaurantTableManager = () => {
   const bgImage = RoomLayouts.RoomLayout1;
   return (
     <div className="w-full mx-auto p-4 space-y-6">
-      <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
         {/* Canvas Container */}
         <div className="xl:col-span-2 space-y-4">
           <Card>
@@ -590,7 +590,7 @@ const RestaurantTableManager = () => {
                   user={user}
                   isSelected={selectedUser === user.id}
                   onSelect={setSelectedUser}
-                  assignedTables={getUserSeatedTables(user.id)}
+                  seatedTables={getUserSeatedTables(user.id)}
                 />
               ))}
             </CardContent>
@@ -618,7 +618,7 @@ const RestaurantTableManager = () => {
                   </div>
                   <Button onClick={assignTablesToUser} className="w-full">
                     <UserPlus className="h-4 w-4 mr-2" />
-                    Confirm Assignment
+                    Make Guest Seated
                   </Button>
                 </div>
               ) : (
@@ -629,152 +629,152 @@ const RestaurantTableManager = () => {
             </CardContent>
           </Card>
         </div>
+      </div>
 
-        {/* Quick Actions & Controls */}
-        <div className="space-y-4">
-          {/* Quick Actions */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() =>
-                  tables.forEach((table) =>
-                    updateTableStatus(table.id, "available"),
-                  )
-                }
-              >
-                Set All Available
-              </Button>
+      {/* Quick Actions & Controls */}
+      <div className="space-y-4  flex  gap-4">
+        {/* Quick Actions */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() =>
+                tables.forEach((table) =>
+                  updateTableStatus(table.id, "available"),
+                )
+              }
+            >
+              Set All Available
+            </Button>
 
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() =>
-                  tables.forEach((table) =>
-                    updateTableStatus(table.id, "cleaning"),
-                  )
-                }
-              >
-                Set All Cleaning
-              </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() =>
+                tables.forEach((table) =>
+                  updateTableStatus(table.id, "cleaning"),
+                )
+              }
+            >
+              Set All Cleaning
+            </Button>
 
-              <Button
-                variant="outline"
-                className="w-full"
-                onClick={() =>
-                  tables.forEach((table) =>
-                    updateTableStatus(table.id, "maintenance"),
-                  )
-                }
-              >
-                Set All Under Maintenance
-              </Button>
-              <Button
-                variant="destructive"
-                className="w-full"
-                onClick={clearAllAssignments}
-              >
-                Clear All Assignments
-              </Button>
-            </CardContent>
-          </Card>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() =>
+                tables.forEach((table) =>
+                  updateTableStatus(table.id, "maintenance"),
+                )
+              }
+            >
+              Set All Under Maintenance
+            </Button>
+            <Button
+              variant="destructive"
+              className="w-full"
+              onClick={clearAllAssignments}
+            >
+              Clear All Assignments
+            </Button>
+          </CardContent>
+        </Card>
 
-          {/* Table Controls */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Table Controls</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              {selectedTables.length === 1 ? (
-                (() => {
-                  const table = tables.find((t) => t.id === selectedTables[0]);
-                  const assignment = tableAssignments[selectedTables[0]];
-                  return (
-                    <div className="space-y-4">
-                      <div>
-                        <Label>Table {table?.tableNumber}</Label>
-                        <p className="text-sm text-gray-600">
-                          Capacity: {table?.capacity} people
+        {/* Table Controls */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Table Controls</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {selectedTables.length === 1 ? (
+              (() => {
+                const table = tables.find((t) => t.id === selectedTables[0]);
+                const assignment = tableAssignments[selectedTables[0]];
+                return (
+                  <div className="space-y-4">
+                    <div>
+                      <Label>Table {table?.tableNumber}</Label>
+                      <p className="text-sm text-gray-600">
+                        Capacity: {table?.capacity} people
+                      </p>
+                      {assignment && (
+                        <p className="text-sm text-blue-600">
+                          Seated By: {assignment.name}
                         </p>
-                        {assignment && (
-                          <p className="text-sm text-blue-600">
-                            Seated By: {assignment.name}
-                          </p>
-                        )}
-                      </div>
-
-                      <div>
-                        <Label>Status</Label>
-                        <Select
-                          value={table?.tableStatus}
-                          onValueChange={(value) =>
-                            updateTableStatus(selectedTables[0], value)
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.entries(TABLE_STATUSES).map(
-                              ([status, config]) => (
-                                <SelectItem key={status} value={status}>
-                                  {config.label}
-                                </SelectItem>
-                              ),
-                            )}
-                          </SelectContent>
-                        </Select>
-                      </div>
-
-                      <Badge
-                        className={`${TABLE_STATUSES[table?.tableStatus]?.color} ${TABLE_STATUSES[table?.tableStatus]?.badgeTextColor}`}
-                      >
-                        {TABLE_STATUSES[table?.tableStatus]?.label}
-                      </Badge>
+                      )}
                     </div>
-                  );
-                })()
-              ) : (
-                <p className="text-gray-500">
-                  Select a single table to modify its status
-                </p>
-              )}
-            </CardContent>
-          </Card>
 
-          {/* Statistics */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Statistics</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <div className="grid grid-cols-2 gap-4 text-sm">
-                <div>
-                  <p className="text-gray-500">Available Tables</p>
-                  <p className="font-semibold text-green-600">
-                    {tables.filter((t) => t.tableStatus === "available").length}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Seated Guests</p>
-                  <p className="font-semibold text-blue-600">
-                    {Object.keys(tableAssignments).length}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500">Waiting Guests</p>
-                  <p className="font-semibold text-yellow-600">
-                    {users.filter((u) => u.status === "waiting").length}
-                  </p>
-                </div>
+                    <div>
+                      <Label>Status</Label>
+                      <Select
+                        value={table?.tableStatus}
+                        onValueChange={(value) =>
+                          updateTableStatus(selectedTables[0], value)
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {Object.entries(TABLE_STATUSES).map(
+                            ([status, config]) => (
+                              <SelectItem key={status} value={status}>
+                                {config.label}
+                              </SelectItem>
+                            ),
+                          )}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <Badge
+                      className={`${TABLE_STATUSES[table?.tableStatus]?.color} ${TABLE_STATUSES[table?.tableStatus]?.badgeTextColor}`}
+                    >
+                      {TABLE_STATUSES[table?.tableStatus]?.label}
+                    </Badge>
+                  </div>
+                );
+              })()
+            ) : (
+              <p className="text-gray-500">
+                Select a single table to modify its status
+              </p>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Statistics */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Statistics</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500">Available Tables</p>
+                <p className="font-semibold text-green-600">
+                  {tables.filter((t) => t.tableStatus === "available").length}
+                </p>
               </div>
-            </CardContent>
-          </Card>
-        </div>
+              <div>
+                <p className="text-gray-500">Seated Guests</p>
+                <p className="font-semibold text-blue-600">
+                  {Object.keys(tableAssignments).length}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-500">Waiting Guests</p>
+                <p className="font-semibold text-yellow-600">
+                  {users.filter((u) => u.status === "waiting").length}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
