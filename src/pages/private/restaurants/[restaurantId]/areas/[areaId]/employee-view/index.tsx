@@ -25,6 +25,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
+import getTableIcon from "./getTableIcon";
 
 // Mock data
 const MOCK_USERS = [
@@ -189,23 +190,36 @@ const TableIcon = ({
     return "rounded-md";
   };
 
-  return (
-    <div
-      className={`
+  const IconComponent = getTableIcon(tableType);
+  if (!IconComponent) {
+    return (
+      <div
+        className={`
         ${statusConfig.color} 
         ${getTableShape()} 
         border-2 
-        ${isSelected ? "border-blue-400 border-4" : isHighlighted ? "border-red-500 border-4" : "border-gray-300"}
+        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
         flex items-center justify-center
         transition-all duration-200
         shadow-md
-        ${isHighlighted ? "ring-2 ring-purple-300" : ""}
       `}
-      style={{
-        width: `${width * scale}px`,
-        height: `${height * scale}px`,
-        opacity: 0.9,
-      }}
+        style={{
+          width: `${width * scale}px`,
+          height: `${height * scale}px`,
+          opacity: 0.9,
+        }}
+      />
+    );
+  }
+
+  return (
+    <IconComponent
+      className={`w-full h-full
+
+        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
+
+${statusConfig.textColor} border-current  bg-opacity-80`}
+      style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
     />
   );
 };
