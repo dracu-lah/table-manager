@@ -233,7 +233,7 @@ const RestaurantTableManager = () => {
 
   return (
     <div className="w-full mx-auto p-4 space-y-6">
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-2">
         {/* Table Layout */}
         <div className="xl:col-span-2 space-y-4">
           <Card>
