@@ -184,20 +184,14 @@ const TableIcon = ({
 }) => {
   const statusConfig = TABLE_STATUSES[status] || TABLE_STATUSES.available;
 
-  const getTableShape = () => {
-    if (tableType.includes("round")) return "rounded-full";
-    if (tableType.includes("rectangle")) return "rounded-lg";
-    return "rounded-md";
-  };
-
   const IconComponent = getTableIcon(tableType);
   if (!IconComponent) {
     return (
       <div
         className={`
         ${statusConfig.color} 
-        ${getTableShape()} 
         border-2 
+rounded-full
         ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
         flex items-center justify-center
         transition-all duration-200
