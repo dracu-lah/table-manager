@@ -22,11 +22,11 @@ import {
   X,
   CheckCircle,
   AlertCircle,
+  Eye,
+  EyeOff,
 } from "lucide-react";
-import getTableIcon from "./getTableIcon";
-import BookingDialogForm from "./BookingDialogForm";
 
-// Mock API Data
+// Mock data
 const MOCK_USERS = [
   {
     id: "user-1",
@@ -68,15 +68,78 @@ const MOCK_USERS = [
     phone: "+1-555-0321",
     avatar: null,
   },
+];
+
+const MOCK_TABLES = [
   {
-    id: "user-5",
-    name: "David Brown",
-    email: "david.brown@email.com",
-    party_size: 2,
-    reservation_time: "9:30 PM",
-    status: "waiting",
-    phone: "+1-555-0654",
-    avatar: null,
+    id: "table-1",
+    tableNumber: 1,
+    tableType: "square-4",
+    tableStatus: "available",
+    position: { x: 150, y: 80 },
+    width: 80,
+    height: 60,
+    capacity: 4,
+  },
+  {
+    id: "table-2",
+    tableNumber: 2,
+    tableType: "round-6",
+    tableStatus: "available",
+    position: { x: 300, y: 80 },
+    width: 80,
+    height: 80,
+    capacity: 6,
+  },
+  {
+    id: "table-3",
+    tableNumber: 3,
+    tableType: "rectangle-6",
+    tableStatus: "available",
+    position: { x: 480, y: 80 },
+    width: 60,
+    height: 60,
+    capacity: 6,
+  },
+  {
+    id: "table-4",
+    tableNumber: 4,
+    tableType: "square-4",
+    tableStatus: "available",
+    position: { x: 150, y: 200 },
+    width: 80,
+    height: 60,
+    capacity: 4,
+  },
+  {
+    id: "table-5",
+    tableNumber: 5,
+    tableType: "round-6",
+    tableStatus: "available",
+    position: { x: 300, y: 200 },
+    width: 70,
+    height: 70,
+    capacity: 4,
+  },
+  {
+    id: "table-6",
+    tableNumber: 6,
+    tableType: "square-4",
+    tableStatus: "available",
+    position: { x: 480, y: 200 },
+    width: 60,
+    height: 50,
+    capacity: 2,
+  },
+  {
+    id: "table-8",
+    tableNumber: 8,
+    tableType: "round-6",
+    tableStatus: "available",
+    position: { x: 450, y: 320 },
+    width: 80,
+    height: 80,
+    capacity: 6,
   },
 ];
 
@@ -108,7 +171,7 @@ const TABLE_STATUSES = {
   },
 };
 
-// Simple table icon component
+// Table Icon Component
 const TableIcon = ({
   tableType,
   status,
@@ -116,57 +179,151 @@ const TableIcon = ({
   height,
   scale = 1,
   isSelected = false,
+  isHighlighted = false,
 }) => {
   const statusConfig = TABLE_STATUSES[status] || TABLE_STATUSES.available;
 
   const getTableShape = () => {
-    if (tableType.includes("round")) {
-      return "rounded-full";
-    } else if (tableType.includes("rectangle")) {
-      return "rounded-lg";
-    }
+    if (tableType.includes("round")) return "rounded-full";
+    if (tableType.includes("rectangle")) return "rounded-lg";
     return "rounded-md";
   };
-  const IconComponent = getTableIcon(tableType);
-  if (!IconComponent) {
-    return (
-      <div
-        className={`
+
+  return (
+    <div
+      className={`
         ${statusConfig.color} 
         ${getTableShape()} 
         border-2 
-        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
+        ${isSelected ? "border-blue-400 border-4" : isHighlighted ? "border-red-500 border-4" : "border-gray-300"}
         flex items-center justify-center
         transition-all duration-200
         shadow-md
+        ${isHighlighted ? "ring-2 ring-purple-300" : ""}
       `}
-        style={{
-          width: `${width * scale}px`,
-          height: `${height * scale}px`,
-          opacity: 0.9,
-        }}
-      />
-    );
-  }
-
-  return (
-    <IconComponent
-      className={`w-full h-full
-
-        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
-
-${statusConfig.textColor} border-current  bg-opacity-80`}
-      style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
+      style={{
+        width: `${width * scale}px`,
+        height: `${height * scale}px`,
+        opacity: 0.9,
+      }}
     />
   );
 };
 
+// Table Assignment Badge Component
+const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
+  if (!assignment) return null;
+
+  return (
+    <div
+      className="absolute -top-2 -right-2 bg-white rounded-full border-2 border-blue-500 shadow-lg p-1"
+      style={{ fontSize: `${Math.max(8, 10 * scale)}px` }}
+    >
+      <div className="flex items-center gap-1 px-2 py-1">
+        <Users size={Math.max(12, 14 * scale)} className="text-blue-600" />
+        <span className="text-blue-600 font-semibold">
+          {assignment.party_size}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+// Table Renderer Component
+const TableRenderer = ({
+  tables,
+  selectedTables,
+  highlightedTables,
+  tableAssignments,
+  canvasScale,
+  onTableSelect,
+  showSeatedHighlight = false,
+}) => {
+  const originalCanvasConfig = { width: 800, height: 494 };
+  const scaledCanvasConfig = {
+    width: originalCanvasConfig.width * canvasScale,
+    height: originalCanvasConfig.height * canvasScale,
+  };
+
+  return (
+    <div className="flex justify-center">
+      <div
+        className="relative border-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
+        style={{
+          width: scaledCanvasConfig.width,
+          height: scaledCanvasConfig.height,
+          backgroundImage: `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
+        }}
+      >
+        {/* Grid pattern */}
+        <div
+          className="absolute inset-0 opacity-10"
+          style={{
+            backgroundImage: `
+              linear-gradient(to right, #666 1px, transparent 1px),
+              linear-gradient(to bottom, #666 1px, transparent 1px)
+            `,
+            backgroundSize: `${Math.max(30, 50 * canvasScale)}px ${Math.max(30, 50 * canvasScale)}px`,
+          }}
+        />
+
+        {/* Tables */}
+        {tables.map((table) => (
+          <div
+            key={table.id}
+            className="absolute transition-all duration-200 hover:scale-105 cursor-pointer"
+            style={{
+              left: `${table.position.x * canvasScale}px`,
+              top: `${table.position.y * canvasScale}px`,
+            }}
+            onClick={() => onTableSelect(table.id)}
+          >
+            <div className="relative">
+              <TableIcon
+                tableType={table.tableType}
+                status={table.tableStatus}
+                width={table.width}
+                height={table.height}
+                scale={canvasScale}
+                isSelected={selectedTables.includes(table.id)}
+                isHighlighted={
+                  showSeatedHighlight && highlightedTables.includes(table.id)
+                }
+              />
+
+              {/* Table Number */}
+              <div
+                className="absolute inset-0 flex items-center justify-center pointer-events-none"
+                style={{
+                  fontSize: `${Math.max(12, 16 * canvasScale)}px`,
+                }}
+              >
+                <span className="text-white font-bold drop-shadow-lg">
+                  {table.tableNumber}
+                </span>
+              </div>
+
+              {/* Assignment Badge */}
+              <TableAssignmentBadge
+                assignment={tableAssignments[table.id]}
+                scale={canvasScale}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// User Card Component
 const UserCard = ({
   user,
   seatedTables = [],
   onSeatUser,
   onCancelUser,
   onUnseatUser,
+  onShowSeatedTables,
 }) => {
   const getStatusBadge = () => {
     switch (user.status) {
@@ -205,6 +362,7 @@ const UserCard = ({
   const canSeat = user.status === "waiting" || user.status === "confirmed";
   const canCancel = user.status !== "cancelled";
   const canUnseat = user.status === "seated";
+  const canShowSeated = user.status === "seated" && seatedTables.length > 0;
 
   return (
     <Card className="transition-all p-0 duration-200 hover:shadow-md">
@@ -245,7 +403,7 @@ const UserCard = ({
             )}
 
             {/* Action Buttons */}
-            <div className="flex gap-2 mt-3">
+            <div className="flex gap-2 mt-3 flex-wrap">
               {canSeat && (
                 <Button
                   size="sm"
@@ -255,6 +413,18 @@ const UserCard = ({
                 >
                   <UserPlus size={12} className="mr-1" />
                   Seat
+                </Button>
+              )}
+
+              {canShowSeated && (
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="h-7 text-xs text-purple-600 border-purple-300 hover:bg-purple-50"
+                  onClick={() => onShowSeatedTables(user)}
+                >
+                  <Eye size={12} className="mr-1" />
+                  Highlight Tables
                 </Button>
               )}
 
@@ -289,45 +459,32 @@ const UserCard = ({
   );
 };
 
-// Helper function to group users by status
-const groupUsersByStatus = (users) => {
-  return users.reduce((acc, user) => {
-    if (!acc[user.status]) {
-      acc[user.status] = [];
-    }
-    acc[user.status].push(user);
-    return acc;
-  }, {});
-};
-
-// Status display configuration
-const statusConfig = {
-  waiting: {
-    label: "Waiting",
-    color: "text-yellow-600",
-  },
-  confirmed: {
-    label: "Confirmed",
-    color: "text-green-600",
-  },
-  seated: {
-    label: "Seated",
-    color: "text-blue-600",
-  },
-  cancelled: {
-    label: "Cancelled",
-    color: "text-red-600",
-  },
-};
-
-// Main component usage
+// User Accordion Component
 const UserAccordion = ({
   users,
   getUserSeatedTables,
   onSeatUser,
   onCancelUser,
   onUnseatUser,
+  onShowSeatedTables,
 }) => {
+  const groupUsersByStatus = (users) => {
+    return users.reduce((acc, user) => {
+      if (!acc[user.status]) {
+        acc[user.status] = [];
+      }
+      acc[user.status].push(user);
+      return acc;
+    }, {});
+  };
+
+  const statusConfig = {
+    waiting: { label: "Waiting", color: "text-yellow-600" },
+    confirmed: { label: "Confirmed", color: "text-green-600" },
+    seated: { label: "Seated", color: "text-blue-600" },
+    cancelled: { label: "Cancelled", color: "text-red-600" },
+  };
+
   const groupedUsers = groupUsersByStatus(users);
   const orderedStatuses = ["waiting", "confirmed", "seated", "cancelled"];
 
@@ -365,6 +522,7 @@ const UserAccordion = ({
                     onSeatUser={onSeatUser}
                     onCancelUser={onCancelUser}
                     onUnseatUser={onUnseatUser}
+                    onShowSeatedTables={onShowSeatedTables}
                   />
                 ))}
               </div>
@@ -376,115 +534,87 @@ const UserAccordion = ({
   );
 };
 
-// Table Assignment Badge Component
-const TableAssignmentBadge = ({ assignment, scale = 1 }) => {
-  if (!assignment) return null;
+// Selection Panel Component
+const SelectionPanel = ({
+  selectedTables,
+  selectedUser,
+  tables,
+  onConfirmSeating,
+  onCancelSelection,
+}) => {
+  if (!selectedTables.length && !selectedUser) return null;
+
+  const getSelectedTableNumbers = () => {
+    return selectedTables
+      .map((tableId) => {
+        const table = tables.find((t) => t.id === tableId);
+        return table?.tableNumber;
+      })
+      .filter(Boolean);
+  };
+
+  const totalCapacity = selectedTables.reduce((sum, tableId) => {
+    const table = tables.find((t) => t.id === tableId);
+    return sum + (table?.capacity || 0);
+  }, 0);
 
   return (
-    <div
-      className="absolute -top-2 -right-2 bg-white rounded-full border-2 border-blue-500 shadow-lg p-1"
-      style={{ fontSize: `${Math.max(8, 10 * scale)}px` }}
-    >
-      <div className="flex items-center gap-1 px-2 py-1">
-        <Users size={Math.max(12, 14 * scale)} className="text-blue-600" />
-        <span className="text-blue-600 font-semibold">
-          {assignment.party_size}
-        </span>
-      </div>
-    </div>
+    <Card className="border-blue-200 bg-blue-50">
+      <CardContent className="p-4">
+        <div className="space-y-3">
+          {selectedTables.length > 0 && (
+            <div>
+              <h4 className="font-semibold text-blue-800 text-sm">
+                Selected Tables:
+              </h4>
+              <p className="text-blue-600 text-sm">
+                Table {getSelectedTableNumbers().join(", ")}
+                {totalCapacity > 0 && ` (Total capacity: ${totalCapacity})`}
+              </p>
+            </div>
+          )}
+
+          {selectedUser && (
+            <div>
+              <h4 className="font-semibold text-blue-800 text-sm">
+                Selected Guest:
+              </h4>
+              <p className="text-blue-600 text-sm">
+                {selectedUser.name} (Party of {selectedUser.party_size})
+              </p>
+            </div>
+          )}
+
+          {selectedTables.length > 0 && selectedUser && (
+            <div className="flex gap-2 pt-2">
+              <Button size="sm" onClick={onConfirmSeating}>
+                <CheckCircle size={14} className="mr-1" />
+                Confirm Seating
+              </Button>
+              <Button size="sm" variant="outline" onClick={onCancelSelection}>
+                Cancel
+              </Button>
+            </div>
+          )}
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
 // Main Component
 const RestaurantTableManager = () => {
-  const canvasRef = useRef(null);
   const containerRef = useRef(null);
   const [canvasScale, setCanvasScale] = useState(1);
 
   // State management
   const [users, setUsers] = useState(MOCK_USERS);
+  const [tables, setTables] = useState(MOCK_TABLES);
   const [selectedTables, setSelectedTables] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [tableAssignments, setTableAssignments] = useState({});
-  const [pendingUser, setPendingUser] = useState(null);
-
-  // Original canvas dimensions
-  const originalCanvasConfig = {
-    width: 800,
-    height: 494,
-  };
-
-  const [tables, setTables] = useState([
-    {
-      id: "table-1",
-      tableNumber: 1,
-      tableType: "square-4",
-      tableStatus: "available",
-      position: { x: 150, y: 80 },
-      width: 80,
-      height: 60,
-      capacity: 4,
-    },
-    {
-      id: "table-2",
-      tableNumber: 2,
-      tableType: "round-6",
-      tableStatus: "available",
-      position: { x: 300, y: 80 },
-      width: 80,
-      height: 80,
-      capacity: 6,
-    },
-    {
-      id: "table-3",
-      tableNumber: 3,
-      tableType: "rectangle-6",
-      tableStatus: "available",
-      position: { x: 480, y: 80 },
-      width: 60,
-      height: 60,
-      capacity: 6,
-    },
-    {
-      id: "table-4",
-      tableNumber: 4,
-      tableType: "square-4",
-      tableStatus: "available",
-      position: { x: 150, y: 200 },
-      width: 80,
-      height: 60,
-      capacity: 4,
-    },
-    {
-      id: "table-5",
-      tableNumber: 5,
-      tableType: "round-6",
-      tableStatus: "available",
-      position: { x: 300, y: 200 },
-      width: 70,
-      height: 70,
-      capacity: 4,
-    },
-    {
-      id: "table-6",
-      tableNumber: 6,
-      tableType: "square-4",
-      tableStatus: "available",
-      position: { x: 480, y: 200 },
-      width: 60,
-      height: 50,
-      capacity: 2,
-    },
-    {
-      id: "table-8",
-      tableNumber: 8,
-      tableType: "round-6",
-      tableStatus: "available",
-      position: { x: 450, y: 320 },
-      width: 80,
-      height: 80,
-      capacity: 6,
-    },
-  ]);
+  const [highlightedTables, setHighlightedTables] = useState([]);
+  const [showSeatedHighlight, setShowSeatedHighlight] = useState(false);
 
   // Calculate responsive scale
   useEffect(() => {
@@ -492,10 +622,7 @@ const RestaurantTableManager = () => {
       if (containerRef.current) {
         const containerWidth = containerRef.current.clientWidth;
         const availableWidth = containerWidth - 40;
-        const maxScale = Math.min(
-          1.2,
-          availableWidth / originalCanvasConfig.width,
-        );
+        const maxScale = Math.min(1.2, availableWidth / 800);
         const scale = Math.max(0.4, maxScale);
         setCanvasScale(scale);
       }
@@ -506,15 +633,10 @@ const RestaurantTableManager = () => {
     return () => window.removeEventListener("resize", updateScale);
   }, []);
 
-  // Scaled canvas dimensions
-  const scaledCanvasConfig = {
-    width: originalCanvasConfig.width * canvasScale,
-    height: originalCanvasConfig.height * canvasScale,
-  };
-
-  // Table management functions
-  const handleTableClick = (tableId) => {
-    if (!pendingUser) return;
+  // Table selection handler
+  const handleTableSelect = (tableId) => {
+    const table = tables.find((t) => t.id === tableId);
+    if (!table || table.tableStatus !== "available") return;
 
     setSelectedTables((prev) => {
       if (prev.includes(tableId)) {
@@ -525,75 +647,42 @@ const RestaurantTableManager = () => {
     });
   };
 
-  // User management functions
+  // User selection handler
   const handleSeatUser = (user) => {
-    setPendingUser(user);
+    if (user.status !== "waiting" && user.status !== "confirmed") return;
+    setSelectedUser(user);
+    setShowSeatedHighlight(false);
+    setHighlightedTables([]);
+  };
+
+  // Show seated tables for a user
+  const handleShowSeatedTables = (user) => {
+    const userTables = Object.entries(tableAssignments)
+      .filter(([_, assignedUser]) => assignedUser?.id === user.id)
+      .map(([tableId, _]) => tableId);
+
+    setHighlightedTables(userTables);
+    setShowSeatedHighlight(true);
     setSelectedTables([]);
+    setSelectedUser(null);
   };
 
-  const handleCancelUser = (user) => {
-    // Update user status to cancelled
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, status: "cancelled" } : u)),
-    );
-
-    // Remove any table assignments for this user
-    const newAssignments = { ...tableAssignments };
-    Object.keys(newAssignments).forEach((tableId) => {
-      if (newAssignments[tableId]?.id === user.id) {
-        delete newAssignments[tableId];
-      }
-    });
-    setTableAssignments(newAssignments);
-
-    // Update table statuses
-    setTables((prev) =>
-      prev.map((table) => ({
-        ...table,
-        tableStatus: newAssignments[table.id] ? "seated" : "available",
-      })),
-    );
-  };
-
-  const handleUnseatUser = (user) => {
-    // Remove table assignments for this user
-    const newAssignments = { ...tableAssignments };
-    Object.keys(newAssignments).forEach((tableId) => {
-      if (newAssignments[tableId]?.id === user.id) {
-        delete newAssignments[tableId];
-      }
-    });
-    setTableAssignments(newAssignments);
-
-    // Update table statuses
-    setTables((prev) =>
-      prev.map((table) => ({
-        ...table,
-        tableStatus: newAssignments[table.id] ? "seated" : "available",
-      })),
-    );
-
-    // Update user status back to confirmed
-    setUsers((prev) =>
-      prev.map((u) => (u.id === user.id ? { ...u, status: "confirmed" } : u)),
-    );
-  };
-
-  const confirmSeating = () => {
-    if (!pendingUser || selectedTables.length === 0) return;
+  // Confirm seating
+  const handleConfirmSeating = () => {
+    if (!selectedUser || selectedTables.length === 0) return;
 
     const newAssignments = { ...tableAssignments };
 
     // Remove previous assignments for this user
     Object.keys(newAssignments).forEach((tableId) => {
-      if (newAssignments[tableId]?.id === pendingUser.id) {
+      if (newAssignments[tableId]?.id === selectedUser.id) {
         delete newAssignments[tableId];
       }
     });
 
     // Add new assignments
     selectedTables.forEach((tableId) => {
-      newAssignments[tableId] = pendingUser;
+      newAssignments[tableId] = selectedUser;
     });
 
     setTableAssignments(newAssignments);
@@ -614,50 +703,70 @@ const RestaurantTableManager = () => {
     setUsers((prev) =>
       prev.map((user) => ({
         ...user,
-        status: user.id === pendingUser.id ? "seated" : user.status,
+        status: user.id === selectedUser.id ? "seated" : user.status,
       })),
     );
 
     // Clear selections
     setSelectedTables([]);
-    setPendingUser(null);
+    setSelectedUser(null);
   };
 
-  const cancelSeating = () => {
-    setPendingUser(null);
+  // Cancel selection
+  const handleCancelSelection = () => {
     setSelectedTables([]);
+    setSelectedUser(null);
+    setShowSeatedHighlight(false);
+    setHighlightedTables([]);
   };
 
-  const updateTableStatus = (tableId, newStatus) => {
-    setTables((prev) =>
-      prev.map((table) =>
-        table.id === tableId ? { ...table, tableStatus: newStatus } : table,
-      ),
-    );
-
-    // If setting to available, remove assignment
-    if (newStatus === "available" && tableAssignments[tableId]) {
-      const newAssignments = { ...tableAssignments };
-      delete newAssignments[tableId];
-      setTableAssignments(newAssignments);
-    }
-  };
-
-  const clearAllAssignments = () => {
-    setTableAssignments({});
-    setTables((prev) =>
-      prev.map((table) => ({ ...table, tableStatus: "available" })),
-    );
+  // Cancel user reservation
+  const handleCancelUser = (user) => {
     setUsers((prev) =>
-      prev.map((user) => ({
-        ...user,
-        status: user.status === "seated" ? "confirmed" : user.status,
+      prev.map((u) => (u.id === user.id ? { ...u, status: "cancelled" } : u)),
+    );
+
+    // Remove table assignments
+    const newAssignments = { ...tableAssignments };
+    Object.keys(newAssignments).forEach((tableId) => {
+      if (newAssignments[tableId]?.id === user.id) {
+        delete newAssignments[tableId];
+      }
+    });
+    setTableAssignments(newAssignments);
+
+    // Update table statuses
+    setTables((prev) =>
+      prev.map((table) => ({
+        ...table,
+        tableStatus: newAssignments[table.id] ? "seated" : "available",
       })),
     );
-    setSelectedTables([]);
-    setPendingUser(null);
   };
 
+  // Unseat user
+  const handleUnseatUser = (user) => {
+    const newAssignments = { ...tableAssignments };
+    Object.keys(newAssignments).forEach((tableId) => {
+      if (newAssignments[tableId]?.id === user.id) {
+        delete newAssignments[tableId];
+      }
+    });
+    setTableAssignments(newAssignments);
+
+    setTables((prev) =>
+      prev.map((table) => ({
+        ...table,
+        tableStatus: newAssignments[table.id] ? "seated" : "available",
+      })),
+    );
+
+    setUsers((prev) =>
+      prev.map((u) => (u.id === user.id ? { ...u, status: "confirmed" } : u)),
+    );
+  };
+
+  // Get seated tables for a user
   const getUserSeatedTables = (userId) => {
     return Object.entries(tableAssignments)
       .filter(([_, user]) => user?.id === userId)
@@ -671,133 +780,42 @@ const RestaurantTableManager = () => {
   return (
     <div className="w-full mx-auto p-4 space-y-6">
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        {/* Canvas Container */}
+        {/* Table Layout */}
         <div className="xl:col-span-2 space-y-4">
           <Card>
-            <CardContent className="pt-4">
-              <div ref={containerRef} className="w-full">
-                <div className="flex justify-center">
-                  <div
-                    ref={canvasRef}
-                    className="relative border-2 border-gray-300 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden"
-                    style={{
-                      width: scaledCanvasConfig.width,
-                      height: scaledCanvasConfig.height,
-                      backgroundImage: `linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%)`,
-                      backgroundSize: "auto",
-                      backgroundPosition: "center",
-                      backgroundRepeat: "no-repeat",
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Restaurant Layout
+                {showSeatedHighlight && (
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => {
+                      setShowSeatedHighlight(false);
+                      setHighlightedTables([]);
                     }}
                   >
-                    {/* Grid pattern */}
-                    <div
-                      className="absolute inset-0 opacity-10"
-                      style={{
-                        backgroundImage: `
-                          linear-gradient(to right, #666 1px, transparent 1px),
-                          linear-gradient(to bottom, #666 1px, transparent 1px)
-                        `,
-                        backgroundSize: `${Math.max(30, 50 * canvasScale)}px ${Math.max(30, 50 * canvasScale)}px`,
-                      }}
-                    />
-
-                    {/* Tables */}
-                    {tables.map((table) => (
-                      <div
-                        key={table.id}
-                        className={`absolute transition-all duration-200 hover:scale-105 ${
-                          pendingUser ? "cursor-pointer" : ""
-                        }`}
-                        style={{
-                          left: `${table.position.x * canvasScale}px`,
-                          top: `${table.position.y * canvasScale}px`,
-                        }}
-                        onClick={() => handleTableClick(table.id)}
-                      >
-                        <div className="relative">
-                          <TableIcon
-                            tableType={table.tableType}
-                            status={table.tableStatus}
-                            width={table.width}
-                            height={table.height}
-                            scale={canvasScale}
-                            isSelected={selectedTables.includes(table.id)}
-                          />
-
-                          {/* Table Number */}
-                          <div
-                            className="absolute inset-0 flex items-center justify-center pointer-events-none"
-                            style={{
-                              fontSize: `${Math.max(12, 16 * canvasScale)}px`,
-                            }}
-                          >
-                            <span className="text-white font-bold drop-shadow-lg">
-                              {table.tableNumber}
-                            </span>
-                          </div>
-
-                          {/* Assignment Badge */}
-                          <TableAssignmentBadge
-                            assignment={tableAssignments[table.id]}
-                            scale={canvasScale}
-                          />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Seating Instructions */}
-                {pendingUser && (
-                  <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-sm text-blue-800 font-semibold">
-                          Seating: {pendingUser.name} (Party of{" "}
-                          {pendingUser.party_size})
-                        </p>
-                        <p className="text-xs text-blue-600">
-                          Click on available tables to select them
-                        </p>
-                        {selectedTables.length > 0 && (
-                          <p className="text-xs text-blue-600 mt-1">
-                            Selected: Table{" "}
-                            {selectedTables
-                              .map((tableId) => {
-                                const table = tables.find(
-                                  (t) => t.id === tableId,
-                                );
-                                return table?.tableNumber;
-                              })
-                              .join(", ")}
-                          </p>
-                        )}
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="sm"
-                          onClick={confirmSeating}
-                          disabled={selectedTables.length === 0}
-                        >
-                          <CheckCircle size={14} className="mr-1" />
-                          Confirm
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          onClick={cancelSeating}
-                        >
-                          Cancel
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
+                    <EyeOff size={14} className="mr-1" />
+                    Hide Highlight
+                  </Button>
                 )}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-4">
+              <div ref={containerRef} className="w-full">
+                <TableRenderer
+                  tables={tables}
+                  selectedTables={selectedTables}
+                  highlightedTables={highlightedTables}
+                  tableAssignments={tableAssignments}
+                  canvasScale={canvasScale}
+                  onTableSelect={handleTableSelect}
+                  showSeatedHighlight={showSeatedHighlight}
+                />
               </div>
             </CardContent>
             <CardFooter className="flex flex-col items-start gap-4">
-              {/* Status Legend */}
-              <h1 className="text-2xl underline font-semibold">Legend</h1>
+              <h4 className="text-lg font-semibold">Legend</h4>
               <div className="flex flex-wrap gap-2">
                 {Object.entries(TABLE_STATUSES).map(([status, config]) => (
                   <Badge
@@ -810,6 +828,14 @@ const RestaurantTableManager = () => {
               </div>
             </CardFooter>
           </Card>
+
+          <SelectionPanel
+            selectedTables={selectedTables}
+            selectedUser={selectedUser}
+            tables={tables}
+            onConfirmSeating={handleConfirmSeating}
+            onCancelSelection={handleCancelSelection}
+          />
         </div>
 
         {/* User Management */}
@@ -828,103 +854,47 @@ const RestaurantTableManager = () => {
                 onSeatUser={handleSeatUser}
                 onCancelUser={handleCancelUser}
                 onUnseatUser={handleUnseatUser}
+                onShowSeatedTables={handleShowSeatedTables}
               />
             </CardContent>
-            <CardFooter className="">
-              <BookingDialogForm />
-            </CardFooter>
           </Card>
         </div>
       </div>
 
-      {/* Quick Actions & Controls */}
-      <div className="grid grid-cols-1 gap-4">
-        {/* Quick Actions */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="grid grid-cols-2 gap-2">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() =>
-                tables.forEach((table) =>
-                  updateTableStatus(table.id, "available"),
-                )
-              }
-            >
-              Set All Available
-            </Button>
-
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() =>
-                tables.forEach((table) =>
-                  updateTableStatus(table.id, "cleaning"),
-                )
-              }
-            >
-              Set All Cleaning
-            </Button>
-
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() =>
-                tables.forEach((table) =>
-                  updateTableStatus(table.id, "maintenance"),
-                )
-              }
-            >
-              Set All Under Maintenance
-            </Button>
-            <Button
-              variant="destructive"
-              className="w-full"
-              onClick={clearAllAssignments}
-            >
-              Clear All Assignments
-            </Button>
-          </CardContent>
-        </Card>
-
-        {/* Statistics */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-xl">Statistics</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-4   text-center gap-6">
-              <div>
-                <p className="text-gray-500 text-base mb-2">Available Tables</p>
-                <p className="font-semibold text-green-600 ">
-                  {tables.filter((t) => t.tableStatus === "available").length}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500 text-base mb-2">Seated Guests</p>
-                <p className="font-semibold text-blue-600 ">
-                  {Object.keys(tableAssignments).length}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500 text-base mb-2">Waiting Guests</p>
-                <p className="font-semibold text-yellow-600">
-                  {users.filter((u) => u.status === "waiting").length}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-500 text-base mb-2">Cancelled</p>
-                <p className="font-semibold text-red-600 ">
-                  {users.filter((u) => u.status === "cancelled").length}
-                </p>
-              </div>
+      {/* Statistics */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Statistics</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-4 text-center gap-6">
+            <div>
+              <p className="text-gray-500 text-base mb-2">Available Tables</p>
+              <p className="font-semibold text-green-600">
+                {tables.filter((t) => t.tableStatus === "available").length}
+              </p>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+            <div>
+              <p className="text-gray-500 text-base mb-2">Seated Guests</p>
+              <p className="font-semibold text-blue-600">
+                {Object.keys(tableAssignments).length}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500 text-base mb-2">Waiting Guests</p>
+              <p className="font-semibold text-yellow-600">
+                {users.filter((u) => u.status === "waiting").length}
+              </p>
+            </div>
+            <div>
+              <p className="text-gray-500 text-base mb-2">Cancelled</p>
+              <p className="font-semibold text-red-600">
+                {users.filter((u) => u.status === "cancelled").length}
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
