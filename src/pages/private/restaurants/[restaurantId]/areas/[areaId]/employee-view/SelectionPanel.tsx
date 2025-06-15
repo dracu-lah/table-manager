@@ -29,7 +29,7 @@ const SelectionPanel = ({
   return (
     <Card className="border-blue-200 bg-blue-50">
       <CardContent className="p-4">
-        <div className="space-y-3">
+        <div className="flex gap-3 justify-between">
           {selectedTables.length > 0 && (
             <div>
               <h4 className="font-semibold text-blue-800 text-sm">

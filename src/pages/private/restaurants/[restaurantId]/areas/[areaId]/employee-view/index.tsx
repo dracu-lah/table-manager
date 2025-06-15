@@ -316,40 +316,40 @@ const RestaurantTableManager = () => {
       </div>
 
       {/* Statistics */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Statistics</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-4 text-center gap-6">
-            <div>
-              <p className="text-gray-500 text-base mb-2">Available Tables</p>
-              <p className="font-semibold text-green-600">
-                {tables.filter((t) => t.tableStatus === "available").length}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-500 text-base mb-2">Seated Guests</p>
-              <p className="font-semibold text-blue-600">
-                {/* Count unique users who are "seated" by looking at tableAssignments */}
-                {new Set(Object.values(tableAssignments).map((a) => a.id)).size}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-500 text-base mb-2">Waiting Guests</p>
-              <p className="font-semibold text-yellow-600">
-                {users.filter((u) => u.status === "waiting").length}
-              </p>
-            </div>
-            <div>
-              <p className="text-gray-500 text-base mb-2">Cancelled</p>
-              <p className="font-semibold text-red-600">
-                {users.filter((u) => u.status === "cancelled").length}
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* <Card> */}
+      {/*   <CardHeader> */}
+      {/*     <CardTitle>Statistics</CardTitle> */}
+      {/*   </CardHeader> */}
+      {/*   <CardContent> */}
+      {/*     <div className="grid grid-cols-4 text-center gap-6"> */}
+      {/*       <div> */}
+      {/*         <p className="text-gray-500 text-base mb-2">Available Tables</p> */}
+      {/*         <p className="font-semibold text-green-600"> */}
+      {/*           {tables.filter((t) => t.tableStatus === "available").length} */}
+      {/*         </p> */}
+      {/*       </div> */}
+      {/*       <div> */}
+      {/*         <p className="text-gray-500 text-base mb-2">Seated Guests</p> */}
+      {/*         <p className="font-semibold text-blue-600"> */}
+      {/* Count unique users who are "seated" by looking at tableAssignments */}
+      {/*           {new Set(Object.values(tableAssignments).map((a) => a.id)).size} */}
+      {/*         </p> */}
+      {/*       </div> */}
+      {/*       <div> */}
+      {/*         <p className="text-gray-500 text-base mb-2">Waiting Guests</p> */}
+      {/*         <p className="font-semibold text-yellow-600"> */}
+      {/*           {users.filter((u) => u.status === "waiting").length} */}
+      {/*         </p> */}
+      {/*       </div> */}
+      {/*       <div> */}
+      {/*         <p className="text-gray-500 text-base mb-2">Cancelled</p> */}
+      {/*         <p className="font-semibold text-red-600"> */}
+      {/*           {users.filter((u) => u.status === "cancelled").length} */}
+      {/*         </p> */}
+      {/*       </div> */}
+      {/*     </div> */}
+      {/*   </CardContent> */}
+      {/* </Card> */}
     </div>
   );
 };
