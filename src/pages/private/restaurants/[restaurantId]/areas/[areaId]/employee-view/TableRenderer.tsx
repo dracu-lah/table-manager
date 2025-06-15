@@ -44,7 +44,7 @@ const TableRenderer = ({
           <div
             key={table.id}
             className={`absolute transition-all duration-200 hover:scale-105 cursor-pointer
-              ${showSeatedHighlight && highlightedTables.includes(table.id) ? "z-10 animate-pulse" : ""}
+              ${showSeatedHighlight && highlightedTables.includes(table.id) ? "z-10   border-2 border-blue-500" : ""}
             `}
             style={{
               left: `${table.position.x * canvasScale}px`,
