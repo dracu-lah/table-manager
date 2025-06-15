@@ -301,7 +301,7 @@ const RestaurantTableManager = () => {
                 Customers ({users.length})
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-3 p-1 max-h-[500px] overflow-y-auto">
+            <CardContent className="space-y-3 p-1 h-full  overflow-y-auto">
               <UserAccordion
                 users={users}
                 getUserSeatedTables={getUserSeatedTables}
