@@ -1,4 +1,4 @@
-import getTableIcon from "../getTableIcon";
+import getTableIcon from "./getTableIcon";
 import { TABLE_STATUSES } from "../constants";
 
 // Table Icon Component
