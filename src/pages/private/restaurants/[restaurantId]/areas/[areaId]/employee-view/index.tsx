@@ -180,7 +180,6 @@ const TableIcon = ({
   height,
   scale = 1,
   isSelected = false,
-  isHighlighted = false,
 }) => {
   const statusConfig = TABLE_STATUSES[status] || TABLE_STATUSES.available;
 
@@ -432,7 +431,7 @@ const UserCard = ({
                   onClick={() => onShowSeatedTables(user)}
                 >
                   <Eye size={12} className="mr-1" />
-                  Highlight Tables
+                  View Tables
                 </Button>
               )}
 
