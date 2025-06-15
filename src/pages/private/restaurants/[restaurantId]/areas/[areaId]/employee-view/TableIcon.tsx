@@ -20,7 +20,7 @@ const TableIcon = ({
         ${statusConfig.color}
         border-2
         rounded-full
-        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
+        ${isSelected ? "border-blue-400 border-2" : "border-gray-300"}
         flex items-center justify-center
         transition-all duration-200
         shadow-md
@@ -37,7 +37,7 @@ const TableIcon = ({
   return (
     <IconComponent
       className={`w-full h-full
-        ${isSelected ? "border-blue-400 border-4" : "border-gray-300"}
+        ${isSelected ? "border-blue-400 border-2" : "border-gray-300"}
         ${statusConfig.textColor} border-current bg-opacity-80`}
       style={{ width: `${width * scale}px`, height: `${height * scale}px` }}
     />
