@@ -1,5 +1,5 @@
 import TableIcon from "./TableIcon";
-import TableAssignmentBadge from "./TableAssignmentBadge";
+import TableAssignmentBadge from "../TableAssignmentBadge";
 
 // Table Renderer Component
 const TableRenderer = ({
