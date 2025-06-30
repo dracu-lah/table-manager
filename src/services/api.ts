@@ -5,9 +5,9 @@ export { BASE_URL };
 
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* AUTH START */
-export const LoginAPI = async (loginData) => {
+export const LoginAPI = async (params: {}) => {
   try {
-    const { data } = await api.post(`${endPoint.login}`, loginData);
+    const { data } = await api.post(`${endPoint.login}`, params);
     return data;
   } catch (error) {
     throw error;
