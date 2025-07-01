@@ -55,9 +55,15 @@ const OutletsPage = () => {
     <div className="container mx-auto py-8">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">Outlets</h1>
-        <Badge variant="secondary" className="text-sm">
-          {outlets?.length || 0} outlets
-        </Badge>
+
+        <div className="flex gap-4">
+          <Button size="sm" onClick={() => navigate(routePath.createOutlet)}>
+            Create
+          </Button>
+          <Badge variant="secondary" className="text-sm">
+            {outlets?.length || 0} outlets
+          </Badge>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
