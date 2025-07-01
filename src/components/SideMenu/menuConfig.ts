@@ -1,5 +1,5 @@
 import routePath from "@/router/routePath";
-import { CircleUser, Home } from "lucide-react";
+import { ChefHat, CircleUser, Home, MapPin, ShoppingBag } from "lucide-react";
 
 import menuKeys from "@/utils/constants/menuKeys";
 
@@ -13,21 +13,19 @@ export const menuConfig = [
 
   {
     key: menuKeys.RESTAURANTS,
-    icon: Home,
+    icon: ChefHat,
     label: "Restaurants",
     route: routePath.restaurants,
   },
-
   {
     key: menuKeys.OUTLETS,
-    icon: Home,
+    icon: ShoppingBag,
     label: "Outlets",
     route: routePath.outlets,
   },
-
   {
     key: menuKeys.ZONES,
-    icon: Home,
+    icon: MapPin,
     label: "Zones",
     route: routePath.zones,
   },
