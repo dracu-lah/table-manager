@@ -88,20 +88,20 @@ export const privateRoutes = [
             path: routePath.editOutlet({}),
             element: <EditOutletPage />,
           },
+        ],
+      },
+
+      {
+        path: routePath.zones,
+        children: [
+          {
+            index: true,
+            element: <ZonesPage />,
+          },
 
           {
-            path: routePath.zones,
-            children: [
-              {
-                index: true,
-                element: <ZonesPage />,
-              },
-
-              {
-                path: routePath.zoneCanvas({}),
-                element: <ZonesCanvasPage />,
-              },
-            ],
+            path: routePath.zoneCanvas({}),
+            element: <ZonesCanvasPage />,
           },
         ],
       },

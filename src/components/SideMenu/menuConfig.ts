@@ -24,6 +24,13 @@ export const menuConfig = [
     label: "Outlets",
     route: routePath.outlets,
   },
+
+  {
+    key: menuKeys.ZONES,
+    icon: Home,
+    label: "Zones",
+    route: routePath.zones,
+  },
   {
     key: menuKeys.USERS,
     icon: CircleUser,

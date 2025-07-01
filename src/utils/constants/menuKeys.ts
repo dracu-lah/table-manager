@@ -5,4 +5,5 @@ export default {
   USER_MANAGEMENT: "userManagement",
   RESTAURANTS: "restaurants",
   OUTLETS: "outlets",
+  ZONES: "zones",
 };
