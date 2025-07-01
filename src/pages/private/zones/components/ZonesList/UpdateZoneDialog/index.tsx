@@ -82,8 +82,6 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField name="name" label="Zone Name" required />
-            <BasicFormField name="canvasUrl" label="Canvas URL" required />
             <BasicFormField
               name="tenant_id"
               label="Tenant ID"
@@ -96,6 +94,8 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
               type="number"
               required
             />
+            <BasicFormField name="name" label="Zone Name" required />
+            <BasicFormField name="canvasUrl" label="Canvas URL" required />
             <SwitchFormField name="isActive" label="Is Active" />
 
             <Button type="submit" className="w-full">
