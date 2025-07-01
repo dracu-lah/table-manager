@@ -24,6 +24,9 @@ const CreateOutletPage = lazy(
   () => import("@/pages/private/outlets/components/create"),
 );
 
+const EditOutletPage = lazy(
+  () => import("@/pages/private/outlets/[outletId]/edit"),
+);
 const RestaurantDetailsPage = lazy(
   () => import("@/pages/private/restaurants/[restaurantId]"),
 );
@@ -70,8 +73,12 @@ export const privateRoutes = [
           },
 
           {
-            path: "create",
+            path: routePath.createOutlet,
             element: <CreateOutletPage />,
+          },
+          {
+            path: routePath.editOutlet({}),
+            element: <EditOutletPage />,
           },
         ],
       },

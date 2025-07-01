@@ -228,9 +228,26 @@ export const GetOutletsAPI = async (params: any) => {
   }
 };
 
+export const GetOutletAPI = async (params: any) => {
+  try {
+    const { data } = await api.get(`${endPoint.outets}/${params.id}`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const CreateOutletAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.outets}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateOutletAPI = async (params: any) => {
+  try {
+    const { data } = await api.put(`${endPoint.outets}/${params.id}`, params);
     return data;
   } catch (error) {
     throw error;

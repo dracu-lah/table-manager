@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Building } from "lucide-react";
+import routePath from "@/router/routePath";
 
 const OutletsPage = () => {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ const OutletsPage = () => {
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["GetOutletsAPI"],
+    queryKey: [GetOutletsAPI.name],
     queryFn: () => GetOutletsAPI(),
   });
 
@@ -141,9 +142,11 @@ const OutletsPage = () => {
               </div>
               <Button
                 size="sm"
-                onClick={() => navigate(`/outlets/${outlet.id}`)}
+                onClick={() =>
+                  navigate(routePath.editOutlet({ id: outlet.id }))
+                }
               >
-                View Details
+                Edit
               </Button>
             </CardFooter>
           </Card>

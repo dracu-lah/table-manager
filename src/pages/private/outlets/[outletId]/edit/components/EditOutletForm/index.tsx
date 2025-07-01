@@ -8,9 +8,11 @@ import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateOutletAPI, GetOutletsAPI } from "@/services/api";
 import { toast } from "sonner";
+import { GetOutletAPI, GetOutletsAPI, UpdateOutletAPI } from "@/services/api";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
+import { useParams } from "react-router";
+import { useEffect } from "react";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -35,41 +37,53 @@ const schema = z.object({
   isActive: z.boolean(),
   tenant_id: z.coerce.number(),
 });
-const defaultValues = {
-  name: "",
-  description: "",
-  cuisine: "",
-  address: "",
-  latitude: 0,
-  longitude: 0,
-  streetName: "",
-  city: "",
-  country: "",
-  logoImageUrl: "",
-  imageConfigurations: [],
-  hasCoverCharges: false,
-  standardCoverCharge: 0,
-  operationalHours: {},
-  cancellationPolicy: "",
-  hasMinimumSpend: false,
-  minimumSpendAmount: 0,
-  requiresUpfrontPayment: false,
-  contactNumber: "",
-  isActive: true,
-  tenant_id: 0,
-};
 
-export default function OutletCreateForm() {
+export default function EditOutletForm() {
+  const { id } = useParams();
   const queryClient = useQueryClient();
+
+  const {
+    data: outlet,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: [GetOutletAPI.name],
+    queryFn: () => GetOutletAPI({ id }),
+  });
   const methods = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues,
   });
-
-  const createMutation = useMutation({
-    mutationFn: CreateOutletAPI,
+  useEffect(() => {
+    if (outlet) {
+      methods.reset({
+        name: outlet.name || "",
+        description: outlet.description || "",
+        cuisine: outlet.cuisine || "",
+        address: outlet.address || "",
+        latitude: outlet.latitude ?? 0,
+        longitude: outlet.longitude ?? 0,
+        streetName: outlet.streetName || "",
+        city: outlet.city || "",
+        country: outlet.country || "",
+        logoImageUrl: outlet.logoImageUrl || "",
+        imageConfigurations: outlet.imageConfigurations ?? [],
+        hasCoverCharges: outlet.hasCoverCharges ?? false,
+        standardCoverCharge: outlet.standardCoverCharge ?? 0,
+        operationalHours: outlet.operationalHours ?? {},
+        cancellationPolicy: outlet.cancellationPolicy || "",
+        hasMinimumSpend: outlet.hasMinimumSpend ?? false,
+        minimumSpendAmount: outlet.minimumSpendAmount ?? 0,
+        requiresUpfrontPayment: outlet.requiresUpfrontPayment ?? false,
+        contactNumber: outlet.contactNumber || "",
+        isActive: outlet.isActive ?? true,
+        tenant_id: outlet.tenant_id,
+      });
+    }
+  }, [outlet, methods.reset]);
+  const updateMutation = useMutation({
+    mutationFn: () => UpdateOutletAPI({ id }),
     onSuccess: () => {
-      toast.success("Created Successfully");
+      toast.success("Updated Successfully");
       queryClient.invalidateQueries({ queryKey: [GetOutletsAPI.name] });
     },
     onError: ({ response }: any) => {
@@ -77,54 +91,76 @@ export default function OutletCreateForm() {
     },
   });
   const onSubmit = (data: z.infer<typeof schema>) => {
-    createMutation.mutate(data);
+    updateMutation.mutate(data);
   };
-
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Create Outlet</CardTitle>
+        <CardTitle>Update Outlet</CardTitle>
       </CardHeader>
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="grid grid-cols-1 gap-4">
-              {/* Input Fields */}
-              <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-wrap gap-4">
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="name" label="Name" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="cuisine" label="Cuisine" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="address" label="Address" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="latitude"
                   label="Latitude"
                   type="number"
                   required
                 />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="longitude"
                   label="Longitude"
                   type="number"
                   required
                 />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="streetName" label="Street Name" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="city" label="City" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="country" label="Country" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField name="logoImageUrl" label="Logo Image URL" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="standardCoverCharge"
                   label="Standard Cover Charge"
                   type="number"
                 />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="minimumSpendAmount"
                   label="Minimum Spend Amount"
                   type="number"
                 />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="contactNumber"
                   label="Contact Number"
                   required
                 />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
                 <BasicFormField
                   name="tenant_id"
                   label="Tenant ID"
@@ -132,34 +168,34 @@ export default function OutletCreateForm() {
                   required
                 />
               </div>
-              {/* Textareas */}
-              <div className="grid grid-cols-2 gap-4">
-                <TextAreaFormField name="description" label="Description" />
-                <TextAreaFormField
-                  name="cancellationPolicy"
-                  label="Cancellation Policy"
-                />
-              </div>
-
-              {/* Switches */}
-              <div className="flex gap-4">
-                <SwitchFormField
-                  name="hasCoverCharges"
-                  label="Has Cover Charges"
-                />
-                <SwitchFormField
-                  name="hasMinimumSpend"
-                  label="Has Minimum Spend"
-                />
-                <SwitchFormField
-                  name="requiresUpfrontPayment"
-                  label="Requires Upfront Payment"
-                />
-                <SwitchFormField name="isActive" label="Is Active" />
-              </div>
             </div>
+
+            <div className="grid gap-4">
+              <TextAreaFormField name="description" label="Description" />
+              <TextAreaFormField
+                name="cancellationPolicy"
+                label="Cancellation Policy"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <SwitchFormField
+                name="hasCoverCharges"
+                label="Has Cover Charges"
+              />
+              <SwitchFormField
+                name="hasMinimumSpend"
+                label="Has Minimum Spend"
+              />
+              <SwitchFormField
+                name="requiresUpfrontPayment"
+                label="Requires Upfront Payment"
+              />
+              <SwitchFormField name="isActive" label="Is Active" />
+            </div>
+
             <Button type="submit">
-              {createMutation.isPending ? "Creating" : "Create Outlet"}
+              {updateMutation.isPending ? "Updating" : "Update Outlet"}
             </Button>
           </form>
         </FormProvider>

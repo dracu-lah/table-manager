@@ -23,4 +23,6 @@ export default {
   restaurantCanvasView: "/restaurants/:restaurantId/areas/:areaId/canvas",
 
   outlets: "/outlets",
+  createOutlet: "/outlets/create",
+  editOutlet: ({ id = ":id" }) => `/outlets/${id}/edit`,
 };
