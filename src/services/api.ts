@@ -5,7 +5,7 @@ export { BASE_URL };
 
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* AUTH START */
-export const LoginAPI = async (params: {}) => {
+export const LoginAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.login}`, params);
     return data;
@@ -14,7 +14,7 @@ export const LoginAPI = async (params: {}) => {
   }
 };
 
-export const UpdatePermissionsAPI = async (params) => {
+export const UpdatePermissionsAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.updateMenus}`, params, {
       params: { RoleName: params.RoleName },
@@ -35,7 +35,7 @@ export const UpdatePermissionsAPI = async (params) => {
 //   }
 // };
 //
-export const GetPermissionsAPI = async ({ roles }) => {
+export const GetPermissionsAPI = async ({ roles }: { roles: any }) => {
   let menuApiResponse = {};
   menuApiResponse = {
     status: "Success",
@@ -119,7 +119,7 @@ export const GetPermissionsAPI = async ({ roles }) => {
     }, 500); // Simulate a 500ms network delay
   });
 };
-export const ChangePasswordAPI = async (params) => {
+export const ChangePasswordAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.changePassword}`, params);
     return data;
@@ -131,7 +131,7 @@ export const ChangePasswordAPI = async (params) => {
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* DASHBOARD  START */
 
-export const GetDashboardAPI = async (params) => {
+export const GetDashboardAPI = async (params: any) => {
   try {
     const { data } = await api.get(`${endPoint.getDashboardData}`, {
       params: params,
@@ -145,7 +145,7 @@ export const GetDashboardAPI = async (params) => {
 /* DASHBOARD  END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* USER MANAGEMENT START */
-export const CreateUserAPI = async (params) => {
+export const CreateUserAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.register}`, params);
     return data;
@@ -154,7 +154,7 @@ export const CreateUserAPI = async (params) => {
   }
 };
 
-export const AssignUserAPI = async (params) => {
+export const AssignUserAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.assignUser}`, params);
     return data;
@@ -163,15 +163,15 @@ export const AssignUserAPI = async (params) => {
   }
 };
 
-export const DeleteUserAPI = async (params) => {
+export const DeleteUserAPI = async (params: any) => {
   try {
-    const { data } = await api.post(`${endPoint.deleteUser}`, params);
+    const { data } = await api.post(`${endPoint.getOutlets}`, params);
     return data;
   } catch (error) {
     throw error;
   }
 };
-export const UpdateUserPasswordAPI = async (params) => {
+export const UpdateUserPasswordAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.updateUserPassword}`, null, {
       params,
@@ -181,7 +181,7 @@ export const UpdateUserPasswordAPI = async (params) => {
     throw error;
   }
 };
-export const GetUsersAPI = async (params) => {
+export const GetUsersAPI = async (params: any) => {
   try {
     const { data } = await api.get(`${endPoint.getUsers}`, { params });
     return data;
@@ -192,7 +192,7 @@ export const GetUsersAPI = async (params) => {
 
 /* ROLE START */
 
-export const CreateRoleAPI = async (params) => {
+export const CreateRoleAPI = async (params: any) => {
   try {
     const { data } = await api.post(`${endPoint.registerRole}`, params);
     return data;
@@ -201,7 +201,7 @@ export const CreateRoleAPI = async (params) => {
   }
 };
 
-export const GetRolesAPI = async (params) => {
+export const GetRolesAPI = async (params: any) => {
   try {
     const { data } = await api.get(`${endPoint.getRoles}`, {
       params: params,
@@ -214,4 +214,18 @@ export const GetRolesAPI = async (params) => {
 /* ROLE END */
 
 /* USER MANAGEMENT END */
+/************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* OUTLET MANAGEMENT END */
+
+export const GetOutletsAPI = async (params: any) => {
+  try {
+    const { data } = await api.get(`${endPoint.getRoles}`, {
+      params: params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+/* OUTLET MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/

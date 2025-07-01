@@ -19,4 +19,7 @@ export default {
   // ========================= ROLE MANAGEMENT APIS =========================
   registerRole: "/api/User/Account/CreateRole",
   getRoles: "/api/User/Account/SearchRoles",
+
+  // ========================= OUTLET  MANAGEMENT APIS =========================
+  getOutlets: "/api/restaurant_outlets",
 };
