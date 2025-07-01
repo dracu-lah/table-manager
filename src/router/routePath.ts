@@ -26,7 +26,8 @@ export default {
   createOutlet: "/outlets/create",
   editOutlet: ({ id = ":id" }) => `/outlets/${id}/edit`,
 
-  zones: ({ id = ":id" }) => `/outlets/${id}/zones`,
-  zoneCanvas: ({ outletId = ":outletId", zoneId = ":zoneId" }) =>
-    `/outlets/${outletId}/zones/${zoneId}/canvas`,
+  zones: `/zones`,
+  createZone: "/zones/create",
+  editZone: ({ id = ":id" }) => `/zones/${id}/edit`,
+  zoneCanvas: ({ zoneId = ":zoneId" }) => `/zones/${zoneId}/canvas`,
 };

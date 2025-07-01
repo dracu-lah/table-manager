@@ -34,6 +34,10 @@ const RestaurantDetailsPage = lazy(
 const ZonesPage = lazy(
   () => import("@/pages/private/outlets/[outletId]/zones"),
 );
+
+const ZonesCanvasPage = lazy(
+  () => import("@/pages/private/outlets/[outletId]/zones/[zoneId]/canvas"),
+);
 const AreaCanvasViewPage = lazy(
   () =>
     import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),
@@ -86,17 +90,17 @@ export const privateRoutes = [
           },
 
           {
-            path: routePath.zones({}),
+            path: routePath.zones,
             children: [
               {
                 index: true,
                 element: <ZonesPage />,
               },
 
-              // {
-              //   path: routePath.zoneCanvas({}),
-              //   element: <AreaCanvasViewPage />,
-              // },
+              {
+                path: routePath.zoneCanvas({}),
+                element: <ZonesCanvasPage />,
+              },
             ],
           },
         ],

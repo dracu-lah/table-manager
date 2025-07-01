@@ -1,5 +1,4 @@
-import { useParams, useNavigate } from "react-router";
-import { Button } from "@/components/ui/button";
+import { useParams } from "react-router";
 import { AreaCanvasProvider } from "@/context/AreaCanvasContext";
 import { Canvas } from "./components/canvas/Canvas";
 
@@ -8,16 +7,9 @@ const AreaCanvasViewPage: React.FC = () => {
     restaurantId: string;
     areaId: string;
   }>();
-  const navigate = useNavigate();
 
   return (
     <div className="container mx-auto py-8">
-      <Button
-        onClick={() => navigate(`/restaurants/${restaurantId}`)}
-        className="mb-6"
-      >
-        Back to Restaurant Details
-      </Button>
       <h1 className="text-3xl font-bold mb-6">Area Canvas View</h1>
       <p>
         Restaurant ID: {restaurantId}, Area ID: {areaId}
