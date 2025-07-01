@@ -11,6 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { CreateOutletAPI, GetOutletsAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
+import RestaurantSelect from "@/components/tableManagerCommon/RestaurantSelect";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -91,12 +92,7 @@ export default function OutletCreateForm() {
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">
-                <BasicFormField
-                  name="tenant_id"
-                  label="Tenant ID"
-                  type="number"
-                  required
-                />
+                <RestaurantSelect />
                 <BasicFormField name="name" label="Name" required />
                 <BasicFormField name="cuisine" label="Cuisine" />
                 <BasicFormField name="address" label="Address" required />
