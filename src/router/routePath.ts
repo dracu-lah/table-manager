@@ -23,4 +23,6 @@ export default {
   createZone: "/zones/create",
   editZone: ({ id = ":id" }) => `/zones/${id}/edit`,
   zoneCanvas: ({ zoneId = ":zoneId" }) => `/zones/${zoneId}/canvas`,
+  zoneEmployeeView: ({ zoneId = ":zoneId" }) =>
+    `/zones/${zoneId}/employee-view`,
 };
