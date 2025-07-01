@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import routePath from "@/router/routePath";
 import CreateZoneDialog from "../CreateZoneDialog";
 import UpdateZoneDialog from "./UpdateZoneDialog";
+import PageLoader from "@/components/loaders/PageLoader";
 
 const ZonesListView = () => {
   const { id } = useParams();
@@ -38,7 +39,12 @@ const ZonesListView = () => {
     });
   };
 
-  if (isLoading) return <div className="p-6">Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="h-full  flex justify-center items-center">
+        <PageLoader />
+      </div>
+    );
 
   return (
     <div className="p-6">
