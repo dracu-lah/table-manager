@@ -17,6 +17,13 @@ export const menuConfig = [
     label: "Restaurants",
     route: routePath.restaurants,
   },
+
+  {
+    key: menuKeys.OUTLETS,
+    icon: Home,
+    label: "Outlets",
+    route: routePath.outlets,
+  },
   {
     key: menuKeys.USERS,
     icon: CircleUser,
