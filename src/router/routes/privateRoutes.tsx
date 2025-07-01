@@ -14,9 +14,7 @@ const EmployeeViewPage = lazy(
 );
 const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const OutletsPage = lazy(() => import("@/pages/private/outlets"));
-const CreateOutletPage = lazy(
-  () => import("@/pages/private/outlets/components/create"),
-);
+const CreateOutletPage = lazy(() => import("@/pages/private/outlets/create"));
 
 const EditOutletPage = lazy(
   () => import("@/pages/private/outlets/[outletId]/edit"),
