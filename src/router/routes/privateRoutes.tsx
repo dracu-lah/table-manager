@@ -19,6 +19,7 @@ const EmployeeViewPage = lazy(
     ),
 );
 const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
+const OutletsPage = lazy(() => import("@/pages/private/outlets"));
 const RestaurantDetailsPage = lazy(
   () => import("@/pages/private/restaurants/[restaurantId]"),
 );
@@ -54,6 +55,11 @@ export const privateRoutes = [
       {
         path: routePath.restaurantEmployeeView,
         element: <EmployeeViewPage />,
+      },
+
+      {
+        path: routePath.outlets,
+        element: <OutletsPage />,
       },
       {
         path: routePath.restaurants,

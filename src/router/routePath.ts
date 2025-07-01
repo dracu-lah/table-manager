@@ -21,4 +21,6 @@ export default {
   restaurantEmployeeView:
     "/restaurants/:restaurantId/areas/:areaId/employee-view",
   restaurantCanvasView: "/restaurants/:restaurantId/areas/:areaId/canvas",
+
+  outlets: "/outlets",
 };
