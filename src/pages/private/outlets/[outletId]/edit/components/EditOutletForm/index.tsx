@@ -90,7 +90,7 @@ export default function EditOutletForm() {
       showErrorAlert(response.data);
     },
   });
-  const onSubmit = (data: z.infer<typeof schema>) => {
+  const onSubmit = (data: any) => {
     updateMutation.mutate(data);
   };
   return (

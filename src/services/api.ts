@@ -217,7 +217,7 @@ export const GetRolesAPI = async (params: any) => {
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* OUTLET MANAGEMENT END */
 
-export const GetOutletsAPI = async (params: any) => {
+export const GetOutletsAPI = async (params: any = {}) => {
   try {
     const { data } = await api.get(`${endPoint.outets}`, {
       params: params,
