@@ -270,7 +270,7 @@ export const UpdateOutletAPI = async (params: any) => {
 
 export const GetZonesAPI = async (params: any = {}) => {
   try {
-    const { data } = await api.get(`${endPoint.outets}`, {
+    const { data } = await api.get(`${endPoint.zones}`, {
       params: params,
     });
     return data;

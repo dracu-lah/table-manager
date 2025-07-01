@@ -1,8 +1,11 @@
-import { useParams } from "react-router";
+import ZonesList from "./components/ZonesList";
 
 const ZonePage = () => {
-  const { id } = useParams();
-  return <div></div>;
+  return (
+    <div>
+      <ZonesList />
+    </div>
+  );
 };
 
 export default ZonePage;

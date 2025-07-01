@@ -39,8 +39,8 @@ const schema = z.object({
 });
 
 export default function EditOutletForm() {
-  const { id } = useParams();
   const queryClient = useQueryClient();
+  const { id } = useParams();
 
   const {
     data: outlet,
