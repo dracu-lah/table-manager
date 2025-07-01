@@ -31,7 +31,9 @@ const RestaurantDetailsPage = lazy(
   () => import("@/pages/private/restaurants/[restaurantId]"),
 );
 
-const ZonesPage = lazy(() => import("@/pages/private/outlets/[outletId]"));
+const ZonesPage = lazy(
+  () => import("@/pages/private/outlets/[outletId]/zones"),
+);
 const AreaCanvasViewPage = lazy(
   () =>
     import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),

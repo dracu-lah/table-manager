@@ -266,3 +266,43 @@ export const UpdateOutletAPI = async (params: any) => {
 };
 /* OUTLET MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* ZONE MANAGEMENT START */
+
+export const GetZonesAPI = async (params: any = {}) => {
+  try {
+    const { data } = await api.get(`${endPoint.outets}`, {
+      params: params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const GetZoneAPI = async (params: { id: string }) => {
+  try {
+    const { data } = await api.get(`${endPoint.zones}/${params.id}`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const CreateZoneAPI = async (params: any) => {
+  try {
+    const { data } = await api.post(`${endPoint.zones}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateZoneAPI = async (params: any) => {
+  try {
+    const { data } = await api.put(`${endPoint.zones}/${params.id}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+/* ZONE MANAGEMENT END */
+/************************************************************************************************************************************************************************************************************************************************************************************************************************/

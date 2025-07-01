@@ -22,4 +22,7 @@ export default {
 
   // ========================= OUTLET  MANAGEMENT APIS =========================
   outets: "/api/restaurant_outlets",
+
+  // ========================= ZONE  MANAGEMENT APIS =========================
+  zones: "/api/areas",
 };
