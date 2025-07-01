@@ -25,4 +25,8 @@ export default {
   outlets: "/outlets",
   createOutlet: "/outlets/create",
   editOutlet: ({ id = ":id" }) => `/outlets/${id}/edit`,
+
+  zones: ({ id = ":id" }) => `/outlets/${id}/areas`,
+  zoneCanvas: ({ areaId = ":areaId", zoneId = ":zoneId" }) =>
+    `/outlets/${areaId}/areas/${zoneId}/canvas`,
 };

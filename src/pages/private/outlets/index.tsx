@@ -146,14 +146,23 @@ const OutletsPage = () => {
               <div className="text-xs text-muted-foreground">
                 ID: {outlet.id}
               </div>
-              <Button
-                size="sm"
-                onClick={() =>
-                  navigate(routePath.editOutlet({ id: outlet.id }))
-                }
-              >
-                Edit
-              </Button>
+
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onClick={() => navigate(routePath.zones({ id: outlet.id }))}
+                >
+                  Areas
+                </Button>
+                <Button
+                  size="sm"
+                  onClick={() =>
+                    navigate(routePath.editOutlet({ id: outlet.id }))
+                  }
+                >
+                  Edit
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         ))}
