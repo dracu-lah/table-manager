@@ -1,0 +1,205 @@
+import { z } from "zod";
+import { useForm, FormProvider } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button } from "@/components/ui/button";
+
+import BasicFormField from "@/components/FormElements/BasicFormField";
+import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
+import SwitchFormField from "@/components/FormElements/SwitchFormField";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+import { GetOutletAPI, GetOutletsAPI, UpdateOutletAPI } from "@/services/api";
+import showErrorAlert from "@/utils/functions/showErrorAlert";
+import { useParams } from "react-router";
+import { useEffect } from "react";
+
+const schema = z.object({
+  name: z.string().min(1),
+  description: z.string().optional(),
+  cuisine: z.string().optional(),
+  address: z.string().min(1),
+  latitude: z.coerce.number(),
+  longitude: z.coerce.number(),
+  streetName: z.string().optional(),
+  city: z.string().min(1),
+  country: z.string().min(1),
+  logoImageUrl: z.string().url().optional(),
+  imageConfigurations: z.array(z.string()).optional(),
+  hasCoverCharges: z.boolean(),
+  standardCoverCharge: z.coerce.number(),
+  operationalHours: z.record(z.any()).optional(),
+  cancellationPolicy: z.string().optional(),
+  hasMinimumSpend: z.boolean(),
+  minimumSpendAmount: z.coerce.number(),
+  requiresUpfrontPayment: z.boolean(),
+  contactNumber: z.string().min(1),
+  isActive: z.boolean(),
+  tenant_id: z.coerce.number(),
+});
+
+export default function EditOutletForm() {
+  const queryClient = useQueryClient();
+  const { id } = useParams();
+
+  const {
+    data: outlet,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: [GetOutletAPI.name],
+    queryFn: () => GetOutletAPI({ id }),
+  });
+  const methods = useForm<z.infer<typeof schema>>({
+    resolver: zodResolver(schema),
+  });
+  useEffect(() => {
+    if (outlet) {
+      methods.reset({
+        name: outlet.name || "",
+        description: outlet.description || "",
+        cuisine: outlet.cuisine || "",
+        address: outlet.address || "",
+        latitude: outlet.latitude ?? 0,
+        longitude: outlet.longitude ?? 0,
+        streetName: outlet.streetName || "",
+        city: outlet.city || "",
+        country: outlet.country || "",
+        logoImageUrl: outlet.logoImageUrl || "",
+        imageConfigurations: outlet.imageConfigurations ?? [],
+        hasCoverCharges: outlet.hasCoverCharges ?? false,
+        standardCoverCharge: outlet.standardCoverCharge ?? 0,
+        operationalHours: outlet.operationalHours ?? {},
+        cancellationPolicy: outlet.cancellationPolicy || "",
+        hasMinimumSpend: outlet.hasMinimumSpend ?? false,
+        minimumSpendAmount: outlet.minimumSpendAmount ?? 0,
+        requiresUpfrontPayment: outlet.requiresUpfrontPayment ?? false,
+        contactNumber: outlet.contactNumber || "",
+        isActive: outlet.isActive ?? true,
+        tenant_id: outlet.tenant_id,
+      });
+    }
+  }, [outlet, methods.reset]);
+  const updateMutation = useMutation({
+    mutationFn: () => UpdateOutletAPI({ id }),
+    onSuccess: () => {
+      toast.success("Updated Successfully");
+      queryClient.invalidateQueries({ queryKey: [GetOutletsAPI.name] });
+    },
+    onError: ({ response }: any) => {
+      showErrorAlert(response.data);
+    },
+  });
+  const onSubmit = (data: any) => {
+    updateMutation.mutate(data);
+  };
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>Update Outlet</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <FormProvider {...methods}>
+          <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
+            <div className="flex flex-wrap gap-4">
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="name" label="Name" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="cuisine" label="Cuisine" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="address" label="Address" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="latitude"
+                  label="Latitude"
+                  type="number"
+                  required
+                />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="longitude"
+                  label="Longitude"
+                  type="number"
+                  required
+                />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="streetName" label="Street Name" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="city" label="City" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="country" label="Country" required />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField name="logoImageUrl" label="Logo Image URL" />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="standardCoverCharge"
+                  label="Standard Cover Charge"
+                  type="number"
+                />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="minimumSpendAmount"
+                  label="Minimum Spend Amount"
+                  type="number"
+                />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="contactNumber"
+                  label="Contact Number"
+                  required
+                />
+              </div>
+              <div className="w-full md:w-[calc(50%-0.5rem)]">
+                <BasicFormField
+                  name="tenant_id"
+                  label="Tenant ID"
+                  type="number"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="grid gap-4">
+              <TextAreaFormField name="description" label="Description" />
+              <TextAreaFormField
+                name="cancellationPolicy"
+                label="Cancellation Policy"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-4">
+              <SwitchFormField
+                name="hasCoverCharges"
+                label="Has Cover Charges"
+              />
+              <SwitchFormField
+                name="hasMinimumSpend"
+                label="Has Minimum Spend"
+              />
+              <SwitchFormField
+                name="requiresUpfrontPayment"
+                label="Requires Upfront Payment"
+              />
+              <SwitchFormField name="isActive" label="Is Active" />
+            </div>
+
+            <Button type="submit">
+              {updateMutation.isPending ? "Updating" : "Update Outlet"}
+            </Button>
+          </form>
+        </FormProvider>
+      </CardContent>
+    </Card>
+  );
+}

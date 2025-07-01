@@ -6,17 +6,11 @@ import { ProtectedRoute } from "../ProtectedRoute";
 // Lazy-loaded components
 const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
 const CustomerViewPage = lazy(
-  () =>
-    import(
-      "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/customer-view"
-    ),
+  () => import("@/pages/private/zones/[zoneId]/customer-view"),
 );
 
 const EmployeeViewPage = lazy(
-  () =>
-    import(
-      "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/employee-view"
-    ),
+  () => import("@/pages/private/zones/[zoneId]/employee-view"),
 );
 const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const OutletsPage = lazy(() => import("@/pages/private/outlets"));
@@ -27,20 +21,11 @@ const CreateOutletPage = lazy(
 const EditOutletPage = lazy(
   () => import("@/pages/private/outlets/[outletId]/edit"),
 );
-const RestaurantDetailsPage = lazy(
-  () => import("@/pages/private/restaurants/[restaurantId]"),
-);
 
-const ZonesPage = lazy(
-  () => import("@/pages/private/outlets/[outletId]/zones"),
-);
+const ZonesPage = lazy(() => import("@/pages/private/zones"));
 
 const ZonesCanvasPage = lazy(
-  () => import("@/pages/private/outlets/[outletId]/zones/[zoneId]/canvas"),
-);
-const AreaCanvasViewPage = lazy(
-  () =>
-    import("@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas"),
+  () => import("@/pages/private/zones/[zoneId]/canvas"),
 );
 
 const UserManagementPage = lazy(
@@ -108,14 +93,6 @@ export const privateRoutes = [
       {
         path: routePath.restaurants,
         element: <RestaurantsPage />,
-      },
-      {
-        path: routePath.restaurantDetails,
-        element: <RestaurantDetailsPage />,
-      },
-      {
-        path: routePath.restaurantCanvasView,
-        element: <AreaCanvasViewPage />,
       },
 
       {
