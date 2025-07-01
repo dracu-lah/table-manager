@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,19 +13,26 @@ import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateZoneAPI, GetZonesAPI } from "@/services/api";
+import { UpdateZoneAPI, GetZonesAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 
+// 🔐 Schema for validation
 const schema = z.object({
-  name: z.string().min(1, "Zone name is required"),
-  canvasUrl: z.string().url("Canvas URL must be valid"),
+  name: z.string().min(1),
+  canvasUrl: z.string().url(),
   isActive: z.boolean(),
   tenant_id: z.coerce.number(),
   location_id: z.coerce.number(),
 });
 
-export default function CreateZoneDialog() {
+type Zone = z.infer<typeof schema> & { id: number };
+
+interface UpdateZoneDialogProps {
+  zone: Zone;
+}
+
+export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -40,10 +47,17 @@ export default function CreateZoneDialog() {
     },
   });
 
-  const createMutation = useMutation({
-    mutationFn: CreateZoneAPI,
+  useEffect(() => {
+    if (open && zone) {
+      methods.reset({ ...zone });
+    }
+  }, [open, zone, methods]);
+
+  const updateMutation = useMutation({
+    mutationFn: (data: z.infer<typeof schema>) =>
+      UpdateZoneAPI({ id: zone.id, ...data }),
     onSuccess: () => {
-      toast.success("Zone created successfully");
+      toast.success("Zone updated successfully");
       queryClient.invalidateQueries({ queryKey: [GetZonesAPI.name] });
       setOpen(false);
     },
@@ -53,17 +67,17 @@ export default function CreateZoneDialog() {
   });
 
   const onSubmit = (data: z.infer<typeof schema>) => {
-    createMutation.mutate(data);
+    updateMutation.mutate(data);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Zone</Button>
+        <Button variant="outline">Edit</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Zone</DialogTitle>
+          <DialogTitle>Edit Zone</DialogTitle>
         </DialogHeader>
 
         <FormProvider {...methods}>
@@ -85,7 +99,7 @@ export default function CreateZoneDialog() {
             <SwitchFormField name="isActive" label="Is Active" />
 
             <Button type="submit" className="w-full">
-              {createMutation.isPending ? "Creating..." : "Create Zone"}
+              {updateMutation.isPending ? "Updating..." : "Update Zone"}
             </Button>
           </form>
         </FormProvider>

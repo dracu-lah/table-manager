@@ -1,4 +1,4 @@
-import { GetZonesAPI } from "@/services/api";
+import { GetZonesAPI, UpdateOutletAPI } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate, useParams } from "react-router";
 import React from "react";
@@ -15,6 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import routePath from "@/router/routePath";
+import CreateZoneDialog from "../CreateZoneDialog";
+import UpdateZoneDialog from "./UpdateZoneDialog";
 
 const ZonesListView = () => {
   const { id } = useParams();
@@ -42,13 +44,17 @@ const ZonesListView = () => {
     <div className="p-6">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Zones Management</h1>
-          <p className="text-muted-foreground">
-            Showing {zonesData.data.length} of {zonesData.total} zones
-          </p>
-        </div>
 
+        <div className="flex justify-between">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold mb-2">Zones Management</h1>
+            <p className="text-muted-foreground">
+              Showing {zonesData.data.length} of {zonesData.total} zones
+            </p>
+          </div>
+
+          <CreateZoneDialog />
+        </div>
         {/* Zones List */}
         <div className="space-y-6">
           {zonesData.data.map((zone) => (
@@ -78,20 +84,23 @@ const ZonesListView = () => {
                       </div>
                     </div>
                   </div>
-                  <Button
-                    onClick={() =>
-                      navigate(
-                        routePath.zoneCanvas({
-                          outletId: zone.locationId,
-                          zoneId: zone.id,
-                        }),
-                      )
-                    }
-                    className="flex items-center space-x-2"
-                  >
-                    <ExternalLink className="w-4 h-4" />
-                    <span>Open Canvas</span>
-                  </Button>
+                  <div className="flex gap-4">
+                    <UpdateZoneDialog zone={zone} />
+                    <Button
+                      onClick={() =>
+                        navigate(
+                          routePath.zoneCanvas({
+                            outletId: zone.locationId,
+                            zoneId: zone.id,
+                          }),
+                        )
+                      }
+                      className="flex items-center space-x-2"
+                    >
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Open Canvas</span>
+                    </Button>
+                  </div>
                 </div>
               </CardHeader>
 
