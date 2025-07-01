@@ -219,7 +219,7 @@ export const GetRolesAPI = async (params: any) => {
 
 export const GetOutletsAPI = async (params: any) => {
   try {
-    const { data } = await api.get(`${endPoint.getRoles}`, {
+    const { data } = await api.get(`${endPoint.getOutlets}`, {
       params: params,
     });
     return data;
