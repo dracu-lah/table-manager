@@ -318,3 +318,47 @@ export const UpdateZoneAPI = async (params: any) => {
 };
 /* ZONE MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
+/* RESTAURANT MANAGEMENT START */
+export const GetRestaurantsAPI = async (params: any = {}) => {
+  try {
+    const { data } = await api.get(`${endPoint.restaurants}`, {
+      params: params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const GetRestaurantAPI = async (params: { id: string }) => {
+  try {
+    const { data } = await api.get(`${endPoint.restaurants}/${params.id}`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const CreateRestaurantAPI = async (params: any) => {
+  try {
+    const { data } = await api.post(`${endPoint.restaurants}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateRestaurantAPI = async (params: any) => {
+  try {
+    const { data } = await api.put(
+      `${endPoint.restaurants}/${params.id}`,
+      params,
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/* RESTAURANT MANAGEMENT END */
+/************************************************************************************************************************************************************************************************************************************************************************************************************************/
