@@ -63,11 +63,8 @@ const OutletsPage = () => {
 
         <div className="flex gap-4">
           <Button size="sm" onClick={() => navigate(routePath.createOutlet)}>
-            Create
+            Create Outlet
           </Button>
-          <Badge variant="secondary" className="text-sm">
-            {outlets?.length || 0} outlets
-          </Badge>
         </div>
       </div>
 
