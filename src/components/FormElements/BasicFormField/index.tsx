@@ -7,24 +7,36 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { clsx } from "clsx";
-import { useFormContext } from "react-hook-form"; // Import useFormContext
+import { useFormContext, FieldValues, Path } from "react-hook-form";
+import { InputHTMLAttributes } from "react";
 
-export default function BasicFormField({
+interface BasicFormFieldProps<T extends FieldValues>
+  extends Omit<InputHTMLAttributes<HTMLInputElement>, "name"> {
+  name: Path<T>;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  className?: string;
+  disabled?: boolean;
+}
+
+export default function BasicFormField<T extends FieldValues>({
   name,
   placeholder,
   label,
   required,
-  type,
+  type = "text",
   className,
   disabled = false,
-}) {
-  const { control } = useFormContext();
+  ...rest
+}: BasicFormFieldProps<T>) {
+  const { control } = useFormContext<T>();
+
   return (
     <FormField
-      disabled={disabled}
       key={name}
-      control={control}
       name={name}
+      control={control}
       render={({ field }) => (
         <FormItem className="flex flex-col">
           {label && (
@@ -34,10 +46,12 @@ export default function BasicFormField({
           )}
           <FormControl>
             <Input
+              {...field}
+              {...rest}
               type={type}
               placeholder={placeholder}
-              {...field}
               className={clsx(className)}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />

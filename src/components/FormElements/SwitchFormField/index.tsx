@@ -5,18 +5,26 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { useFormContext } from "react-hook-form"; // Import useFormContext
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 
-export default function SwitchFormField({
+interface SwitchFormFieldProps<T extends FieldValues> {
+  name: Path<T>;
+  label?: string;
+  required?: boolean;
+  disabled?: boolean;
+  className?: string;
+}
+
+export default function SwitchFormField<T extends FieldValues>({
   name,
   disabled = false,
   label,
   required,
-  type,
   className,
-}) {
-  const { control } = useFormContext();
+}: SwitchFormFieldProps<T>) {
+  const { control } = useFormContext<T>();
+
   return (
     <FormField
       key={name}
@@ -31,8 +39,8 @@ export default function SwitchFormField({
           )}
           <FormControl>
             <Switch
-              disabled={disabled}
               className={className}
+              disabled={disabled}
               checked={field.value}
               onCheckedChange={field.onChange}
             />

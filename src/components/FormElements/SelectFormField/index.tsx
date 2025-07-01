@@ -15,19 +15,35 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useFormContext } from "react-hook-form";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 
-const SelectFormField = ({
-  disabled,
+interface SelectOption {
+  label: string;
+  value: string;
+}
+
+interface SelectFormFieldProps<T extends FieldValues> {
+  name: Path<T>;
+  label?: string;
+  required?: boolean;
+  placeholder?: string;
+  description?: string;
+  className?: string;
+  disabled?: boolean;
+  items: SelectOption[];
+}
+
+export default function SelectFormField<T extends FieldValues>({
   name,
-  placeholder,
   label,
   required,
-  items,
+  placeholder,
   description,
   className = "w-[180px]",
-}) => {
-  const { control, setValue } = useFormContext();
+  disabled = false,
+  items,
+}: SelectFormFieldProps<T>) {
+  const { control, setValue } = useFormContext<T>();
 
   return (
     <FormField
@@ -44,7 +60,7 @@ const SelectFormField = ({
           <FormControl>
             <Select
               disabled={disabled}
-              onValueChange={(value) => setValue(name, value)}
+              onValueChange={(value) => setValue(name, value as any)}
               value={field.value}
             >
               <SelectTrigger className={className}>
@@ -76,6 +92,4 @@ const SelectFormField = ({
       )}
     />
   );
-};
-
-export default SelectFormField;
+}

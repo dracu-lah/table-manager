@@ -24,11 +24,33 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useFormContext } from "react-hook-form";
-import { useMemo } from "react";
-import { useState } from "react";
+import { useFormContext, Path, FieldValues } from "react-hook-form";
+import { useState, useMemo } from "react";
 
-export default function ComboboxFormField({
+interface SubLabel {
+  key: string;
+  value: string;
+}
+
+interface ComboboxItem {
+  label: string;
+  value: string;
+  subLabels?: SubLabel[];
+}
+
+interface ComboboxFormFieldProps<T extends FieldValues> {
+  name: Path<T>;
+  items: ComboboxItem[];
+  label?: string;
+  placeholder?: string;
+  description?: string;
+  disabled?: boolean;
+  required?: boolean;
+  className?: string;
+  truncateText?: boolean;
+}
+
+export default function ComboboxFormField<T extends FieldValues>({
   name,
   items,
   label,
@@ -38,8 +60,8 @@ export default function ComboboxFormField({
   required = false,
   className = "w-[300px]",
   truncateText = true,
-}) {
-  const form = useFormContext();
+}: ComboboxFormFieldProps<T>) {
+  const form = useFormContext<T>();
   const [open, setOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
 
@@ -99,7 +121,7 @@ export default function ComboboxFormField({
                         key={item.value}
                         value={item.label}
                         onSelect={() => {
-                          form.setValue(name, item.value);
+                          form.setValue(name, item.value as any); // cast for generic safety
                           setSearchValue("");
                           setOpen(false);
                         }}
@@ -108,8 +130,11 @@ export default function ComboboxFormField({
                           <h1>{item.label}</h1>
                           <div>
                             {item?.subLabels?.map((s) => (
-                              <p className="opacity-70 text-xs">
-                                {s.key} :{s.value}
+                              <p
+                                key={s.key + s.value}
+                                className="opacity-70 text-xs"
+                              >
+                                {s.key}: {s.value}
                               </p>
                             ))}
                           </div>

@@ -1,6 +1,7 @@
-import { useFormContext } from "react-hook-form";
+import { useFormContext, FieldValues, Path } from "react-hook-form";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { format } from "date-fns";
+import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -18,10 +19,20 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { useState } from "react";
 import { DatePickerV2 } from "@/components/DatePickerV2";
 
-const DatePickerFormField = ({
+interface DatePickerFormFieldProps<T extends FieldValues> {
+  name: Path<T>;
+  placeholder?: string;
+  label?: string;
+  required?: boolean;
+  description?: string;
+  className?: string;
+  modal?: boolean;
+  disabled?: boolean;
+}
+
+export default function DatePickerFormField<T extends FieldValues>({
   name,
   placeholder = "Pick a date",
   label,
@@ -30,27 +41,29 @@ const DatePickerFormField = ({
   className = "w-[240px]",
   modal = true,
   disabled,
-}) => {
-  const { control } = useFormContext();
-
+}: DatePickerFormFieldProps<T>) {
+  const { control } = useFormContext<T>();
   const [open, setOpen] = useState(false);
+
   return (
     <FormField
       control={control}
       name={name}
       render={({ field }) => (
         <FormItem className="flex flex-col">
-          <FormLabel>
-            {label} {required && <span className="text-red-500">*</span>}
-          </FormLabel>
+          {label && (
+            <FormLabel>
+              {label} {required && <span className="text-red-500">*</span>}
+            </FormLabel>
+          )}
           <Popover open={open} onOpenChange={setOpen} modal={modal}>
             <PopoverTrigger asChild>
               <FormControl>
                 <Button
                   disabled={disabled}
-                  variant={"outline"}
+                  variant="outline"
                   className={cn(
-                    className + "pl-3 text-left font-normal",
+                    `${className} pl-3 text-left font-normal`,
                     !field.value && "text-muted-foreground",
                   )}
                 >
@@ -83,6 +96,4 @@ const DatePickerFormField = ({
       )}
     />
   );
-};
-
-export default DatePickerFormField;
+}

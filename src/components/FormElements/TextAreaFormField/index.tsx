@@ -6,18 +6,30 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { useFormContext } from "react-hook-form"; // Import useFormContext
+import { useFormContext, FieldValues, Path } from "react-hook-form";
+import { TextareaHTMLAttributes } from "react";
 
-export default function TextAreaFormField({
+interface TextAreaFormFieldProps<T extends FieldValues>
+  extends Omit<TextareaHTMLAttributes<HTMLTextAreaElement>, "name"> {
+  name: Path<T>;
+  label?: string;
+  placeholder?: string;
+  required?: boolean;
+  className?: string;
+  disabled?: boolean;
+}
+
+export default function TextAreaFormField<T extends FieldValues>({
   name,
   placeholder,
   label,
   required,
-  type,
   className,
   disabled = false,
-}) {
-  const { control } = useFormContext();
+  ...rest
+}: TextAreaFormFieldProps<T>) {
+  const { control } = useFormContext<T>();
+
   return (
     <FormField
       key={name}
@@ -32,11 +44,11 @@ export default function TextAreaFormField({
           )}
           <FormControl>
             <Textarea
-              disabled={disabled}
-              type={type}
-              placeholder={placeholder}
               {...field}
+              {...rest}
+              placeholder={placeholder}
               className={className}
+              disabled={disabled}
             />
           </FormControl>
           <FormMessage />
