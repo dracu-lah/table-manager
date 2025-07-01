@@ -5,13 +5,13 @@ import { ProtectedRoute } from "../ProtectedRoute";
 
 // Lazy-loaded components
 const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
-const CustomerViewPage = lazy(
-  () => import("@/pages/private/zones/[zoneId]/customer-view"),
-);
-
-const EmployeeViewPage = lazy(
-  () => import("@/pages/private/zones/[zoneId]/employee-view"),
-);
+// const CustomerViewPage = lazy(
+//   () => import("@/pages/private/zones/[zoneId]/customer-view"),
+// );
+//
+// const EmployeeViewPage = lazy(
+//   () => import("@/pages/private/zones/[zoneId]/employee-view"),
+// );
 const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const OutletsPage = lazy(() => import("@/pages/private/outlets"));
 const CreateOutletPage = lazy(() => import("@/pages/private/outlets/create"));
