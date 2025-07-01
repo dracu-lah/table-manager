@@ -21,5 +21,5 @@ export default {
   getRoles: "/api/User/Account/SearchRoles",
 
   // ========================= OUTLET  MANAGEMENT APIS =========================
-  getOutlets: "/api/restaurant_outlets",
+  outets: "/api/restaurant_outlets",
 };

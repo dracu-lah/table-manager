@@ -165,7 +165,7 @@ export const AssignUserAPI = async (params: any) => {
 
 export const DeleteUserAPI = async (params: any) => {
   try {
-    const { data } = await api.post(`${endPoint.getOutlets}`, params);
+    const { data } = await api.post(`${endPoint.outets}`, params);
     return data;
   } catch (error) {
     throw error;
@@ -219,9 +219,18 @@ export const GetRolesAPI = async (params: any) => {
 
 export const GetOutletsAPI = async (params: any) => {
   try {
-    const { data } = await api.get(`${endPoint.getOutlets}`, {
+    const { data } = await api.get(`${endPoint.outets}`, {
       params: params,
     });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const CreateOutletAPI = async (params: any) => {
+  try {
+    const { data } = await api.post(`${endPoint.outets}`, params);
     return data;
   } catch (error) {
     throw error;

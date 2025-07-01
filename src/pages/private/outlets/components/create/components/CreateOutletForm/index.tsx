@@ -7,6 +7,10 @@ import BasicFormField from "@/components/FormElements/BasicFormField";
 import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { CreateOutletAPI, GetOutletsAPI } from "@/services/api";
+import { toast } from "sonner";
+import showErrorAlert from "@/utils/functions/showErrorAlert";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -31,37 +35,49 @@ const schema = z.object({
   isActive: z.boolean(),
   tenant_id: z.coerce.number(),
 });
+const defaultValues = {
+  name: "",
+  description: "",
+  cuisine: "",
+  address: "",
+  latitude: 0,
+  longitude: 0,
+  streetName: "",
+  city: "",
+  country: "",
+  logoImageUrl: "",
+  imageConfigurations: [],
+  hasCoverCharges: false,
+  standardCoverCharge: 0,
+  operationalHours: {},
+  cancellationPolicy: "",
+  hasMinimumSpend: false,
+  minimumSpendAmount: 0,
+  requiresUpfrontPayment: false,
+  contactNumber: "",
+  isActive: true,
+  tenant_id: 0,
+};
 
 export default function OutletCreateForm() {
+  const queryClient = useQueryClient();
   const methods = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      name: "",
-      description: "",
-      cuisine: "",
-      address: "",
-      latitude: 0,
-      longitude: 0,
-      streetName: "",
-      city: "",
-      country: "",
-      logoImageUrl: "",
-      imageConfigurations: [],
-      hasCoverCharges: false,
-      standardCoverCharge: 0,
-      operationalHours: {},
-      cancellationPolicy: "",
-      hasMinimumSpend: false,
-      minimumSpendAmount: 0,
-      requiresUpfrontPayment: false,
-      contactNumber: "",
-      isActive: true,
-      tenant_id: 0,
-    },
+    defaultValues: defaultValues,
   });
 
+  const createMutation = useMutation({
+    mutationFn: CreateOutletAPI,
+    onSuccess: () => {
+      toast.success("Deleted Successfully");
+      queryClient.invalidateQueries({ queryKey: [GetOutletsAPI.name] });
+    },
+    onError: ({ response }: any) => {
+      showErrorAlert(response.data);
+    },
+  });
   const onSubmit = (data: z.infer<typeof schema>) => {
-    console.log(data);
+    createMutation.mutate(data);
   };
 
   return (
@@ -142,7 +158,9 @@ export default function OutletCreateForm() {
                 <SwitchFormField name="isActive" label="Is Active" />
               </div>
             </div>
-            <Button type="submit">Create Outlet</Button>
+            <Button type="submit">
+              {createMutation.isPending ? "Creating" : "Create Outlet"}
+            </Button>
           </form>
         </FormProvider>
       </CardContent>
