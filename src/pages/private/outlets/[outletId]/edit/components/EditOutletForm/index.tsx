@@ -101,75 +101,48 @@ export default function EditOutletForm() {
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            <div className="flex flex-wrap gap-4">
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="name" label="Name" required />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="cuisine" label="Cuisine" />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="address" label="Address" required />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="latitude"
-                  label="Latitude"
-                  type="number"
-                  required
-                />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="longitude"
-                  label="Longitude"
-                  type="number"
-                  required
-                />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="streetName" label="Street Name" />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="city" label="City" required />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="country" label="Country" required />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField name="logoImageUrl" label="Logo Image URL" />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="standardCoverCharge"
-                  label="Standard Cover Charge"
-                  type="number"
-                />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="minimumSpendAmount"
-                  label="Minimum Spend Amount"
-                  type="number"
-                />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="contactNumber"
-                  label="Contact Number"
-                  required
-                />
-              </div>
-              <div className="w-full md:w-[calc(50%-0.5rem)]">
-                <BasicFormField
-                  name="tenant_id"
-                  label="Tenant ID"
-                  type="number"
-                  required
-                />
-              </div>
+            <div className="grid grid-cols-2 gap-4">
+              <BasicFormField
+                name="tenant_id"
+                label="Tenant ID"
+                type="number"
+                required
+              />
+              <BasicFormField name="name" label="Name" required />
+              <BasicFormField name="cuisine" label="Cuisine" />
+              <BasicFormField name="address" label="Address" required />
+              <BasicFormField
+                name="latitude"
+                label="Latitude"
+                type="number"
+                required
+              />
+              <BasicFormField
+                name="longitude"
+                label="Longitude"
+                type="number"
+                required
+              />
+              <BasicFormField name="streetName" label="Street Name" />
+              <BasicFormField name="city" label="City" required />
+              <BasicFormField name="country" label="Country" required />
+              <BasicFormField name="logoImageUrl" label="Logo Image URL" />
+              <BasicFormField
+                name="standardCoverCharge"
+                label="Standard Cover Charge"
+                type="number"
+              />
+              <BasicFormField
+                name="minimumSpendAmount"
+                label="Minimum Spend Amount"
+                type="number"
+              />
+              <BasicFormField
+                name="contactNumber"
+                label="Contact Number"
+                required
+              />
             </div>
-
             <div className="grid gap-4">
               <TextAreaFormField name="description" label="Description" />
               <TextAreaFormField

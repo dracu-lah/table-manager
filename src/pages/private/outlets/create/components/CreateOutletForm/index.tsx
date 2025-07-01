@@ -91,6 +91,12 @@ export default function OutletCreateForm() {
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">
+                <BasicFormField
+                  name="tenant_id"
+                  label="Tenant ID"
+                  type="number"
+                  required
+                />
                 <BasicFormField name="name" label="Name" required />
                 <BasicFormField name="cuisine" label="Cuisine" />
                 <BasicFormField name="address" label="Address" required />
@@ -123,12 +129,6 @@ export default function OutletCreateForm() {
                 <BasicFormField
                   name="contactNumber"
                   label="Contact Number"
-                  required
-                />
-                <BasicFormField
-                  name="tenant_id"
-                  label="Tenant ID"
-                  type="number"
                   required
                 />
               </div>
