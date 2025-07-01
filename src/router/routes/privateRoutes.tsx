@@ -2,6 +2,7 @@ import { lazy } from "react";
 import { Navigate } from "react-router";
 import routePath from "../routePath";
 import { ProtectedRoute } from "../ProtectedRoute";
+import PropertyManagementPage from "@/pages/private/restaurants";
 
 // Lazy-loaded components
 const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
@@ -90,7 +91,16 @@ export const privateRoutes = [
       },
       {
         path: routePath.restaurants,
-        element: <RestaurantsPage />,
+        children: [
+          {
+            index: true,
+            element: <Navigate to={routePath.restaurants + "/new"} />,
+          },
+          {
+            path: ":property_name",
+            element: <PropertyManagementPage />,
+          },
+        ],
       },
 
       {
