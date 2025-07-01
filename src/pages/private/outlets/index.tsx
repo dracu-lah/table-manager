@@ -13,6 +13,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Building } from "lucide-react";
 import routePath from "@/router/routePath";
+import PageLoader from "@/components/loaders/PageLoader";
 
 const OutletsPage = () => {
   const navigate = useNavigate();
@@ -42,7 +43,11 @@ const OutletsPage = () => {
   };
 
   if (isLoading)
-    return <div className="text-center py-10">Loading outlets...</div>;
+    return (
+      <div className="h-full  flex justify-center items-center">
+        <PageLoader />
+      </div>
+    );
 
   if (error)
     return (

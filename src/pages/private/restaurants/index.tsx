@@ -1,5 +1,5 @@
 import { useState } from "react";
-import CreatePropertyForm from "./components/CreatePropertyForm";
+// import CreatePropertyForm from "./components/CreatePropertyForm";
 // import EditPropertyForm from "./components/EditPropertyForm";
 // import PropertiesSidebar from "./components/PropertiesSidebar";
 
@@ -11,7 +11,7 @@ const PropertyManagementPage = () => {
     <div className="flex h-full">
       {/* <div className="flex-1"> */}
       {/*   {property_name === "new" ? ( */}
-      <CreatePropertyForm length={length} />
+      {/* <CreatePropertyForm length={length} /> */}
       {/*   ) : ( */}
       {/*     <EditPropertyForm */}
 
