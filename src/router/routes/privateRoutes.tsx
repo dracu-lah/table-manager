@@ -2,7 +2,6 @@ import { lazy } from "react";
 import { Navigate } from "react-router";
 import routePath from "../routePath";
 import { ProtectedRoute } from "../ProtectedRoute";
-import PropertyManagementPage from "@/pages/private/restaurants";
 
 // Lazy-loaded components
 const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
@@ -13,7 +12,6 @@ const CustomerViewPage = lazy(
 const EmployeeViewPage = lazy(
   () => import("@/pages/private/zones/[zoneId]/employee-view"),
 );
-const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
 const OutletsPage = lazy(() => import("@/pages/private/outlets"));
 const CreateOutletPage = lazy(() => import("@/pages/private/outlets/create"));
 
@@ -46,15 +44,6 @@ export const privateRoutes = [
         index: true,
         element: <Navigate to={routePath.restaurants} replace />,
       },
-      {
-        path: routePath.restaurantCustomerView,
-        element: <CustomerViewPage />,
-      },
-
-      {
-        path: routePath.restaurantEmployeeView,
-        element: <EmployeeViewPage />,
-      },
 
       {
         path: routePath.outlets,
@@ -86,19 +75,6 @@ export const privateRoutes = [
           {
             path: routePath.zoneCanvas({}),
             element: <ZonesCanvasPage />,
-          },
-        ],
-      },
-      {
-        path: routePath.restaurants,
-        children: [
-          {
-            index: true,
-            element: <Navigate to={routePath.restaurants + "/new"} />,
-          },
-          {
-            path: ":property_name",
-            element: <PropertyManagementPage />,
           },
         ],
       },
