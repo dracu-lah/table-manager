@@ -12,6 +12,9 @@ import { CreateOutletAPI, GetOutletsAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import RestaurantSelect from "@/components/tableManagerCommon/RestaurantSelect";
+import ImageCrop from "@/components/uploaders/ImageCrop/ImageCrop";
+import { Label } from "@/components/ui/label";
+import ImageCropFormField from "@/components/FormElements/ImageCropField";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -89,6 +92,17 @@ export default function OutletCreateForm() {
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
+            <ImageCropFormField
+              name="logoImageUrl"
+              label="Outlet Logo"
+              required
+              cropperWidth="100%"
+              uploaderWidth="100%"
+              uploaderHeight="200px"
+              cropperHeight="300px"
+              removeButtonText="Remove Logo"
+              imageAlt="Outlet Logo"
+            />
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">
@@ -111,7 +125,6 @@ export default function OutletCreateForm() {
                 <BasicFormField name="streetName" label="Street Name" />
                 <BasicFormField name="city" label="City" required />
                 <BasicFormField name="country" label="Country" required />
-                <BasicFormField name="logoImageUrl" label="Logo Image URL" />
                 <BasicFormField
                   name="standardCoverCharge"
                   label="Standard Cover Charge"
