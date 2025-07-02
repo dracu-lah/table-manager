@@ -152,12 +152,6 @@ const OutletsPage = () => {
               <div className="flex gap-2">
                 <Button
                   size="sm"
-                  onClick={() => navigate(routePath.zones({ id: outlet.id }))}
-                >
-                  Areas
-                </Button>
-                <Button
-                  size="sm"
                   onClick={() =>
                     navigate(routePath.editOutlet({ id: outlet.id }))
                   }
