@@ -13,7 +13,7 @@ import { GetOutletAPI, GetOutletsAPI, UpdateOutletAPI } from "@/services/api";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import RestaurantSelect from "@/components/tableManagerCommon/RestaurantSelect";
+import RestaurantSelectFormField from "@/components/tableManagerCommon/RestaurantSelectFormField";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -103,7 +103,7 @@ export default function EditOutletForm() {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
             <div className="grid grid-cols-2 gap-4">
-              <RestaurantSelect />
+              <RestaurantSelectFormField />
               <BasicFormField name="name" label="Name" required />
               <BasicFormField name="cuisine" label="Cuisine" />
               <BasicFormField name="address" label="Address" required />

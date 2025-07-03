@@ -2,7 +2,7 @@ import ComboboxFormField from "@/components/FormElements/ComboboxFormField";
 import { GetRestaurantsAPI } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
-const RestaurantSelect = () => {
+const RestaurantSelectFormField = () => {
   const {
     data: restaurantsData,
     isLoading,
@@ -27,4 +27,4 @@ const RestaurantSelect = () => {
   );
 };
 
-export default RestaurantSelect;
+export default RestaurantSelectFormField;
