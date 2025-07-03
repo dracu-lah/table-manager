@@ -122,7 +122,6 @@ export default function EditOutletForm() {
               <BasicFormField name="streetName" label="Street Name" />
               <BasicFormField name="city" label="City" required />
               <BasicFormField name="country" label="Country" required />
-              <BasicFormField name="logoImageUrl" label="Logo Image URL" />
               <BasicFormField
                 name="standardCoverCharge"
                 label="Standard Cover Charge"
