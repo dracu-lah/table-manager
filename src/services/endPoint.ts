@@ -28,5 +28,6 @@ export default {
   // ========================= ZONE  MANAGEMENT APIS =========================
   zones: "/api/areas",
 
-  tempImageUpload: "/api/Settings/Image/SaveExperienceImage",
+  logoImageUpload: "/api/files/upload/logo",
+  canvasThumbnailImage: "/api/files/upload/canvas",
 };
