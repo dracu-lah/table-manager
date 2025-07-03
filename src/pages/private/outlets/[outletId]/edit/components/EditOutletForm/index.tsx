@@ -66,7 +66,8 @@ export default function EditOutletForm() {
         streetName: outlet.streetName || "",
         city: outlet.city || "",
         country: outlet.country || "",
-        logoImageUrl: outlet.logoImageUrl || "",
+        logoImageUrl:
+          "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1074&auto=format&fit=crop",
         imageConfigurations: outlet.imageConfigurations ?? [],
         hasCoverCharges: outlet.hasCoverCharges ?? false,
         standardCoverCharge: outlet.standardCoverCharge ?? 0,
