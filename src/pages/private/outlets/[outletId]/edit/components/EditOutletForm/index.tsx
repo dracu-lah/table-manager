@@ -9,11 +9,18 @@ import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { GetOutletAPI, GetOutletsAPI, UpdateOutletAPI } from "@/services/api";
+import {
+  BASE_URL,
+  GetOutletAPI,
+  GetOutletsAPI,
+  UpdateOutletAPI,
+} from "@/services/api";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import { useParams } from "react-router";
 import { useEffect } from "react";
 import RestaurantSelectFormField from "@/components/tableManagerCommon/RestaurantSelectFormField";
+import ImageCropFormField from "@/components/FormElements/ImageCropField";
+import endPoint from "@/services/endPoint";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -66,8 +73,7 @@ export default function EditOutletForm() {
         streetName: outlet.streetName || "",
         city: outlet.city || "",
         country: outlet.country || "",
-        logoImageUrl:
-          "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1074&auto=format&fit=crop",
+        logoImageUrl: outlet.logoImageUrl || "",
         imageConfigurations: outlet.imageConfigurations ?? [],
         hasCoverCharges: outlet.hasCoverCharges ?? false,
         standardCoverCharge: outlet.standardCoverCharge ?? 0,
@@ -103,6 +109,18 @@ export default function EditOutletForm() {
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
+            <ImageCropFormField
+              url={BASE_URL + endPoint.logoImageUpload}
+              name="logoImageUrl"
+              label="Outlet Logo"
+              required
+              cropperWidth="100%"
+              uploaderWidth="100%"
+              uploaderHeight="200px"
+              cropperHeight="300px"
+              removeButtonText="Remove Logo"
+              imageAlt="Outlet Logo"
+            />
             <div className="grid grid-cols-2 gap-4">
               <RestaurantSelectFormField />
               <BasicFormField name="name" label="Name" required />
