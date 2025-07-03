@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm, FormProvider } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,9 +13,11 @@ import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateZoneAPI, GetZonesAPI } from "@/services/api";
+import { BASE_URL, CreateZoneAPI, GetZonesAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
+import endPoint from "@/services/endPoint";
+import ImageCropFormField from "@/components/FormElements/ImageCropField";
 
 const schema = z.object({
   name: z.string().min(1, "Zone name is required"),
@@ -35,7 +37,7 @@ export default function CreateZoneDialog({ outletId }) {
       name: "",
       canvasUrl: "",
       isActive: true,
-      location_id: outletId,
+      location_id: 0,
     },
   });
 
@@ -51,6 +53,9 @@ export default function CreateZoneDialog({ outletId }) {
     },
   });
 
+  useEffect(() => {
+    methods.setValue("location_id", outletId);
+  }, [outletId]);
   const onSubmit = (data: z.infer<typeof schema>) => {
     createMutation.mutate(data);
   };
@@ -67,8 +72,19 @@ export default function CreateZoneDialog({ outletId }) {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
+            <ImageCropFormField
+              url={BASE_URL + endPoint.canvasThumbnailImage}
+              name="canvasUrl"
+              label="Zone Image"
+              required
+              cropperWidth="100%"
+              uploaderWidth="100%"
+              uploaderHeight="200px"
+              cropperHeight="300px"
+              removeButtonText="Remove Zone"
+              imageAlt="Zone Image"
+            />
             <BasicFormField name="name" label="Zone Name" required />
-            {/* <BasicFormField name="canvasUrl" label="Canvas URL" required /> */}
             <SwitchFormField name="isActive" label="Is Active" />
 
             <Button type="submit" className="w-full">
