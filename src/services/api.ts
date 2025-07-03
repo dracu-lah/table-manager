@@ -310,7 +310,7 @@ export const CreateZoneAPI = async (params: any) => {
 
 export const UpdateZoneAPI = async (params: any) => {
   try {
-    const { data } = await api.put(`${endPoint.zones}/${params.id}`, params);
+    const { data } = await api.patch(`${endPoint.zones}/${params.id}`, params);
     return data;
   } catch (error) {
     throw error;

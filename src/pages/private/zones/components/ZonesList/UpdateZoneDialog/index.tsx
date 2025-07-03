@@ -20,9 +20,9 @@ import showErrorAlert from "@/utils/functions/showErrorAlert";
 // 🔐 Schema for validation
 const schema = z.object({
   name: z.string().min(1),
-  canvasUrl: z.string().url(),
+  // canvasUrl: z.string().url(),
+  canvasUrl: z.string().optional(),
   isActive: z.boolean(),
-  tenant_id: z.coerce.number(),
   location_id: z.coerce.number(),
 });
 
@@ -42,14 +42,18 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
       name: "",
       canvasUrl: "",
       isActive: true,
-      tenant_id: 0,
       location_id: 0,
     },
   });
 
   useEffect(() => {
     if (open && zone) {
-      methods.reset({ ...zone });
+      methods.reset({
+        name: zone.name,
+        canvasUrl: zone.canvasUrl,
+        isActive: zone.isActive,
+        location_id: zone.locationId,
+      });
     }
   }, [open, zone, methods]);
 
@@ -70,6 +74,7 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
     updateMutation.mutate(data);
   };
 
+  console.log("methods.formState.errors", methods.formState.errors);
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
@@ -82,20 +87,7 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField
-              name="tenant_id"
-              label="Tenant ID"
-              type="number"
-              required
-            />
-            <BasicFormField
-              name="location_id"
-              label="Location ID"
-              type="number"
-              required
-            />
             <BasicFormField name="name" label="Zone Name" required />
-            <BasicFormField name="canvasUrl" label="Canvas URL" required />
             <SwitchFormField name="isActive" label="Is Active" />
 
             <Button type="submit" className="w-full">

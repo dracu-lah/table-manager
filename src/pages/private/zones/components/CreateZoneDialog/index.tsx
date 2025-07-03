@@ -19,9 +19,9 @@ import showErrorAlert from "@/utils/functions/showErrorAlert";
 
 const schema = z.object({
   name: z.string().min(1, "Zone name is required"),
-  canvasUrl: z.string().url("Canvas URL must be valid"),
+  // canvasUrl: z.string().url("Canvas URL must be valid"),
+  canvasUrl: z.string().optional(),
   isActive: z.boolean(),
-  tenant_id: z.coerce.number(),
   location_id: z.coerce.number(),
 });
 
@@ -35,8 +35,7 @@ export default function CreateZoneDialog() {
       name: "",
       canvasUrl: "",
       isActive: true,
-      tenant_id: 0,
-      location_id: 0,
+      location_id: 3,
     },
   });
 
@@ -68,20 +67,8 @@ export default function CreateZoneDialog() {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField
-              name="tenant_id"
-              label="Tenant ID"
-              type="number"
-              required
-            />
-            <BasicFormField
-              name="location_id"
-              label="Location ID"
-              type="number"
-              required
-            />
             <BasicFormField name="name" label="Zone Name" required />
-            <BasicFormField name="canvasUrl" label="Canvas URL" required />
+            {/* <BasicFormField name="canvasUrl" label="Canvas URL" required /> */}
             <SwitchFormField name="isActive" label="Is Active" />
 
             <Button type="submit" className="w-full">
