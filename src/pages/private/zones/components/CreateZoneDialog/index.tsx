@@ -25,7 +25,7 @@ const schema = z.object({
   location_id: z.coerce.number(),
 });
 
-export default function CreateZoneDialog() {
+export default function CreateZoneDialog({ outletId }) {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -35,7 +35,7 @@ export default function CreateZoneDialog() {
       name: "",
       canvasUrl: "",
       isActive: true,
-      location_id: 3,
+      location_id: outletId,
     },
   });
 
