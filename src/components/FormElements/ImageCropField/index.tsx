@@ -65,7 +65,7 @@ export default function ImageCropFormField<T extends FieldValues>({
               uploaderHeight={uploaderHeight}
               cropperHeight={cropperHeight}
               onUploadResponse={(response) => {
-                setValue(name, response);
+                setValue(name, response.data.url);
               }}
               disabled={disabled}
               {...rest}

@@ -8,7 +8,7 @@ import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { CreateOutletAPI, GetOutletsAPI } from "@/services/api";
+import { BASE_URL, CreateOutletAPI, GetOutletsAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import RestaurantSelectFormField from "@/components/tableManagerCommon/RestaurantSelectFormField";
@@ -16,6 +16,7 @@ import ImageCrop from "@/components/uploaders/ImageCrop/ImageCrop";
 import { Label } from "@/components/ui/label";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
 import { useNavigate } from "react-router";
+import endPoint from "@/services/endPoint";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -50,8 +51,7 @@ const defaultValues = {
   streetName: "",
   city: "",
   country: "",
-  logoImageUrl:
-    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1074&auto=format&fit=crop",
+  logoImageUrl: "",
   imageConfigurations: [],
   hasCoverCharges: false,
   standardCoverCharge: 0,
@@ -97,17 +97,18 @@ export default function OutletCreateForm() {
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            {/* <ImageCropFormField */}
-            {/*   name="logoImageUrl" */}
-            {/*   label="Outlet Logo" */}
-            {/*   required */}
-            {/*   cropperWidth="100%" */}
-            {/*   uploaderWidth="100%" */}
-            {/*   uploaderHeight="200px" */}
-            {/*   cropperHeight="300px" */}
-            {/*   removeButtonText="Remove Logo" */}
-            {/*   imageAlt="Outlet Logo" */}
-            {/* /> */}
+            <ImageCropFormField
+              url={BASE_URL + endPoint.logoImageUpload}
+              name="logoImageUrl"
+              label="Outlet Logo"
+              required
+              cropperWidth="100%"
+              uploaderWidth="100%"
+              uploaderHeight="200px"
+              cropperHeight="300px"
+              removeButtonText="Remove Logo"
+              imageAlt="Outlet Logo"
+            />
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">

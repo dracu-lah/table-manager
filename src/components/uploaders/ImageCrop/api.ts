@@ -1,24 +1,22 @@
-export const UploadImageAPI = (ImageUploadURL, file) => {
-  return new Promise((resolve, reject) => {
-    const xhr = new XMLHttpRequest();
+import api from "@/configs/axios";
+
+export const UploadImageAPI = async (ImageUploadURL, file) => {
+  try {
     const formData = new FormData();
+    formData.append("file", file);
 
-    formData.append("ImageFile", file);
+    const response = await api.post(ImageUploadURL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
 
-    xhr.open("POST", ImageUploadURL, true);
-
-    xhr.onload = function () {
-      if (xhr.status === 201) {
-        resolve(JSON.parse(xhr.responseText));
-      } else {
-        reject(new Error("Upload failed"));
-      }
-    };
-
-    xhr.onerror = function () {
-      reject(new Error("Network error"));
-    };
-
-    xhr.send(formData);
-  });
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error("Upload failed");
+    }
+  } catch (error) {
+    throw new Error(error?.message || "Network error");
+  }
 };
