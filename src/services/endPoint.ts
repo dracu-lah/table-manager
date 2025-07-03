@@ -27,4 +27,6 @@ export default {
 
   // ========================= ZONE  MANAGEMENT APIS =========================
   zones: "/api/areas",
+
+  tempImageUpload: "/api/Settings/Image/SaveExperienceImage",
 };

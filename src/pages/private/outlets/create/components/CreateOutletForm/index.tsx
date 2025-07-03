@@ -15,6 +15,7 @@ import RestaurantSelectFormField from "@/components/tableManagerCommon/Restauran
 import ImageCrop from "@/components/uploaders/ImageCrop/ImageCrop";
 import { Label } from "@/components/ui/label";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
+import { useNavigate } from "react-router";
 
 const schema = z.object({
   name: z.string().min(1),
@@ -49,7 +50,8 @@ const defaultValues = {
   streetName: "",
   city: "",
   country: "",
-  logoImageUrl: "",
+  logoImageUrl:
+    "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1074&auto=format&fit=crop",
   imageConfigurations: [],
   hasCoverCharges: false,
   standardCoverCharge: 0,
@@ -64,6 +66,7 @@ const defaultValues = {
 };
 
 export default function OutletCreateForm() {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const methods = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
@@ -75,6 +78,8 @@ export default function OutletCreateForm() {
     onSuccess: () => {
       toast.success("Created Successfully");
       queryClient.invalidateQueries({ queryKey: [GetOutletsAPI.name] });
+      methods.reset(defaultValues);
+      navigate(-1);
     },
     onError: ({ response }: any) => {
       showErrorAlert(response.data);
@@ -92,17 +97,17 @@ export default function OutletCreateForm() {
       <CardContent>
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
-            <ImageCropFormField
-              name="logoImageUrl"
-              label="Outlet Logo"
-              required
-              cropperWidth="100%"
-              uploaderWidth="100%"
-              uploaderHeight="200px"
-              cropperHeight="300px"
-              removeButtonText="Remove Logo"
-              imageAlt="Outlet Logo"
-            />
+            {/* <ImageCropFormField */}
+            {/*   name="logoImageUrl" */}
+            {/*   label="Outlet Logo" */}
+            {/*   required */}
+            {/*   cropperWidth="100%" */}
+            {/*   uploaderWidth="100%" */}
+            {/*   uploaderHeight="200px" */}
+            {/*   cropperHeight="300px" */}
+            {/*   removeButtonText="Remove Logo" */}
+            {/*   imageAlt="Outlet Logo" */}
+            {/* /> */}
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">
