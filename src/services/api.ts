@@ -359,3 +359,24 @@ export const UpdatePropertyAPI = async (params: any) => {
 
 /* PROPERTY MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
+
+export const UploadImageAPI = async (ImageUploadURL: string, file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const response = await api.post(ImageUploadURL, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error("Upload failed");
+    }
+  } catch (error: any) {
+    throw new Error(error?.message || "Network error");
+  }
+};
