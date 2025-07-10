@@ -11,7 +11,7 @@ import {
   CardFooter,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Building } from "lucide-react";
+import { MapPin, Phone, Building, Store } from "lucide-react";
 import routePath from "@/router/routePath";
 import PageLoader from "@/components/loaders/PageLoader";
 
@@ -27,24 +27,9 @@ const OutletsPage = () => {
     queryFn: () => GetOutletsAPI(),
   });
 
-  // Placeholder images for different types of outlets
-  const getPlaceholderImage = (name: string) => {
-    const placeholders = [
-      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1074&auto=format&fit=crop", // Property
-      "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1074&auto=format&fit=crop", // Office
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1074&auto=format&fit=crop", // Building
-      "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1074&auto=format&fit=crop", // Modern office
-      "https://images.unsplash.com/photo-1441986300917-64674bd600d8?q=80&w=1074&auto=format&fit=crop", // Store
-    ];
-
-    // Use name hash to consistently pick the same image for the same name
-    const hash = name.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
-    return placeholders[hash % placeholders.length];
-  };
-
   if (isLoading)
     return (
-      <div className="h-full  flex justify-center items-center">
+      <div className="h-full flex justify-center items-center">
         <PageLoader />
       </div>
     );
@@ -74,15 +59,8 @@ const OutletsPage = () => {
             key={outlet.id}
             className="pt-0 overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
           >
-            <div className="h-48 relative">
-              <img
-                src={outlet.logoImageUrl || getPlaceholderImage(outlet.name)}
-                className="size-full object-cover"
-                alt={outlet.name}
-                onError={(e) => {
-                  e.currentTarget.src = getPlaceholderImage(outlet.name);
-                }}
-              />
+            <div className="h-48 relative bg-primary flex items-center justify-center">
+              <Store className="h-16 w-16 text-secondary" />
               {outlet.isActive ? (
                 <Badge className="absolute top-2 right-2 bg-green-500">
                   Active
@@ -100,7 +78,7 @@ const OutletsPage = () => {
                 {outlet.name}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                {outlet.__tenant__?.propertyName}
+                {outlet.__property__?.propertyName}
               </p>
             </CardHeader>
 
@@ -129,7 +107,7 @@ const OutletsPage = () => {
 
               <div className="flex flex-wrap gap-1 pt-2">
                 <Badge variant="secondary" className="text-xs">
-                  {outlet.__tenant__?.subscriptionPlan}
+                  {outlet.__property__?.subscriptionPlan}
                 </Badge>
                 {outlet.hasCoverCharges && (
                   <Badge variant="outline" className="text-xs">
