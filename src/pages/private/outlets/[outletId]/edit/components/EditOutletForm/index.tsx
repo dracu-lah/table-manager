@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 
 import BasicFormField from "@/components/FormElements/BasicFormField";
-import TextZoneFormField from "@/components/FormElements/TextZoneFormField";
+import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -158,8 +158,8 @@ export default function EditOutletForm() {
               />
             </div>
             <div className="grid gap-4">
-              <TextZoneFormField name="description" label="Description" />
-              <TextZoneFormField
+              <TextAreaFormField name="description" label="Description" />
+              <TextAreaFormField
                 name="cancellationPolicy"
                 label="Cancellation Policy"
               />
