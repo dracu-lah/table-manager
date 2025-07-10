@@ -90,7 +90,7 @@ export default function EditOutletForm() {
     }
   }, [outlet, methods.reset]);
   const updateMutation = useMutation({
-    mutationFn: () => UpdateOutletAPI({ id }),
+    mutationFn: UpdateOutletAPI,
     onSuccess: () => {
       toast.success("Updated Successfully");
       queryClient.invalidateQueries({ queryKey: [GetOutletsAPI.name] });
@@ -100,7 +100,7 @@ export default function EditOutletForm() {
     },
   });
   const onSubmit = (data: any) => {
-    updateMutation.mutate(data);
+    updateMutation.mutate({ id, ...data });
   };
   return (
     <Card>
