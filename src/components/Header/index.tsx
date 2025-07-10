@@ -23,12 +23,12 @@ const Header = () => {
           {accessToken && <SideSheet />}
           <Logo />
         </div>
-        {isTesting && (
-          <h1 className="hidden sm:block text-2xl  text-red-700">
-            Test Instance
-          </h1>
-        )}
-        <div className="flex gap-4">
+        <div className="flex gap-4 items-center">
+          {isTesting && (
+            <h1 className="hidden sm:block text-xl font-semibold  text-red-700">
+              Test Instance
+            </h1>
+          )}
           {accessToken && <AuthenticatedNavLinks />}
           <ModeToggle />
         </div>
