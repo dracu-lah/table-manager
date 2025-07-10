@@ -59,8 +59,12 @@ const OutletsPage = () => {
             key={outlet.id}
             className="pt-0 overflow-hidden flex flex-col hover:shadow-lg transition-shadow"
           >
-            <div className="h-48 relative bg-primary flex items-center justify-center">
-              <Store className="h-16 w-16 text-secondary" />
+            <div className="h-48  relative overflow-hidden bg-primary flex items-center justify-center">
+              {outlet.logoImageUrl ? (
+                <img src={outlet.logoImageUrl} />
+              ) : (
+                <Store className="size-16 text-secondary" />
+              )}
               {outlet.isActive ? (
                 <Badge className="absolute top-2 right-2 bg-green-500">
                   Active
