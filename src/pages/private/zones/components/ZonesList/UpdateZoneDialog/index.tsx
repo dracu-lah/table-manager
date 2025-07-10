@@ -94,7 +94,7 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
               name="canvasUrl"
               label="Zone Image"
               required
-              cropperWidth="100%"
+              wdith="100%"
               uploaderWidth="100%"
               uploaderHeight="200px"
               cropperHeight="300px"

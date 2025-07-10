@@ -7,24 +7,20 @@ import {
 } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { clsx } from "clsx";
-import { useFormContext, FieldValues, Path } from "react-hook-form";
-import ImageCrop from "@/components/uploaders/ImageCrop/ImageCrop";
+import { useFormContext, type FieldValues, type Path } from "react-hook-form";
+import ImageCrop from "@/components/uploaders/ImageCrop";
+import type { ImageCropProps } from "@/components/uploaders/ImageCrop";
 
-interface ImageCropFormFieldProps<T extends FieldValues> {
+export type ImageCropFormFieldProps<T extends FieldValues> = {
   name: Path<T>;
   label?: string;
   required?: boolean;
   className?: string;
   disabled?: boolean;
-  cropperWidth?: string;
-  uploaderWidth?: string;
-  uploaderHeight?: string;
-  cropperHeight?: string;
-  url?: string;
   removeButtonText?: string;
   imageAlt?: string;
   imageClassName?: string;
-}
+} & Omit<ImageCropProps, "onUploadResponse">;
 
 export default function ImageCropFormField<T extends FieldValues>({
   name,
@@ -32,11 +28,9 @@ export default function ImageCropFormField<T extends FieldValues>({
   required,
   className,
   disabled = false,
-  cropperWidth = "100%",
-  uploaderWidth = "100%",
-  uploaderHeight = "200px",
-  cropperHeight = "300px",
-  url = "",
+  apiFn,
+  width,
+  height,
   removeButtonText = "Remove Image",
   imageAlt = "Uploaded Image",
   imageClassName = "h-20 w-20 rounded object-cover",
@@ -47,10 +41,9 @@ export default function ImageCropFormField<T extends FieldValues>({
 
   return (
     <FormField
-      key={name}
       name={name}
       control={control}
-      render={({ field }) => (
+      render={() => (
         <FormItem className={clsx("flex flex-col space-y-2", className)}>
           {label && (
             <FormLabel>
@@ -58,18 +51,20 @@ export default function ImageCropFormField<T extends FieldValues>({
             </FormLabel>
           )}
           <FormControl>
-            <ImageCrop
-              url={url}
-              cropperWidth={cropperWidth}
-              uploaderWidth={uploaderWidth}
-              uploaderHeight={uploaderHeight}
-              cropperHeight={cropperHeight}
-              onUploadResponse={(response) => {
-                setValue(name, response.data.url);
-              }}
-              disabled={disabled}
-              {...rest}
-            />
+            <div aria-disabled={disabled}>
+              <ImageCrop
+                apiFn={apiFn}
+                width={width}
+                height={height}
+                onUploadResponse={(response) => {
+                  setValue(name, response.data.url, {
+                    shouldValidate: true,
+                    shouldDirty: true,
+                  });
+                }}
+                {...rest}
+              />
+            </div>
           </FormControl>
 
           {currentValue && (
@@ -84,9 +79,7 @@ export default function ImageCropFormField<T extends FieldValues>({
                 variant="destructive"
                 size="sm"
                 disabled={disabled}
-                onClick={() => {
-                  setValue(name, "");
-                }}
+                onClick={() => setValue(name, "" as any)}
               >
                 {removeButtonText}
               </Button>

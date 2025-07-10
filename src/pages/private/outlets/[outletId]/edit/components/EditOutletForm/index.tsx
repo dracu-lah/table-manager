@@ -114,7 +114,7 @@ export default function EditOutletForm() {
               name="logoImageUrl"
               label="Outlet Logo"
               required
-              cropperWidth="100%"
+              wdith="100%"
               uploaderWidth="100%"
               uploaderHeight="200px"
               cropperHeight="300px"
