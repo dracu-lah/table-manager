@@ -24,7 +24,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
 
   const defaultValues = {
-    usernameOrEmail: isTesting ? "laila" : "",
+    usernameOrEmail: isTesting ? "systemadmin2" : "",
     password: isTesting ? "securePassword123" : "",
   };
   const {

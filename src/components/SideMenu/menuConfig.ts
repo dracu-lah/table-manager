@@ -12,10 +12,10 @@ export const menuConfig = [
   },
 
   {
-    key: menuKeys.RESTAURANTS,
+    key: menuKeys.PROPERTIES,
     icon: ChefHat,
-    label: "Restaurants",
-    route: routePath.restaurants,
+    label: "Properties",
+    route: routePath.properties,
   },
   {
     key: menuKeys.OUTLETS,

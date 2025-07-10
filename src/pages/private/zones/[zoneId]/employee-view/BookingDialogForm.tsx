@@ -17,7 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Textzone } from "@/components/ui/textzone";
 import { Card, CardContent } from "@/components/ui/card";
 import {
   Plus,
@@ -42,7 +42,7 @@ const zones = [
   { id: "indoor", name: "Indoor", capacity: 50 },
   { id: "outdoor", name: "Outdoor", capacity: 30 },
   { id: "private", name: "Private Room", capacity: 20 },
-  { id: "bar", name: "Bar Area", capacity: 25 },
+  { id: "bar", name: "Bar Zone", capacity: 25 },
 ];
 
 const availableTables = [

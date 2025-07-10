@@ -44,7 +44,7 @@ const OutletCard = ({ outletData }) => {
     requiresUpfrontPayment: false,
     contactNumber: "95676565",
     isActive: true,
-    tenant_id: 1,
+    propertyId: 1,
     createdAt: "2025-05-30T15:20:36.485Z",
     updatedAt: "2025-05-30T15:20:36.485Z",
     __tenant__: {

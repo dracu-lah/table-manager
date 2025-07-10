@@ -1,7 +1,7 @@
 import React from "react";
 import { v4 as uuidv4 } from "uuid";
 import { Button } from "@/components/ui/button";
-import { useAreaCanvas } from "@/context/AreaCanvasContext";
+import { useZoneCanvas } from "@/context/ZoneCanvasContext";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { TableIcon, DoorOpen, Minus } from "lucide-react";
 import { ElementData } from "@/types";
@@ -128,7 +128,7 @@ const tableConfigs = [
 ];
 
 export const Toolbar: React.FC = () => {
-  const { state, dispatch } = useAreaCanvas();
+  const { state, dispatch } = useZoneCanvas();
 
   const addTable = (config: (typeof tableConfigs)[0]) => {
     const width = config.width * 1.8;

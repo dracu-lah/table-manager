@@ -1,24 +1,24 @@
 import ComboboxFormField from "@/components/FormElements/ComboboxFormField";
-import { GetRestaurantsAPI } from "@/services/api";
+import { GetPropertiesAPI } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
 const RestaurantSelectFormField = () => {
   const {
-    data: restaurantsData,
+    data: propertysData,
     isLoading,
     error,
   } = useQuery({
-    queryKey: [GetRestaurantsAPI.name],
-    queryFn: () => GetRestaurantsAPI(),
+    queryKey: [GetPropertiesAPI.name],
+    queryFn: () => GetPropertiesAPI(),
   });
   const data =
-    restaurantsData?.map((restaurant: any) => ({
-      label: restaurant.tenantName,
-      value: restaurant.id,
+    propertysData?.map((property: any) => ({
+      label: property.tenantName,
+      value: property.id,
     })) || [];
   return (
     <ComboboxFormField
-      name="tenant_id"
+      name="propertyId"
       className="w-full"
       items={data}
       placeholder="Select Restaurant"

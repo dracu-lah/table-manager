@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { ElementData } from "@/types";
-import { useAreaCanvas } from "@/context/AreaCanvasContext";
+import { useZoneCanvas } from "@/context/ZoneCanvasContext";
 import { Button } from "@/components/ui/button";
 import {
   Edit,
@@ -40,7 +40,7 @@ export const DraggableElement: React.FC<DraggableElementProps> = ({
   isEditable = true,
   onTableSelect,
 }) => {
-  const { dispatch, state } = useAreaCanvas();
+  const { dispatch, state } = useZoneCanvas();
   const isSelected = state.selectedElement === element.id;
   const elementRef = useRef<HTMLDivElement>(null);
   const resizeStartPosRef = useRef<{ x: number; y: number } | null>(null);

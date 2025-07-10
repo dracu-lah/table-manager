@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 
 import BasicFormField from "@/components/FormElements/BasicFormField";
-import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
+import TextZoneFormField from "@/components/FormElements/TextZoneFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -39,7 +39,7 @@ const schema = z.object({
   requiresUpfrontPayment: z.boolean(),
   contactNumber: z.string().min(1),
   isActive: z.boolean(),
-  tenant_id: z.coerce.number(),
+  propertyId: z.coerce.number(),
 });
 const defaultValues = {
   name: "",
@@ -62,7 +62,7 @@ const defaultValues = {
   requiresUpfrontPayment: false,
   contactNumber: "",
   isActive: true,
-  tenant_id: 0,
+  propertyId: 0,
 };
 
 export default function OutletCreateForm() {
@@ -147,10 +147,10 @@ export default function OutletCreateForm() {
                   required
                 />
               </div>
-              {/* Textareas */}
+              {/* Textzones */}
               <div className="grid grid-cols-2 gap-4">
-                <TextAreaFormField name="description" label="Description" />
-                <TextAreaFormField
+                <TextZoneFormField name="description" label="Description" />
+                <TextZoneFormField
                   name="cancellationPolicy"
                   label="Cancellation Policy"
                 />

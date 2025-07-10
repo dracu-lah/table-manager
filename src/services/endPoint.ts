@@ -20,13 +20,13 @@ export default {
   registerRole: "/api/User/Account/CreateRole",
   getRoles: "/api/User/Account/SearchRoles",
 
-  // ========================= RESTAURANT  MANAGEMENT APIS =========================
-  restaurants: "/api/resturant_groups",
+  // ========================= PROPERTY  MANAGEMENT APIS =========================
+  property: "/api/properties",
   // ========================= OUTLET  MANAGEMENT APIS =========================
-  outets: "/api/restaurant_outlets",
+  outets: "/api/outlets",
 
   // ========================= ZONE  MANAGEMENT APIS =========================
-  zones: "/api/areas",
+  zones: "/api/zones",
 
   logoImageUpload: "/api/files/upload/logo",
   canvasThumbnailImage: "/api/files/upload/canvas",

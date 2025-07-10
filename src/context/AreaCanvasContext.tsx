@@ -2,8 +2,8 @@ import React, { createContext, useContext, useReducer, useEffect } from "react";
 import { ElementData } from "@/types";
 
 export interface CanvasConfig {
-  restaurantId?: string;
-  areaId?: string;
+  propertyId?: string;
+  zoneId?: string;
   aspectRatio: string;
   width: number;
   height: number;
@@ -116,7 +116,7 @@ const canvasReducer = (
       return { ...state, initialElements: [...state.elements] };
     case "SAVE_STATE":
       // Handle saving to local storage here
-      const storageKey = `tableLayoutState_${action.payload.canvasConfig.restaurantId}_${action.payload.canvasConfig.areaId}`; // Assuming restaurantId and areaId are part of canvasConfig for simplicity here, adjust as needed.
+      const storageKey = `tableLayoutState_${action.payload.canvasConfig.propertyId}_${action.payload.canvasConfig.zoneId}`; // Assuming propertyId and zoneId are part of canvasConfig for simplicity here, adjust as needed.
       localStorage.setItem(storageKey, JSON.stringify(action.payload));
       return state; // Saving doesn't change the current state
     default:
@@ -124,18 +124,18 @@ const canvasReducer = (
   }
 };
 
-const AreaCanvasContext = createContext<{
+const ZoneCanvasContext = createContext<{
   state: CanvasState;
   dispatch: React.Dispatch<CanvasAction>;
 } | null>(null);
 
-export const AreaCanvasProvider: React.FC<{
+export const ZoneCanvasProvider: React.FC<{
   children: React.ReactNode;
-  restaurantId: string;
-  areaId: string;
+  propertyId: string;
+  zoneId: string;
   onTableUpdate?: (table: ElementData) => void;
-}> = ({ children, restaurantId, areaId, onTableUpdate }) => {
-  const storageKey = `tableLayoutState_${restaurantId}_${areaId}`;
+}> = ({ children, propertyId, zoneId, onTableUpdate }) => {
+  const storageKey = `tableLayoutState_${propertyId}_${zoneId}`;
   const [state, dispatch] = useReducer(canvasReducer, getInitialState());
 
   // Load state from local storage on mount
@@ -170,16 +170,16 @@ export const AreaCanvasProvider: React.FC<{
   }, [state.elements, onTableUpdate]);
 
   return (
-    <AreaCanvasContext.Provider value={{ state, dispatch }}>
+    <ZoneCanvasContext.Provider value={{ state, dispatch }}>
       {children}
-    </AreaCanvasContext.Provider>
+    </ZoneCanvasContext.Provider>
   );
 };
 
-export const useAreaCanvas = () => {
-  const context = useContext(AreaCanvasContext);
+export const useZoneCanvas = () => {
+  const context = useContext(ZoneCanvasContext);
   if (!context) {
-    throw new Error("useAreaCanvas must be used within an AreaCanvasProvider");
+    throw new Error("useZoneCanvas must be used within an ZoneCanvasProvider");
   }
   return context;
 };

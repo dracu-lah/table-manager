@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useAreaCanvas } from "@/context/AreaCanvasContext";
+import { useZoneCanvas } from "@/context/ZoneCanvasContext";
 import { DraggableElement } from "./DraggableElement";
 import { Button } from "@/components/ui/button";
 import { ElementData } from "@/types";
@@ -19,8 +19,8 @@ interface CanvasProps {
   isEditable?: boolean;
   onTableSelect?: (tableData: ElementData) => void;
   tableStatuses?: Record<string, "available" | "occupied" | "reserved">;
-  restaurantId?: string; // Add restaurantId and areaId props for saving
-  areaId?: string;
+  propertyId?: string; // Add propertyId and zoneId props for saving
+  zoneId?: string;
 }
 
 interface CornerLabels {
@@ -34,10 +34,10 @@ export const Canvas: React.FC<CanvasProps> = ({
   isEditable = true,
   onTableSelect,
   tableStatuses = {},
-  restaurantId, // Get these from props
-  areaId,
+  propertyId, // Get these from props
+  zoneId,
 }) => {
-  const { state, dispatch } = useAreaCanvas();
+  const { state, dispatch } = useZoneCanvas();
   const constraintsRef = useRef<any>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -192,21 +192,21 @@ export const Canvas: React.FC<CanvasProps> = ({
 
   // Function to dispatch the SAVE_STATE action
   const handleSaveLayout = () => {
-    if (restaurantId && areaId) {
+    if (propertyId && zoneId) {
       dispatch({
         type: "SAVE_STATE",
         payload: {
           ...state,
           canvasConfig: {
             ...state.canvasConfig,
-            restaurantId: restaurantId, // Include restaurantId and areaId in the state for saving
-            areaId: areaId,
+            propertyId: propertyId, // Include propertyId and zoneId in the state for saving
+            zoneId: zoneId,
           } as any, // Type assertion as these are not strictly in CanvasConfig
         },
       });
       alert("Layout saved!"); // Provide feedback to the user
     } else {
-      console.error("Cannot save layout: restaurantId or areaId is missing.");
+      console.error("Cannot save layout: propertyId or zoneId is missing.");
       alert("Error: Cannot save layout.");
     }
   };
@@ -383,7 +383,7 @@ export const Canvas: React.FC<CanvasProps> = ({
             <div className="text-sm text-gray-500">
               <p>
                 Click on any label around the room layout to add or edit text.
-                Labels help indicate areas outside the room.
+                Labels help indicate zones outside the room.
               </p>
             </div>
           </div>

@@ -12,7 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateRestaurantAPI, GetRestaurantsAPI } from "@/services/api";
+import { CreatePropertyAPI, GetPropertiesAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 
@@ -38,10 +38,10 @@ export default function CreateRestaurantDialog() {
   });
 
   const createMutation = useMutation({
-    mutationFn: CreateRestaurantAPI,
+    mutationFn: CreatePropertyAPI,
     onSuccess: () => {
       toast.success("Restaurant created successfully");
-      queryClient.invalidateQueries({ queryKey: [GetRestaurantsAPI.name] });
+      queryClient.invalidateQueries({ queryKey: [GetPropertiesAPI.name] });
       setOpen(false);
     },
     onError: ({ response }: any) => {

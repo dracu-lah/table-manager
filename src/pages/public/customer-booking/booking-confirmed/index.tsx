@@ -20,7 +20,7 @@ const BookingConfirmationPage = () => {
   // Sample confirmed booking data
   const bookingDetails = {
     confirmationNumber: "TM-2025-ADG-7834",
-    restaurant: "Al Dhiyafa Grand Kitchen",
+    property: "Al Dhiyafa Grand Kitchen",
     date: "2025-06-15", // Sunday, June 15, 2025
     time: "7:30 pm",
     guests: 4,
@@ -31,7 +31,7 @@ const BookingConfirmationPage = () => {
     occasion: "Anniversary",
     viewPreference: "Waterfall View",
     specialRequest:
-      "Could we have a table away from the kitchen area? Also celebrating our 5th anniversary, so any special touches would be appreciated!",
+      "Could we have a table away from the kitchen zone? Also celebrating our 5th anniversary, so any special touches would be appreciated!",
     totalAmount: 780.0, // 4 guests × AED 195.00
     address: {
       street: "Al Falea Street Jumeirah Beach",
@@ -218,7 +218,7 @@ const BookingConfirmationPage = () => {
               <Card>
                 <CardHeader>
                   <CardTitle className="text-xl">
-                    {bookingDetails.restaurant}
+                    {bookingDetails.property}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">

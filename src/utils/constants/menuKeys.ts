@@ -3,7 +3,7 @@ export default {
   USERS: "users",
   ROLE_MANAGEMENT: "roleManagement",
   USER_MANAGEMENT: "userManagement",
-  RESTAURANTS: "restaurants",
+  PROPERTIES: "properties",
   OUTLETS: "outlets",
   ZONES: "zones",
 };

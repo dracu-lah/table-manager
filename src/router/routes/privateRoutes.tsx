@@ -11,7 +11,7 @@ const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
 const EmployeeViewPage = lazy(
   () => import("@/pages/private/zones/[zoneId]/employee-view"),
 );
-const RestaurantsPage = lazy(() => import("@/pages/private/restaurants"));
+const PropertiesPage = lazy(() => import("@/pages/private/properties"));
 const OutletsPage = lazy(() => import("@/pages/private/outlets"));
 const CreateOutletPage = lazy(() => import("@/pages/private/outlets/create"));
 
@@ -42,7 +42,7 @@ export const privateRoutes = [
       { index: true, element: <DashboardPage /> },
       {
         index: true,
-        element: <Navigate to={routePath.restaurants} replace />,
+        element: <Navigate to={routePath.properties} replace />,
       },
 
       {
@@ -65,11 +65,11 @@ export const privateRoutes = [
       },
 
       {
-        path: routePath.restaurants,
+        path: routePath.properties,
         children: [
           {
             index: true,
-            element: <RestaurantsPage />,
+            element: <PropertiesPage />,
           },
         ],
       },

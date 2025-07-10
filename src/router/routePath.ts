@@ -13,7 +13,7 @@ export default {
   roleManagement: "/users/role-management",
 
   // ========================= PRIVATE ROUTES =========================
-  restaurants: "/restaurants",
+  properties: "/properties",
 
   outlets: "/outlets",
   createOutlet: "/outlets/create",

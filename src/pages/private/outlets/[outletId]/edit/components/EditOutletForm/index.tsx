@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 
 import BasicFormField from "@/components/FormElements/BasicFormField";
-import TextAreaFormField from "@/components/FormElements/TextAreaFormField";
+import TextZoneFormField from "@/components/FormElements/TextZoneFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -43,7 +43,7 @@ const schema = z.object({
   requiresUpfrontPayment: z.boolean(),
   contactNumber: z.string().min(1),
   isActive: z.boolean(),
-  tenant_id: z.coerce.number(),
+  propertyId: z.coerce.number(),
 });
 
 export default function EditOutletForm() {
@@ -84,7 +84,7 @@ export default function EditOutletForm() {
         requiresUpfrontPayment: outlet.requiresUpfrontPayment ?? false,
         contactNumber: outlet.contactNumber || "",
         isActive: outlet.isActive ?? true,
-        tenant_id: outlet.tenant_id,
+        propertyId: outlet.propertyId,
       });
     }
   }, [outlet, methods.reset]);
@@ -158,8 +158,8 @@ export default function EditOutletForm() {
               />
             </div>
             <div className="grid gap-4">
-              <TextAreaFormField name="description" label="Description" />
-              <TextAreaFormField
+              <TextZoneFormField name="description" label="Description" />
+              <TextZoneFormField
                 name="cancellationPolicy"
                 label="Cancellation Policy"
               />

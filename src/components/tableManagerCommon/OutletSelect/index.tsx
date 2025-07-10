@@ -21,7 +21,7 @@ import { GetOutletsAPI } from "@/services/api";
 const OutletSelect = ({
   outlet,
   setOutlet,
-  restaurantId,
+  propertyId,
   enableAll = false,
   disabled = false,
   buttonClassName = "w-[280px] justify-between",
@@ -30,9 +30,9 @@ const OutletSelect = ({
   placeholder = "Select an Outlet",
 }) => {
   const { data, error, isLoading } = useQuery({
-    queryKey: [GetOutletsAPI.name, restaurantId],
+    queryKey: [GetOutletsAPI.name, propertyId],
     queryFn: () => GetOutletsAPI(),
-    enabled: restaurantId !== 0,
+    enabled: propertyId !== 0,
   });
 
   const [open, setOpen] = useState(false);
@@ -40,7 +40,7 @@ const OutletSelect = ({
 
   const allOutlets = (data ?? []) as any[];
   const filteredOutlets = allOutlets.filter(
-    (o) => o.tenant_id === restaurantId,
+    (o) => o.propertyId === propertyId,
   );
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const OutletSelect = ({
           role="combobox"
           aria-expanded={open}
           className={cn("w-[300px] justify-between", buttonClassName)}
-          disabled={disabled || restaurantId === 0}
+          disabled={disabled || propertyId === 0}
         >
           <span className="truncate">{getDisplayText()}</span>
           <ChevronsUpDown className="ml-2 h-4 w-4 opacity-50" />

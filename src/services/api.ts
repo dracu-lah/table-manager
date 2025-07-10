@@ -54,12 +54,12 @@ export const GetPermissionsAPI = async ({ roles }: { roles: any }) => {
 
       {
         id: 2,
-        key: "restaurants",
-        routeName: "Restaurants",
+        key: "properties",
+        routeName: "Properties",
         isEnabled: true,
         availablePermissions: ["create", "edit", "delete"],
         permissions: [],
-        parent: "restaurants",
+        parent: "properties",
         parentID: 0,
         submenus: [],
       },
@@ -318,10 +318,10 @@ export const UpdateZoneAPI = async (params: any) => {
 };
 /* ZONE MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
-/* RESTAURANT MANAGEMENT START */
-export const GetRestaurantsAPI = async (params: any = {}) => {
+/* PROPERTY MANAGEMENT START */
+export const GetPropertiesAPI = async (params: any = {}) => {
   try {
-    const { data } = await api.get(`${endPoint.restaurants}`, {
+    const { data } = await api.get(`${endPoint.property}`, {
       params: params,
     });
     return data;
@@ -330,35 +330,32 @@ export const GetRestaurantsAPI = async (params: any = {}) => {
   }
 };
 
-export const GetRestaurantAPI = async (params: { id: string }) => {
+export const GetPropertyAPI = async (params: { id: string }) => {
   try {
-    const { data } = await api.get(`${endPoint.restaurants}/${params.id}`);
+    const { data } = await api.get(`${endPoint.property}/${params.id}`);
     return data;
   } catch (error) {
     throw error;
   }
 };
 
-export const CreateRestaurantAPI = async (params: any) => {
+export const CreatePropertyAPI = async (params: any) => {
   try {
-    const { data } = await api.post(`${endPoint.restaurants}`, params);
+    const { data } = await api.post(`${endPoint.property}`, params);
     return data;
   } catch (error) {
     throw error;
   }
 };
 
-export const UpdateRestaurantAPI = async (params: any) => {
+export const UpdatePropertyAPI = async (params: any) => {
   try {
-    const { data } = await api.put(
-      `${endPoint.restaurants}/${params.id}`,
-      params,
-    );
+    const { data } = await api.put(`${endPoint.property}/${params.id}`, params);
     return data;
   } catch (error) {
     throw error;
   }
 };
 
-/* RESTAURANT MANAGEMENT END */
+/* PROPERTY MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/

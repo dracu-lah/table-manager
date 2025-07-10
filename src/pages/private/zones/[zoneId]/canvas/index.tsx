@@ -1,35 +1,35 @@
 import { useParams } from "react-router";
-import { AreaCanvasProvider } from "@/context/AreaCanvasContext";
+import { ZoneCanvasProvider } from "@/context/ZoneCanvasContext";
 import { Canvas } from "./components/canvas/Canvas";
 
-const AreaCanvasViewPage: React.FC = () => {
-  const { restaurantId, areaId } = useParams<{
-    restaurantId: string;
-    areaId: string;
+const ZoneCanvasViewPage: React.FC = () => {
+  const { propertyId, zoneId } = useParams<{
+    propertyId: string;
+    zoneId: string;
   }>();
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-6">Area Canvas View</h1>
+      <h1 className="text-3xl font-bold mb-6">Zone Canvas View</h1>
       <p>
-        Restaurant ID: {restaurantId}, Area ID: {areaId}
+        Restaurant ID: {propertyId}, Zone ID: {zoneId}
       </p>
 
       {/* Implement your table management canvas here */}
       <div className="">
-        <AreaCanvasProvider
-          restaurantId={`${restaurantId}`}
-          areaId={`${areaId}`}
+        <ZoneCanvasProvider
+          propertyId={`${propertyId}`}
+          zoneId={`${zoneId}`}
         >
           <Canvas
-            restaurantId={restaurantId}
-            areaId={areaId}
+            propertyId={propertyId}
+            zoneId={zoneId}
             isEditable={true}
           />
-        </AreaCanvasProvider>
+        </ZoneCanvasProvider>
       </div>
     </div>
   );
 };
 
-export default AreaCanvasViewPage;
+export default ZoneCanvasViewPage;

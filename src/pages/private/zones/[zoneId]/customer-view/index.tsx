@@ -1,8 +1,8 @@
 import React, { useState, useMemo } from "react";
 import { Link, useParams } from "react-router";
-import { Canvas } from "@/pages/private/restaurants/[restaurantId]/areas/[areaId]/canvas/components/canvas/Canvas";
+import { Canvas } from "@/pages/private/propertys/[propertyId]/zones/[zoneId]/canvas/components/canvas/Canvas";
 import { Button } from "@/components/ui/button";
-import { AreaCanvasProvider, useAreaCanvas } from "@/context/AreaCanvasContext";
+import { ZoneCanvasProvider, useZoneCanvas } from "@/context/ZoneCanvasContext";
 import {
   Dialog,
   DialogContent,
@@ -26,31 +26,31 @@ interface ReservationDetails {
 }
 
 // This is the main CustomerView component that will extract URL params and wrap
-// the content with AreaCanvasProvider.
+// the content with ZoneCanvasProvider.
 const CustomerViewPage: React.FC = () => {
   // Extract parameters from the URL
-  const { restaurantId, areaId } = useParams<{
-    restaurantId: string;
-    areaId: string;
+  const { propertyId, zoneId } = useParams<{
+    propertyId: string;
+    zoneId: string;
   }>();
 
-  // Render the AreaCanvasProvider and its children
-  // Pass the extracted restaurantId and areaId to the provider
+  // Render the ZoneCanvasProvider and its children
+  // Pass the extracted propertyId and zoneId to the provider
   return (
-    <AreaCanvasProvider
-      restaurantId={restaurantId || "default-restaurant"}
-      areaId={areaId || "default-area"}
+    <ZoneCanvasProvider
+      propertyId={propertyId || "default-property"}
+      zoneId={zoneId || "default-zone"}
     >
       {/* Render the inner content which will use the context */}
       <CustomerViewContent />
-    </AreaCanvasProvider>
+    </ZoneCanvasProvider>
   );
 };
 
 // This component will contain the actual logic and UI of the Customer View
-// It is now rendered inside the AreaCanvasProvider and can safely use useAreaCanvas.
+// It is now rendered inside the ZoneCanvasProvider and can safely use useZoneCanvas.
 const CustomerViewContent: React.FC = () => {
-  const { state, dispatch } = useAreaCanvas();
+  const { state, dispatch } = useZoneCanvas();
   const [isReservationOpen, setIsReservationOpen] = useState(false);
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
   const [reservationDetails, setReservationDetails] =

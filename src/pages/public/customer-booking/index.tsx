@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
+import { Textzone } from "@/components/ui/textzone";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, Users, MapPin, Edit2, Eye } from "lucide-react";
@@ -45,7 +45,7 @@ const CustomerBookingPage = () => {
     "City View",
     "Beach View",
     "Private Booth",
-    "Bar Area",
+    "Bar Zone",
     "Terrace",
   ];
 
@@ -230,7 +230,7 @@ const CustomerBookingPage = () => {
 
             <div className="mb-8">
               <Button variant="link" className="text-primary p-0">
-                See all affiliated restaurants ›
+                See all affiliated propertys ›
               </Button>
             </div>
 
@@ -384,7 +384,7 @@ const CustomerBookingPage = () => {
                 <Label htmlFor="special-request">
                   Add a special request (optional)
                 </Label>
-                <Textarea
+                <Textzone
                   id="special-request"
                   placeholder="Add a special request (optional)"
                   className="min-h-[80px]"
@@ -405,7 +405,7 @@ const CustomerBookingPage = () => {
                   <Checkbox id="dining-offers" />
                   <Label htmlFor="dining-offers" className="text-sm leading-5">
                     Sign me up to receive dining offers and news from this
-                    restaurant by email.
+                    property by email.
                   </Label>
                 </div>
 

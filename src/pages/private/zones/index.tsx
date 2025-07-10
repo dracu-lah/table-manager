@@ -16,7 +16,7 @@ const ZonePage = () => {
           <OutletSelect
             outlet={outlet}
             setOutlet={setOutlet}
-            restaurantId={1}
+            propertyId={1}
           />
           <CreateZoneDialog outletId={outlet} />
         </div>

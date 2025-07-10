@@ -1,4 +1,4 @@
-import { GetRestaurantsAPI } from "@/services/api";
+import { GetPropertiesAPI } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 import { useNavigate } from "react-router";
 import {
@@ -16,16 +16,16 @@ import { Separator } from "@/components/ui/separator";
 import routePath from "@/router/routePath";
 import PageLoader from "@/components/loaders/PageLoader";
 
-const RestaurantsListView = () => {
+const PropertiesList = () => {
   const navigate = useNavigate();
 
   const {
-    data: restaurantsData,
+    data: propertiesData,
     isLoading,
     error,
   } = useQuery({
-    queryKey: [GetRestaurantsAPI.name],
-    queryFn: () => GetRestaurantsAPI(),
+    queryKey: [GetPropertiesAPI.name],
+    queryFn: () => GetPropertiesAPI(),
   });
 
   const formatDate = (dateString: string) => {
@@ -46,16 +46,16 @@ const RestaurantsListView = () => {
   if (error)
     return (
       <div className="text-red-500 text-center mt-8">
-        Failed to load restaurants.
+        Failed to load properties.
       </div>
     );
 
   return (
     <>
       <div className="grid grid-cols-2 gap-4">
-        {restaurantsData?.map((restaurant: any) => (
+        {propertiesData?.map((property: any) => (
           <Card
-            key={restaurant.id}
+            key={property.id}
             className="hover:shadow-lg transition-shadow duration-200"
           >
             <CardHeader className="pb-4">
@@ -66,11 +66,11 @@ const RestaurantsListView = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold capitalize">
-                      {restaurant.tenantName}
+                      {property.propertyName}
                     </h3>
                     <div className="flex items-center space-x-2 mt-1">
                       <Badge variant="default">
-                        Restaurant ID: {restaurant.id}
+                        Property ID: {property.id}
                       </Badge>
                     </div>
                   </div>
@@ -88,20 +88,20 @@ const RestaurantsListView = () => {
                   <Separator />
                   <div className="space-y-3">
                     <div className="text-sm font-medium">
-                      {restaurant.tenantName}
+                      {property.tenantName}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Mail className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">{restaurant.contactEmail}</span>
+                      <span className="text-sm">{property.contactEmail}</span>
                     </div>
                     <div className="flex items-center space-x-2">
                       <Phone className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm">{restaurant.contactPhone}</span>
+                      <span className="text-sm">{property.contactPhone}</span>
                     </div>
                     <div className="text-sm">
                       <span className="text-muted-foreground">Plan: </span>
                       <Badge variant="outline">
-                        {restaurant.subscriptionPlan}
+                        {property.subscriptionPlan}
                       </Badge>
                     </div>
                   </div>
@@ -119,7 +119,7 @@ const RestaurantsListView = () => {
                       <div className="text-sm">
                         <span className="text-muted-foreground">Start: </span>
                         <span className="font-medium">
-                          {formatDate(restaurant.subscriptionStartDate)}
+                          {formatDate(property.subscriptionStartDate)}
                         </span>
                       </div>
                     </div>
@@ -128,7 +128,7 @@ const RestaurantsListView = () => {
                       <div className="text-sm">
                         <span className="text-muted-foreground">End: </span>
                         <span className="font-medium">
-                          {formatDate(restaurant.subscriptionEndDate)}
+                          {formatDate(property.subscriptionEndDate)}
                         </span>
                       </div>
                     </div>
@@ -147,7 +147,7 @@ const RestaurantsListView = () => {
                       <div className="text-sm">
                         <span className="text-muted-foreground">Created: </span>
                         <span className="font-medium">
-                          {formatDate(restaurant.createdAt)}
+                          {formatDate(property.createdAt)}
                         </span>
                       </div>
                     </div>
@@ -156,7 +156,7 @@ const RestaurantsListView = () => {
                       <div className="text-sm">
                         <span className="text-muted-foreground">Updated: </span>
                         <span className="font-medium">
-                          {formatDate(restaurant.updatedAt)}
+                          {formatDate(property.updatedAt)}
                         </span>
                       </div>
                     </div>
@@ -184,4 +184,4 @@ const RestaurantsListView = () => {
   );
 };
 
-export default RestaurantsListView;
+export default PropertiesList;

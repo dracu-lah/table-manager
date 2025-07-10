@@ -23,12 +23,12 @@ const Dashboard = () => {
   const [activeTab, setActiveTab] = useState("overview");
 
   // Sample data
-  const restaurants = [
+  const propertys = [
     {
       id: 1,
       name: "Mario's Italian",
       location: "Downtown",
-      areas: 3,
+      zones: 3,
       canvases: 5,
       tables: 24,
       status: "active",
@@ -37,7 +37,7 @@ const Dashboard = () => {
       id: 2,
       name: "Sakura Sushi",
       location: "Midtown",
-      areas: 2,
+      zones: 2,
       canvases: 3,
       tables: 18,
       status: "active",
@@ -46,18 +46,18 @@ const Dashboard = () => {
       id: 3,
       name: "Blue Ocean Café",
       location: "Waterfront",
-      areas: 4,
+      zones: 4,
       canvases: 6,
       tables: 32,
       status: "inactive",
     },
   ];
 
-  const areas = [
+  const zones = [
     {
       id: 1,
       name: "Main Dining",
-      restaurant: "Mario's Italian",
+      property: "Mario's Italian",
       tables: 12,
       capacity: 48,
       status: "active",
@@ -65,7 +65,7 @@ const Dashboard = () => {
     {
       id: 2,
       name: "Patio",
-      restaurant: "Mario's Italian",
+      property: "Mario's Italian",
       tables: 8,
       capacity: 32,
       status: "active",
@@ -73,7 +73,7 @@ const Dashboard = () => {
     {
       id: 3,
       name: "Private Room",
-      restaurant: "Mario's Italian",
+      property: "Mario's Italian",
       tables: 4,
       capacity: 16,
       status: "active",
@@ -81,7 +81,7 @@ const Dashboard = () => {
     {
       id: 4,
       name: "Sushi Bar",
-      restaurant: "Sakura Sushi",
+      property: "Sakura Sushi",
       tables: 10,
       capacity: 20,
       status: "active",
@@ -92,34 +92,34 @@ const Dashboard = () => {
     {
       id: 1,
       name: "Floor Plan A",
-      restaurant: "Mario's Italian",
-      area: "Main Dining",
+      property: "Mario's Italian",
+      zone: "Main Dining",
       tables: 12,
       lastModified: "2 hours ago",
     },
     {
       id: 2,
       name: "Patio Layout",
-      restaurant: "Mario's Italian",
-      area: "Patio",
+      property: "Mario's Italian",
+      zone: "Patio",
       tables: 8,
       lastModified: "1 day ago",
     },
     {
       id: 3,
       name: "Sushi Counter",
-      restaurant: "Sakura Sushi",
-      area: "Sushi Bar",
+      property: "Sakura Sushi",
+      zone: "Sushi Bar",
       tables: 10,
       lastModified: "3 hours ago",
     },
   ];
 
   const stats = {
-    totalRestaurants: restaurants.length,
-    totalAreas: areas.length,
+    totalProperties: propertys.length,
+    totalZones: zones.length,
     totalCanvases: canvases.length,
-    totalTables: restaurants.reduce((sum, r) => sum + r.tables, 0),
+    totalTables: propertys.reduce((sum, r) => sum + r.tables, 0),
   };
 
   const TabButton = ({ id, label, icon: Icon }) => (
@@ -157,7 +157,7 @@ const Dashboard = () => {
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Table Manager</h1>
             <p className="text-gray-600">
-              Manage your restaurant layouts and seating
+              Manage your property layouts and seating
             </p>
           </div>
           <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
@@ -171,8 +171,8 @@ const Dashboard = () => {
       <nav className=" border-b  px-6 py-3">
         <div className="flex gap-2">
           <TabButton id="overview" label="Overview" icon={Layout} />
-          <TabButton id="restaurants" label="Restaurants" icon={Building2} />
-          <TabButton id="areas" label="Areas" icon={MapPin} />
+          <TabButton id="propertys" label="Properties" icon={Building2} />
+          <TabButton id="zones" label="Zones" icon={MapPin} />
           <TabButton id="canvases" label="Canvases" icon={Layout} />
         </div>
       </nav>
@@ -186,13 +186,13 @@ const Dashboard = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Restaurants
+                    Total Properties
                   </CardTitle>
                   <Building2 className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">
-                    {stats.totalRestaurants}
+                    {stats.totalProperties}
                   </div>
                   <p className="text-xs text-muted-foreground">
                     +2 from last month
@@ -203,14 +203,14 @@ const Dashboard = () => {
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium">
-                    Total Areas
+                    Total Zones
                   </CardTitle>
                   <MapPin className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{stats.totalAreas}</div>
+                  <div className="text-2xl font-bold">{stats.totalZones}</div>
                   <p className="text-xs text-muted-foreground">
-                    Across all restaurants
+                    Across all propertys
                   </p>
                 </CardContent>
               </Card>
@@ -253,7 +253,7 @@ const Dashboard = () => {
               <CardHeader>
                 <CardTitle>Recent Activity</CardTitle>
                 <CardDescription>
-                  Latest updates across your restaurants
+                  Latest updates across your propertys
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -271,7 +271,7 @@ const Dashboard = () => {
                   <div className="flex items-center gap-4 p-3  rounded-lg">
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
-                      <p className="font-medium">Area modified</p>
+                      <p className="font-medium">Zone modified</p>
                       <p className="text-sm text-gray-600">
                         Patio seating updated at Mario's Italian
                       </p>
@@ -294,10 +294,10 @@ const Dashboard = () => {
           </div>
         )}
 
-        {activeTab === "restaurants" && (
+        {activeTab === "propertys" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Restaurants</h2>
+              <h2 className="text-xl font-semibold">Properties</h2>
               <div className="flex items-center gap-3">
                 <div className="relative">
                   <Search
@@ -306,7 +306,7 @@ const Dashboard = () => {
                   />
                   <input
                     type="text"
-                    placeholder="Search restaurants..."
+                    placeholder="Search propertys..."
                     className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   />
                 </div>
@@ -328,7 +328,7 @@ const Dashboard = () => {
                       Location
                     </th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900">
-                      Areas
+                      Zones
                     </th>
                     <th className="text-left py-3 px-4 font-medium text-gray-900">
                       Canvases
@@ -345,29 +345,29 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {restaurants.map((restaurant) => (
+                  {propertys.map((property) => (
                     <tr
-                      key={restaurant.id}
+                      key={property.id}
                       className="border-b border-gray-100 hover:"
                     >
                       <td className="py-3 px-4 font-medium">
-                        {restaurant.name}
+                        {property.name}
                       </td>
                       <td className="py-3 px-4 text-gray-600">
-                        {restaurant.location}
+                        {property.location}
                       </td>
-                      <td className="py-3 px-4">{restaurant.areas}</td>
-                      <td className="py-3 px-4">{restaurant.canvases}</td>
-                      <td className="py-3 px-4">{restaurant.tables}</td>
+                      <td className="py-3 px-4">{property.zones}</td>
+                      <td className="py-3 px-4">{property.canvases}</td>
+                      <td className="py-3 px-4">{property.tables}</td>
                       <td className="py-3 px-4">
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            restaurant.status === "active"
+                            property.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {restaurant.status}
+                          {property.status}
                         </span>
                       </td>
                       <td className="py-3 px-4">
@@ -385,46 +385,46 @@ const Dashboard = () => {
           </div>
         )}
 
-        {activeTab === "areas" && (
+        {activeTab === "zones" && (
           <div className="space-y-6">
             <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Areas</h2>
+              <h2 className="text-xl font-semibold">Zones</h2>
               <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                 <Plus size={16} />
-                Add Area
+                Add Zone
               </button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {areas.map((area) => (
-                <Card key={area.id}>
+              {zones.map((zone) => (
+                <Card key={zone.id}>
                   <CardHeader>
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg">{area.name}</CardTitle>
+                      <CardTitle className="text-lg">{zone.name}</CardTitle>
                       <ActionButton icon={MoreHorizontal} onClick={() => {}} />
                     </div>
-                    <CardDescription>{area.restaurant}</CardDescription>
+                    <CardDescription>{zone.property}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-2">
                       <div className="flex justify-between">
                         <span className="text-gray-600">Tables:</span>
-                        <span className="font-medium">{area.tables}</span>
+                        <span className="font-medium">{zone.tables}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Capacity:</span>
-                        <span className="font-medium">{area.capacity}</span>
+                        <span className="font-medium">{zone.capacity}</span>
                       </div>
                       <div className="flex justify-between">
                         <span className="text-gray-600">Status:</span>
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
-                            area.status === "active"
+                            zone.status === "active"
                               ? "bg-green-100 text-green-800"
                               : "bg-gray-100 text-gray-800"
                           }`}
                         >
-                          {area.status}
+                          {zone.status}
                         </span>
                       </div>
                     </div>
@@ -464,7 +464,7 @@ const Dashboard = () => {
                       <ActionButton icon={MoreHorizontal} onClick={() => {}} />
                     </div>
                     <CardDescription>
-                      {canvas.restaurant} • {canvas.area}
+                      {canvas.property} • {canvas.zone}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
