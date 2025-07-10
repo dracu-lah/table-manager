@@ -80,7 +80,7 @@ const ZonesListView = () => {
                     onClick={() =>
                       navigate(
                         routePath.zoneCanvas({
-                          outletId: zone.locationId,
+                          outletId: zone.rvcOutletId,
                           zoneId: zone.id,
                         }),
                       )

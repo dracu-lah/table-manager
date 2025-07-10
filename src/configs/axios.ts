@@ -52,7 +52,17 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    // Skip refresh if already retried or no response
+    if (!error.response || originalRequest._retry) {
+      return Promise.reject(error);
+    }
+
+    const isLoginOrRefresh =
+      originalRequest.url.includes(endPoint.login) ||
+      originalRequest.url.includes(endPoint.refresh);
+
+    // Skip refresh logic for login or refresh endpoint
+    if (error.response.status === 401 && !isLoginOrRefresh) {
       originalRequest._retry = true;
       const newAccessToken = await refreshToken();
 
@@ -62,7 +72,7 @@ api.interceptors.response.use(
       }
     }
 
-    if (error.response?.status === 403) {
+    if (error.response.status === 403) {
       localStorage.clear();
       window.location.reload();
     }

@@ -24,7 +24,7 @@ const schema = z.object({
   // canvasUrl: z.string().url("Canvas URL must be valid"),
   canvasUrl: z.string().optional(),
   isActive: z.boolean(),
-  location_id: z.coerce.number(),
+  rvcOutletId: z.coerce.number(),
 });
 
 export default function CreateZoneDialog({ outletId }) {
@@ -37,7 +37,7 @@ export default function CreateZoneDialog({ outletId }) {
       name: "",
       canvasUrl: "",
       isActive: true,
-      location_id: 0,
+      rvcOutletId: 0,
     },
   });
 
@@ -54,7 +54,7 @@ export default function CreateZoneDialog({ outletId }) {
   });
 
   useEffect(() => {
-    methods.setValue("location_id", outletId);
+    methods.setValue("rvcOutletId", outletId);
   }, [outletId]);
   const onSubmit = (data: z.infer<typeof schema>) => {
     createMutation.mutate(data);

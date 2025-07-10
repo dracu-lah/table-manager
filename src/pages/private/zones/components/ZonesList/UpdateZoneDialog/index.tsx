@@ -25,7 +25,7 @@ const schema = z.object({
   // canvasUrl: z.string().url(),
   canvasUrl: z.string().optional(),
   isActive: z.boolean(),
-  location_id: z.coerce.number(),
+  rvcOutletId: z.coerce.number(),
 });
 
 type Zone = z.infer<typeof schema> & { id: number };
@@ -44,7 +44,7 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
       name: "",
       canvasUrl: "",
       isActive: true,
-      location_id: 0,
+      rvcOutletId: 0,
     },
   });
 
@@ -54,7 +54,7 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
         name: zone.name,
         canvasUrl: zone.canvasUrl,
         isActive: zone.isActive,
-        location_id: zone.locationId,
+        rvcOutletId: zone.rvcOutletId,
       });
     }
   }, [open, zone, methods]);
