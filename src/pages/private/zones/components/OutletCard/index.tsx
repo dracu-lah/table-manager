@@ -49,7 +49,7 @@ const OutletCard = ({ outletData }) => {
     updatedAt: "2025-05-30T15:20:36.485Z",
     __tenant__: {
       id: 1,
-      tenantName: "Tenant A",
+      tenantName: "Property A",
       subscriptionPlan: "Basic",
       isActive: true,
       subscriptionStartDate: "2025-06-17T11:45:23.310Z",
@@ -254,16 +254,16 @@ const OutletCard = ({ outletData }) => {
             </div>
           )}
 
-          {/* Tenant Information */}
+          {/* Property Information */}
           {outlet.__tenant__ && (
             <div className="border-t pt-6">
               <h3 className="text-xl font-semibold text-gray-800 mb-4">
-                Tenant Information
+                Property Information
               </h3>
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <p>
-                    <span className="font-medium text-gray-600">Tenant:</span>{" "}
+                    <span className="font-medium text-gray-600">Property:</span>{" "}
                     {outlet.__tenant__.tenantName}
                   </p>
                   <p>

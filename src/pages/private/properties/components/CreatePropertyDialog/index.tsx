@@ -17,7 +17,7 @@ import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 
 const schema = z.object({
-  tenantName: z.string().min(1, "Tenant name is required"),
+  tenantName: z.string().min(1, "Property name is required"),
   subscriptionPlan: z.string().min(1, "Subscription plan is required"),
   contactEmail: z.string().email("Enter a valid email"),
   contactPhone: z.string().min(7, "Phone number is required"),
@@ -65,7 +65,7 @@ export default function CreateRestaurantDialog() {
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField name="tenantName" label="Tenant Name" required />
+            <BasicFormField name="tenantName" label="Property Name" required />
             <BasicFormField
               name="subscriptionPlan"
               label="Subscription Plan"

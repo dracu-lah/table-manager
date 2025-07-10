@@ -80,10 +80,10 @@ const PropertiesList = () => {
 
             <CardContent>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Tenant Info */}
+                {/* Property Info */}
                 <div className="space-y-3">
                   <h4 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
-                    Tenant Details
+                    Property Details
                   </h4>
                   <Separator />
                   <div className="space-y-3">
