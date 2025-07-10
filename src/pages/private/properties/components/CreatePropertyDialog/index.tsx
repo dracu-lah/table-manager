@@ -62,10 +62,13 @@ export default function CreatePropertyDialog() {
         <DialogHeader>
           <DialogTitle>Create Property</DialogTitle>
         </DialogHeader>
-
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField name="propertyName" label="Property Name" required />
+            <BasicFormField
+              name="propertyName"
+              label="Property Name"
+              required
+            />
             <BasicFormField
               name="subscriptionPlan"
               label="Subscription Plan"
