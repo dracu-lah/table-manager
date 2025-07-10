@@ -14,6 +14,7 @@ import {
   GetOutletAPI,
   GetOutletsAPI,
   UpdateOutletAPI,
+  UploadOutletLogoAPI,
 } from "@/services/api";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import { useParams } from "react-router";
@@ -110,14 +111,10 @@ export default function EditOutletForm() {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-8">
             <ImageCropFormField
-              url={BASE_URL + endPoint.logoImageUpload}
+              apiFn={UploadOutletLogoAPI}
               name="logoImageUrl"
               label="Outlet Logo"
               required
-              wdith="100%"
-              uploaderWidth="100%"
-              uploaderHeight="200px"
-              cropperHeight="300px"
               removeButtonText="Remove Logo"
               imageAlt="Outlet Logo"
             />
