@@ -213,7 +213,7 @@ const BookingConfirmationPage = () => {
               </div>
             </div>
 
-            {/* Right column - Restaurant Info & Summary */}
+            {/* Right column - Property Info & Summary */}
             <div className="space-y-6">
               <Card>
                 <CardHeader>
@@ -239,7 +239,7 @@ const BookingConfirmationPage = () => {
                       variant="outline"
                       className="w-full border-primary text-red-500 hover:bg-red-50"
                     >
-                      View Restaurant Details
+                      View Property Details
                     </Button>
                   </div>
                 </CardContent>
@@ -304,7 +304,7 @@ const BookingConfirmationPage = () => {
                       className="w-full justify-start border-primary text-red-500 hover:bg-red-50"
                     >
                       <MessageSquare className="w-4 h-4 mr-2" />
-                      Contact Restaurant
+                      Contact Property
                     </Button>
                     <Button
                       variant="outline"

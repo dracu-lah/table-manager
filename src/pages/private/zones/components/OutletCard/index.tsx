@@ -49,7 +49,7 @@ const OutletCard = ({ outletData }) => {
     updatedAt: "2025-05-30T15:20:36.485Z",
     __tenant__: {
       id: 1,
-      tenantName: "Property A",
+      propertyName: "Property A",
       subscriptionPlan: "Basic",
       isActive: true,
       subscriptionStartDate: "2025-06-17T11:45:23.310Z",
@@ -264,7 +264,7 @@ const OutletCard = ({ outletData }) => {
                 <div className="space-y-2">
                   <p>
                     <span className="font-medium text-gray-600">Property:</span>{" "}
-                    {outlet.__tenant__.tenantName}
+                    {outlet.__tenant__.propertyName}
                   </p>
                   <p>
                     <span className="font-medium text-gray-600">Plan:</span>

@@ -2,7 +2,7 @@ import ComboboxFormField from "@/components/FormElements/ComboboxFormField";
 import { GetPropertiesAPI } from "@/services/api";
 import { useQuery } from "@tanstack/react-query";
 
-const RestaurantSelectFormField = () => {
+const PropertySelectFormField = () => {
   const {
     data: propertysData,
     isLoading,
@@ -13,7 +13,7 @@ const RestaurantSelectFormField = () => {
   });
   const data =
     propertysData?.map((property: any) => ({
-      label: property.tenantName,
+      label: property.propertyName,
       value: property.id,
     })) || [];
   return (
@@ -21,10 +21,10 @@ const RestaurantSelectFormField = () => {
       name="propertyId"
       className="w-full"
       items={data}
-      placeholder="Select Restaurant"
-      label="Restaurant"
+      placeholder="Select Property"
+      label="Property"
     />
   );
 };
 
-export default RestaurantSelectFormField;
+export default PropertySelectFormField;

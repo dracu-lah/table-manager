@@ -11,7 +11,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { BASE_URL, CreateOutletAPI, GetOutletsAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
-import RestaurantSelectFormField from "@/components/tableManagerCommon/RestaurantSelectFormField";
+import PropertySelectFormField from "@/components/tableManagerCommon/PropertySelectFormField";
 import ImageCrop from "@/components/uploaders/ImageCrop/ImageCrop";
 import { Label } from "@/components/ui/label";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
@@ -112,7 +112,7 @@ export default function OutletCreateForm() {
             <div className="grid grid-cols-1 gap-4">
               {/* Input Fields */}
               <div className="grid grid-cols-2 gap-4">
-                <RestaurantSelectFormField />
+                <PropertySelectFormField />
                 <BasicFormField name="name" label="Name" required />
                 <BasicFormField name="cuisine" label="Cuisine" />
                 <BasicFormField name="address" label="Address" required />

@@ -16,7 +16,7 @@ import SelectionPanel from "./SelectionPanel";
 import { MOCK_USERS, MOCK_TABLES, TABLE_STATUSES } from "./constants";
 
 // Main Component
-const RestaurantTableManager = () => {
+const PropertyTableManager = () => {
   const containerRef = useRef(null);
   const [canvasScale, setCanvasScale] = useState(1);
 
@@ -239,7 +239,7 @@ const RestaurantTableManager = () => {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                Restaurant Layout
+                Property Layout
                 {showSeatedHighlight && (
                   <Button
                     size="sm"
@@ -354,4 +354,4 @@ const RestaurantTableManager = () => {
   );
 };
 
-export default RestaurantTableManager;
+export default PropertyTableManager;

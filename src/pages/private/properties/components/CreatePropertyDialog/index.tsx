@@ -17,20 +17,20 @@ import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 
 const schema = z.object({
-  tenantName: z.string().min(1, "Property name is required"),
+  propertyName: z.string().min(1, "Property name is required"),
   subscriptionPlan: z.string().min(1, "Subscription plan is required"),
   contactEmail: z.string().email("Enter a valid email"),
   contactPhone: z.string().min(7, "Phone number is required"),
 });
 
-export default function CreateRestaurantDialog() {
+export default function CreatePropertyDialog() {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const methods = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
     defaultValues: {
-      tenantName: "",
+      propertyName: "",
       subscriptionPlan: "",
       contactEmail: "",
       contactPhone: "",
@@ -40,7 +40,7 @@ export default function CreateRestaurantDialog() {
   const createMutation = useMutation({
     mutationFn: CreatePropertyAPI,
     onSuccess: () => {
-      toast.success("Restaurant created successfully");
+      toast.success("Property created successfully");
       queryClient.invalidateQueries({ queryKey: [GetPropertiesAPI.name] });
       setOpen(false);
     },
@@ -56,16 +56,16 @@ export default function CreateRestaurantDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Restaurant</Button>
+        <Button>Create Property</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Restaurant</DialogTitle>
+          <DialogTitle>Create Property</DialogTitle>
         </DialogHeader>
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
-            <BasicFormField name="tenantName" label="Property Name" required />
+            <BasicFormField name="propertyName" label="Property Name" required />
             <BasicFormField
               name="subscriptionPlan"
               label="Subscription Plan"
@@ -83,7 +83,7 @@ export default function CreateRestaurantDialog() {
             />
 
             <Button type="submit" className="w-full">
-              {createMutation.isPending ? "Creating..." : "Create Restaurant"}
+              {createMutation.isPending ? "Creating..." : "Create Property"}
             </Button>
           </form>
         </FormProvider>

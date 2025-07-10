@@ -12,7 +12,7 @@ const ZoneCanvasViewPage: React.FC = () => {
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-6">Zone Canvas View</h1>
       <p>
-        Restaurant ID: {propertyId}, Zone ID: {zoneId}
+        Property ID: {propertyId}, Zone ID: {zoneId}
       </p>
 
       {/* Implement your table management canvas here */}

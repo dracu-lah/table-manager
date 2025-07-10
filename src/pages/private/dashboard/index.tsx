@@ -162,7 +162,7 @@ const Dashboard = () => {
           </div>
           <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
             <Plus size={18} />
-            New Restaurant
+            New Property
           </button>
         </div>
       </header>
@@ -281,7 +281,7 @@ const Dashboard = () => {
                   <div className="flex items-center gap-4 p-3  rounded-lg">
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
-                      <p className="font-medium">Restaurant status changed</p>
+                      <p className="font-medium">Property status changed</p>
                       <p className="text-sm text-gray-600">
                         Blue Ocean Café marked as inactive
                       </p>
@@ -312,7 +312,7 @@ const Dashboard = () => {
                 </div>
                 <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
                   <Plus size={16} />
-                  Add Restaurant
+                  Add Property
                 </button>
               </div>
             </div>

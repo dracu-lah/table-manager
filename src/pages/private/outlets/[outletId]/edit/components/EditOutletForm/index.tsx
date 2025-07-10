@@ -18,7 +18,7 @@ import {
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import { useParams } from "react-router";
 import { useEffect } from "react";
-import RestaurantSelectFormField from "@/components/tableManagerCommon/RestaurantSelectFormField";
+import PropertySelectFormField from "@/components/tableManagerCommon/PropertySelectFormField";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
 import endPoint from "@/services/endPoint";
 
@@ -122,7 +122,7 @@ export default function EditOutletForm() {
               imageAlt="Outlet Logo"
             />
             <div className="grid grid-cols-2 gap-4">
-              <RestaurantSelectFormField />
+              <PropertySelectFormField />
               <BasicFormField name="name" label="Name" required />
               <BasicFormField name="cuisine" label="Cuisine" />
               <BasicFormField name="address" label="Address" required />

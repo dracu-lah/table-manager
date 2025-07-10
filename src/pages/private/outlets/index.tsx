@@ -30,7 +30,7 @@ const OutletsPage = () => {
   // Placeholder images for different types of outlets
   const getPlaceholderImage = (name: string) => {
     const placeholders = [
-      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1074&auto=format&fit=crop", // Restaurant
+      "https://images.unsplash.com/photo-1528605248644-14dd04022da1?q=80&w=1074&auto=format&fit=crop", // Property
       "https://images.unsplash.com/photo-1497366216548-37526070297c?q=80&w=1074&auto=format&fit=crop", // Office
       "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1074&auto=format&fit=crop", // Building
       "https://images.unsplash.com/photo-1568605114967-8130f3a36994?q=80&w=1074&auto=format&fit=crop", // Modern office
@@ -100,7 +100,7 @@ const OutletsPage = () => {
                 {outlet.name}
               </CardTitle>
               <p className="text-sm text-muted-foreground">
-                {outlet.__tenant__?.tenantName}
+                {outlet.__tenant__?.propertyName}
               </p>
             </CardHeader>
 

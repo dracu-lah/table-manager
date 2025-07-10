@@ -88,7 +88,7 @@ const PropertiesList = () => {
                   <Separator />
                   <div className="space-y-3">
                     <div className="text-sm font-medium">
-                      {property.tenantName}
+                      {property.propertyName}
                     </div>
                     <div className="flex items-center space-x-2">
                       <Mail className="w-4 h-4 text-muted-foreground" />
