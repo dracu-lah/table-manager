@@ -310,6 +310,26 @@ export const GetZonesAPI = async (params: any = {}) => {
     throw error;
   }
 };
+
+export const UploadZoneImageAPI = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(endPoint.zoneThumbnailImage, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error("Upload failed");
+    }
+  } catch (error: any) {
+    throw new Error(error?.message || "Network error");
+  }
+};
 export const GetZoneAPI = async (params: { id: string }) => {
   try {
     const { data } = await api.get(`${endPoint.zones}/${params.id}`);

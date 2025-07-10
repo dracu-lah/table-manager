@@ -29,5 +29,5 @@ export default {
   zones: "/api/zones",
 
   logoImageUpload: "/api/files/upload/logo",
-  canvasThumbnailImage: "/api/files/upload/canvas",
+  zoneThumbnailImage: "/api/files/upload/canvas",
 };

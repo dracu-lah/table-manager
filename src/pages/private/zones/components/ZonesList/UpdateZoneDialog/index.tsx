@@ -13,7 +13,12 @@ import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { UpdateZoneAPI, GetZonesAPI, BASE_URL } from "@/services/api";
+import {
+  UpdateZoneAPI,
+  GetZonesAPI,
+  BASE_URL,
+  UploadZoneImageAPI,
+} from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import endPoint from "@/services/endPoint";
@@ -90,16 +95,12 @@ export default function UpdateZoneDialog({ zone }: UpdateZoneDialogProps) {
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
             <ImageCropFormField
-              url={BASE_URL + endPoint.canvasThumbnailImage}
-              name="canvasUrl"
-              label="Zone Image"
+              apiFn={UploadZoneImageAPI}
+              name="logoImageUrl"
+              label="Zone Thumbnail"
               required
-              wdith="100%"
-              uploaderWidth="100%"
-              uploaderHeight="200px"
-              cropperHeight="300px"
-              removeButtonText="Remove Zone"
-              imageAlt="Zone Image"
+              removeButtonText="Remove Thumbnail"
+              imageAlt="Thumbnail"
             />
             <BasicFormField name="name" label="Zone Name" required />
             <SwitchFormField name="isActive" label="Is Active" />
