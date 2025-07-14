@@ -116,6 +116,7 @@ const canvasReducer = (
       return { ...state, initialElements: [...state.elements] };
     case "SAVE_STATE":
       // Handle saving to local storage here
+      console.log("canvasState", action.payload);
       const storageKey = `tableLayoutState_${action.payload.canvasConfig.propertyId}_${action.payload.canvasConfig.zoneId}`; // Assuming propertyId and zoneId are part of canvasConfig for simplicity here, adjust as needed.
       localStorage.setItem(storageKey, JSON.stringify(action.payload));
       return state; // Saving doesn't change the current state
