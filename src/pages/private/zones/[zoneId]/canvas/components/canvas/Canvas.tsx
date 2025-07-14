@@ -6,7 +6,7 @@ import React, {
   useMemo,
 } from "react";
 import { AnimatePresence } from "framer-motion";
-import { useZoneCanvas } from "@/context/ZoneCanvasContext";
+import { useZoneCanvas } from "@/context/ZoneCanvasContext"; // Ensure this path is correct
 import { DraggableElement } from "./DraggableElement";
 import { Button } from "@/components/ui/button";
 import { ElementData } from "@/types";
@@ -19,7 +19,7 @@ interface CanvasProps {
   isEditable?: boolean;
   onTableSelect?: (tableData: ElementData) => void;
   tableStatuses?: Record<string, "available" | "occupied" | "reserved">;
-  propertyId?: string; // Add propertyId and zoneId props for saving
+  outletId?: string; // Add outletId and zoneId props for saving
   zoneId?: string;
 }
 
@@ -34,10 +34,18 @@ export const Canvas: React.FC<CanvasProps> = ({
   isEditable = true,
   onTableSelect,
   tableStatuses = {},
-  propertyId, // Get these from props
+  outletId, // Get these from props
   zoneId,
 }) => {
-  const { state, dispatch } = useZoneCanvas();
+  // Destructure the new values from useZoneCanvas
+  const {
+    state,
+    dispatch,
+    saveCanvas,
+    isLoadingCanvas,
+    isSavingCanvas,
+    canvasError,
+  } = useZoneCanvas();
   const constraintsRef = useRef<any>(null);
   const [containerWidth, setContainerWidth] = useState(800);
   const [isImageLoading, setIsImageLoading] = useState(false);
@@ -97,8 +105,16 @@ export const Canvas: React.FC<CanvasProps> = ({
   }, [cornerLabels]);
 
   // Load default layout image on mount if no layout image is in context state
+  // This useEffect might need refinement if you want to ensure the API call
+  // has completed before setting a default. Currently, it assumes the context
+  // will load the image via API. If state.canvasConfig.layoutImage is undefined
+  // *after* the API load, then this fallback can be useful.
   useEffect(() => {
     if (state.canvasConfig.layoutImage === undefined) {
+      // Only set a default if the API hasn't provided one
+      // This might be better handled in the context's useQuery success logic
+      // to avoid race conditions with initial API fetch.
+      // For now, keeping it here but be mindful of its interaction with async API load.
       handleLayoutImageChange(roomLayouts[0].img);
     }
   }, [state.canvasConfig.layoutImage, containerWidth]);
@@ -190,25 +206,12 @@ export const Canvas: React.FC<CanvasProps> = ({
     setEditingText("");
   };
 
-  // Function to dispatch the SAVE_STATE action
+  // Function to trigger the save API call via context
   const handleSaveLayout = () => {
-    if (propertyId && zoneId) {
-      dispatch({
-        type: "SAVE_STATE",
-        payload: {
-          ...state,
-          canvasConfig: {
-            ...state.canvasConfig,
-            propertyId: propertyId, // Include propertyId and zoneId in the state for saving
-            zoneId: zoneId,
-          } as any, // Type assertion as these are not strictly in CanvasConfig
-        },
-      });
-      alert("Layout saved!"); // Provide feedback to the user
-    } else {
-      console.error("Cannot save layout: propertyId or zoneId is missing.");
-      alert("Error: Cannot save layout.");
-    }
+    // The `saveCanvas` function in ZoneCanvasContext already takes care of
+    // including propertyId (outletId) and zoneId from the context's setup.
+    // We just pass the current state.
+    saveCanvas(state);
   };
 
   const elementsWithStatus = useMemo(() => {
@@ -253,7 +256,7 @@ export const Canvas: React.FC<CanvasProps> = ({
         break;
       case "bottom":
         positionStyle = {
-          width: `${canvasWidth / 4}px`,
+          width: "calc(25% + 10px)", // Adjusted for consistency
           height: "20px",
           bottom: "-25px",
           left: `${(index * canvasWidth) / 4}px`,
@@ -333,6 +336,25 @@ export const Canvas: React.FC<CanvasProps> = ({
     );
   };
 
+  // Render loading and error states for the entire canvas
+  if (isLoadingCanvas) {
+    return (
+      <div className="flex justify-center items-center h-96">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
+        <p className="ml-4 text-lg text-gray-600">Loading canvas layout...</p>
+      </div>
+    );
+  }
+
+  if (canvasError) {
+    return (
+      <div className="flex flex-col justify-center items-center h-96 text-red-600">
+        <p className="text-lg">Error loading canvas: {canvasError.message}</p>
+        <p className="text-sm text-gray-500 mt-2">Please try again later.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full gap-4">
       {isEditable && <Toolbar />}
@@ -397,7 +419,11 @@ export const Canvas: React.FC<CanvasProps> = ({
               Reset Layout
             </Button>
             <div className="relative">
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                className="flex items-center gap-2"
+                disabled={isImageLoading}
+              >
                 <Upload className="h-4 w-4" /> Upload Custom Image
               </Button>
               <input
@@ -437,7 +463,9 @@ export const Canvas: React.FC<CanvasProps> = ({
       {isEditable && (
         <div className="flex flex-col gap-4 mb-8">
           <div className="flex justify-center items-center gap-2">
-            <Button onClick={handleSaveLayout}>Save Canvas</Button>
+            <Button onClick={handleSaveLayout} disabled={isSavingCanvas}>
+              {isSavingCanvas ? "Saving..." : "Save Canvas"}
+            </Button>
 
             <Button variant="destructive" onClick={handleClearCanvas}>
               <Trash2 className="h-4 w-4 mr-2" /> Clear Canvas
