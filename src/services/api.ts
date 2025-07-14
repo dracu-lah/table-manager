@@ -356,6 +356,20 @@ export const UpdateZoneAPI = async (params: any) => {
     throw error;
   }
 };
+
+// Layouts
+
+export const UpdateCanvasAPI = async (params: any) => {
+  try {
+    const { data } = await api.patch(
+      `${endPoint.zones}/${params.id}/layout`,
+      params,
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 /* ZONE MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* PROPERTY MANAGEMENT START */
