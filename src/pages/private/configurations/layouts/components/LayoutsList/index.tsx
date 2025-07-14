@@ -12,6 +12,7 @@ import { Button } from "@/components/ui/button";
 import routePath from "@/router/routePath";
 // import UpdateLayoutDialog from "./UpdateLayoutDialog"; // Renamed from UpdateZoneDialog
 import PageLoader from "@/components/loaders/PageLoader";
+import UpdateLayoutDialog from "./UpdateLayoutDialog";
 
 // Define the type for a single layout item from your API response
 interface LayoutItem {
@@ -112,7 +113,7 @@ const LayoutsList = () => {
                 </div>
                 <div className="flex gap-4">
                   {/* Assuming you have a similar dialog for updating layouts */}
-                  {/* <UpdateLayoutDialog layout={layout} /> */}
+                  <UpdateLayoutDialog layout={layout} />
                   {/* <Button */}
                   {/*   onClick={() => */}
                   {/*     navigate( */}

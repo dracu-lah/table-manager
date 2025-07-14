@@ -1,5 +1,5 @@
-import CreateZoneDialog from "./components/CreateZoneDialog";
-import ZonesList from "./components/ZonesList";
+import CreateZoneDialog from "./components/CreateLayoutDialog";
+import ZonesList from "./components/LayoutsList";
 
 const Layouts = () => {
   return (
@@ -10,7 +10,7 @@ const Layouts = () => {
             <h1 className="text-3xl font-bold mb-2">Layouts Management</h1>
           </div>
 
-          {/* <CreateZoneDialog /> */}
+          <CreateZoneDialog />
         </div>
         <ZonesList />
       </div>

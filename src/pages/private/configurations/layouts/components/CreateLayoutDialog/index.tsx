@@ -11,22 +11,26 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
-import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CreateZoneAPI, GetZonesAPI, UploadZoneImageAPI } from "@/services/api";
+import {
+  CreateLayoutAPI,
+  GetLayoutsAPI,
+  UploadLayoutImageAPI,
+} from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
 
 const schema = z.object({
-  name: z.string().min(1, "Zone name is required"),
-  // canvasUrl: z.string().url("Canvas URL must be valid"),
-  canvasUrl: z.string().optional(),
-  isActive: z.boolean(),
-  rvcOutletId: z.coerce.number(),
+  name: z.string().min(1, "Layout name is required"),
+  imageUrl: z
+    .string()
+    .url("Image URL must be valid")
+    .min(1, "Layout thumbnail is required"),
 });
 
-export default function CreateZoneDialog({ outletId }) {
+// Removed outletId from props as it's not used internally for creation payload
+export default function CreateLayoutDialog() {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
@@ -34,56 +38,61 @@ export default function CreateZoneDialog({ outletId }) {
     resolver: zodResolver(schema),
     defaultValues: {
       name: "",
-      canvasUrl: "",
-      isActive: true,
-      rvcOutletId: 0,
+      imageUrl: "",
     },
   });
 
   const createMutation = useMutation({
-    mutationFn: CreateZoneAPI,
+    mutationFn: CreateLayoutAPI,
     onSuccess: () => {
-      toast.success("Zone created successfully");
-      queryClient.invalidateQueries({ queryKey: [GetZonesAPI.name] });
+      toast.success("Layout created successfully");
+      queryClient.invalidateQueries({ queryKey: [GetLayoutsAPI.name] });
       setOpen(false);
+      methods.reset();
     },
     onError: ({ response }: any) => {
       showErrorAlert(response.data);
     },
   });
 
-  useEffect(() => {
-    methods.setValue("rvcOutletId", outletId);
-  }, [outletId]);
+  // useEffect for outletId is now completely removed as it's not needed.
+
   const onSubmit = (data: z.infer<typeof schema>) => {
-    createMutation.mutate(data);
+    const payload = {
+      name: data.name,
+      imageUrl: data.imageUrl,
+    };
+    createMutation.mutate(payload);
   };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Create Zone</Button>
+        <Button>Create Layout</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create Zone</DialogTitle>
+          <DialogTitle>Create Layout</DialogTitle>
         </DialogHeader>
 
         <FormProvider {...methods}>
           <form onSubmit={methods.handleSubmit(onSubmit)} className="space-y-6">
             <ImageCropFormField
-              apiFn={UploadZoneImageAPI}
-              name="logoImageUrl"
-              label="Zone Thumbnail"
+              apiFn={UploadLayoutImageAPI}
+              name="imageUrl"
+              label="Layout Thumbnail"
               required
               removeButtonText="Remove Thumbnail"
-              imageAlt="Thumbnail"
+              imageAlt="Layout Thumbnail"
             />
-            <BasicFormField name="name" label="Zone Name" required />
-            <SwitchFormField name="isActive" label="Is Active" />
+            <BasicFormField name="name" label="Layout Name" required />
 
-            <Button type="submit" className="w-full">
-              {createMutation.isPending ? "Creating..." : "Create Zone"}
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={createMutation.isPending}
+            >
+              {createMutation.isPending ? "Creating..." : "Create Layout"}
             </Button>
           </form>
         </FormProvider>
