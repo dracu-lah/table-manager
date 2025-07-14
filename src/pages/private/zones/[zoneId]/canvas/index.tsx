@@ -17,15 +17,8 @@ const ZoneCanvasViewPage: React.FC = () => {
 
       {/* Implement your table management canvas here */}
       <div className="">
-        <ZoneCanvasProvider
-          propertyId={`${propertyId}`}
-          zoneId={`${zoneId}`}
-        >
-          <Canvas
-            propertyId={propertyId}
-            zoneId={zoneId}
-            isEditable={true}
-          />
+        <ZoneCanvasProvider propertyId={`${propertyId}`} zoneId={`${zoneId}`}>
+          <Canvas propertyId={propertyId} zoneId={zoneId} isEditable={true} />
         </ZoneCanvasProvider>
       </div>
     </div>

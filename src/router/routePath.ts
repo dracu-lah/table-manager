@@ -22,7 +22,8 @@ export default {
   zones: `/zones`,
   createZone: "/zones/create",
   editZone: ({ id = ":id" }) => `/zones/${id}/edit`,
-  zoneCanvas: ({ zoneId = ":zoneId" }) => `/zones/${zoneId}/canvas`,
+  zoneCanvas: ({ zoneId = ":zoneId", outletId = ":outletId" }) =>
+    `/zones/${outletId}/${zoneId}/canvas`,
   zoneEmployeeView: ({ zoneId = ":zoneId" }) =>
     `/zones/${zoneId}/employee-view`,
 };
