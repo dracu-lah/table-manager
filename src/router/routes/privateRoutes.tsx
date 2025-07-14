@@ -21,6 +21,10 @@ const EditOutletPage = lazy(
 
 const ZonesPage = lazy(() => import("@/pages/private/zones"));
 
+const LayoutsConfigurationsPage = lazy(
+  () => import("@/pages/private/configurations/layouts"),
+);
+
 const ZonesCanvasPage = lazy(
   () => import("@/pages/private/zones/[zoneId]/canvas"),
 );
@@ -70,6 +74,16 @@ export const privateRoutes = [
           {
             index: true,
             element: <PropertiesPage />,
+          },
+        ],
+      },
+
+      {
+        path: routePath.layoutsConfigurations,
+        children: [
+          {
+            index: true,
+            element: <LayoutsConfigurationsPage />,
           },
         ],
       },

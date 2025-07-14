@@ -28,30 +28,16 @@ const Routes = () => {
     ),
   }));
   // Combine and conditionally include routes based on authentication status
-  const router = createBrowserRouter(
-    [
-      {
-        path: "/",
-        errorElement: <ErrorPage />,
-        element: <RootLayout />,
-        children: [...publicRoutes, ...authRoutes, ...privateRoutes],
-      },
-    ],
+  const router = createBrowserRouter([
     {
-      future: {
-        v7_relativeSplatPath: true,
-      },
+      path: "/",
+      errorElement: <ErrorPage />,
+      element: <RootLayout />,
+      children: [...publicRoutes, ...authRoutes, ...privateRoutes],
     },
-  );
+  ]);
 
-  return (
-    <RouterProvider
-      router={router}
-      future={{
-        v7_startTransition: true,
-      }}
-    />
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default Routes;

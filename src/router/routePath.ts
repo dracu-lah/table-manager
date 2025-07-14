@@ -14,6 +14,7 @@ export default {
 
   // ========================= PRIVATE ROUTES =========================
   properties: "/properties",
+  layoutsConfigurations: "/configurations/layouts",
 
   outlets: "/outlets",
   createOutlet: "/outlets/create",
