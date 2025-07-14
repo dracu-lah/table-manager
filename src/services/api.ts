@@ -357,7 +357,70 @@ export const UpdateZoneAPI = async (params: any) => {
   }
 };
 
-// Layouts
+// Layout
+
+export const GetLayoutsAPI = async (params: any = {}) => {
+  try {
+    const { data } = await api.get(`${endPoint.layouts}`, {
+      params: params,
+    });
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UploadLayoutImageAPI = async (file: File) => {
+  try {
+    const formData = new FormData();
+    formData.append("file", file);
+    const response = await api.post(endPoint.layoutImageUpload, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status === 201) {
+      return response.data;
+    } else {
+      throw new Error("Upload failed");
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const GetLayoutAPI = async (params: { id: string }) => {
+  try {
+    const { data } = await api.get(`${endPoint.layouts}/${params.id}`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const CreateLayoutAPI = async (params: any) => {
+  try {
+    const { data } = await api.post(`${endPoint.layouts}`, params);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const UpdateLayoutAPI = async (params: any) => {
+  try {
+    const { data } = await api.patch(
+      `${endPoint.layouts}/${params.id}`,
+      params,
+    );
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+//  Canvas
 
 export const GetCanvasAPI = async (params: { id: string }) => {
   try {
@@ -378,6 +441,7 @@ export const UpdateCanvasAPI = async (params: any) => {
     throw error;
   }
 };
+
 /* ZONE MANAGEMENT END */
 /************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /* PROPERTY MANAGEMENT START */

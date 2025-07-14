@@ -28,6 +28,9 @@ export default {
   // ========================= ZONE  MANAGEMENT APIS =========================
   zones: "/api/zones",
 
+  // ========================= Layout  MANAGEMENT APIS =========================
+  layouts: "/api/layouts",
+  layoutImageUpload: "/api/files/upload/canvas",
   logoImageUpload: "/api/files/upload/logo",
   zoneThumbnailImage: "/api/files/upload/canvas",
 };
