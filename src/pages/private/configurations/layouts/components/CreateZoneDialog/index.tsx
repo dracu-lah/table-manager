@@ -13,15 +13,9 @@ import { Button } from "@/components/ui/button";
 import BasicFormField from "@/components/FormElements/BasicFormField";
 import SwitchFormField from "@/components/FormElements/SwitchFormField";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import {
-  BASE_URL,
-  CreateZoneAPI,
-  GetZonesAPI,
-  UploadZoneImageAPI,
-} from "@/services/api";
+import { CreateZoneAPI, GetZonesAPI, UploadZoneImageAPI } from "@/services/api";
 import { toast } from "sonner";
 import showErrorAlert from "@/utils/functions/showErrorAlert";
-import endPoint from "@/services/endPoint";
 import ImageCropFormField from "@/components/FormElements/ImageCropField";
 
 const schema = z.object({

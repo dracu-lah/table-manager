@@ -126,9 +126,7 @@ const Dashboard = () => {
     <button
       onClick={() => setActiveTab(id)}
       className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-colors ${
-        activeTab === id
-          ? "bg-primary text-white"
-          : "text-gray-600 hover:bg-gray-100"
+        activeTab === id ? "bg-primary text-white" : " hover:bg-gray-100"
       }`}
     >
       <Icon size={18} />
@@ -142,7 +140,7 @@ const Dashboard = () => {
       className={`p-2 rounded-lg transition-colors ${
         variant === "primary"
           ? "bg-primary text-white hover:bg-blue-700"
-          : "text-gray-600 hover:bg-gray-100"
+          : " hover:bg-gray-100"
       }`}
     >
       <Icon size={16} />
@@ -155,10 +153,8 @@ const Dashboard = () => {
       <header className=" border-b  px-6 py-4">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Table Manager</h1>
-            <p className="text-gray-600">
-              Manage your property layouts and seating
-            </p>
+            <h1 className="text-2xl font-bold ">Table Manager</h1>
+            <p className="">Manage your property layouts and seating</p>
           </div>
           <button className="flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors">
             <Plus size={18} />
@@ -262,7 +258,7 @@ const Dashboard = () => {
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">New canvas created</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm ">
                         Floor Plan A added to Mario's Italian
                       </p>
                     </div>
@@ -272,7 +268,7 @@ const Dashboard = () => {
                     <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">Zone modified</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm ">
                         Patio seating updated at Mario's Italian
                       </p>
                     </div>
@@ -282,7 +278,7 @@ const Dashboard = () => {
                     <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
                     <div className="flex-1">
                       <p className="font-medium">Property status changed</p>
-                      <p className="text-sm text-gray-600">
+                      <p className="text-sm ">
                         Blue Ocean Café marked as inactive
                       </p>
                     </div>
@@ -350,12 +346,8 @@ const Dashboard = () => {
                       key={property.id}
                       className="border-b border-gray-100 hover:"
                     >
-                      <td className="py-3 px-4 font-medium">
-                        {property.name}
-                      </td>
-                      <td className="py-3 px-4 text-gray-600">
-                        {property.location}
-                      </td>
+                      <td className="py-3 px-4 font-medium">{property.name}</td>
+                      <td className="py-3 px-4 ">{property.location}</td>
                       <td className="py-3 px-4">{property.zones}</td>
                       <td className="py-3 px-4">{property.canvases}</td>
                       <td className="py-3 px-4">{property.tables}</td>
@@ -408,15 +400,15 @@ const Dashboard = () => {
                   <CardContent>
                     <div className="space-y-2">
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Tables:</span>
+                        <span className="">Tables:</span>
                         <span className="font-medium">{zone.tables}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Capacity:</span>
+                        <span className="">Capacity:</span>
                         <span className="font-medium">{zone.capacity}</span>
                       </div>
                       <div className="flex justify-between">
-                        <span className="text-gray-600">Status:</span>
+                        <span className="">Status:</span>
                         <span
                           className={`px-2 py-1 text-xs font-medium rounded-full ${
                             zone.status === "active"
@@ -474,11 +466,11 @@ const Dashboard = () => {
                       </div>
                       <div className="space-y-2">
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Tables:</span>
+                          <span className="">Tables:</span>
                           <span className="font-medium">{canvas.tables}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-gray-600">Modified:</span>
+                          <span className="">Modified:</span>
                           <span className="text-sm text-gray-500">
                             {canvas.lastModified}
                           </span>
