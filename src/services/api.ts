@@ -359,6 +359,14 @@ export const UpdateZoneAPI = async (params: any) => {
 
 // Layouts
 
+export const GetCanvasAPI = async (params: { id: string }) => {
+  try {
+    const { data } = await api.get(`${endPoint.zones}/${params.id}/layout`);
+    return data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const UpdateCanvasAPI = async (params: any) => {
   try {
     const { data } = await api.patch(
