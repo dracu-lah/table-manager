@@ -9,7 +9,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textzone } from "@/components/ui/textzone";
+import { Textarea } from "@/components/ui/textarea";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Calendar, Clock, Users, MapPin, Edit2, Eye } from "lucide-react";
@@ -384,7 +384,7 @@ const CustomerBookingPage = () => {
                 <Label htmlFor="special-request">
                   Add a special request (optional)
                 </Label>
-                <Textzone
+                <Textarea
                   id="special-request"
                   placeholder="Add a special request (optional)"
                   className="min-h-[80px]"

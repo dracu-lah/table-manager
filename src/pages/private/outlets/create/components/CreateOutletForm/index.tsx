@@ -146,7 +146,7 @@ export default function OutletCreateForm() {
                   required
                 />
               </div>
-              {/* Textzones */}
+              {/* Textareas */}
               <div className="grid grid-cols-2 gap-4">
                 <TextAreaFormField name="description" label="Description" />
                 <TextAreaFormField
