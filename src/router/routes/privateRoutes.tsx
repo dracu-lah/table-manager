@@ -4,10 +4,6 @@ import routePath from "../routePath";
 import { ProtectedRoute } from "../ProtectedRoute";
 
 const DashboardPage = lazy(() => import("@/pages/private/dashboard"));
-// const CustomerViewPage = lazy(
-//   () => import("@/pages/private/zones/[zoneId]/customer-view"),
-// );
-
 const EmployeeViewPage = lazy(
   () => import("@/pages/private/zones/[zoneId]/employee-view"),
 );
@@ -44,6 +40,7 @@ export const privateRoutes = [
     element: <ProtectedRoute />,
     children: [
       { index: true, element: <DashboardPage /> },
+
       {
         index: true,
         element: <Navigate to={routePath.properties} replace />,
@@ -106,7 +103,6 @@ export const privateRoutes = [
           },
         ],
       },
-
       {
         path: routePath.userManagement,
         children: [

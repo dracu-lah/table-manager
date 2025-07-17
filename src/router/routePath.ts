@@ -1,13 +1,9 @@
 export default {
-  // ========================= GENERAL ROUTES =========================
   login: "/login",
   dashboard: "/",
 
   // ========================= PUBLIC ROUTES =========================
   aboutUs: "/about-us",
-  customerBooking: "/:restaurantId/customer-booking",
-  bookingConfirmed: "/:restaurantId/customer-booking/booking-confirmed",
-
   // ========================= USERS & ROLES =========================
   userManagement: "/users/user-management",
   roleManagement: "/users/role-management",
@@ -15,6 +11,9 @@ export default {
   // ========================= PRIVATE ROUTES =========================
   properties: "/properties",
   layoutsConfigurations: "/configurations/layouts",
+
+  customerBooking: () => `/customer-booking`,
+  customerBooked: () => `/customer-booking/booked`,
 
   outlets: "/outlets",
   createOutlet: "/outlets/create",

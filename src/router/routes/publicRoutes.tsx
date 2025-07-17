@@ -5,7 +5,7 @@ const CustomerBookingPage = lazy(
   () => import("@/pages/public/customer-booking"),
 );
 
-const BookingConfirmPage = lazy(
+const CustomerBookedPage = lazy(
   () => import("@/pages/public/customer-booking/booking-confirmed"),
 );
 export const publicRoutes = [
@@ -17,13 +17,17 @@ export const publicRoutes = [
       //   element: <AboutPage />,
       // },
       {
-        path: routePath.customerBooking,
-        element: <CustomerBookingPage />,
-      },
-
-      {
-        path: routePath.bookingConfirmed,
-        element: <BookingConfirmPage />,
+        path: routePath.customerBooking(),
+        children: [
+          {
+            index: true,
+            element: <CustomerBookingPage />,
+          },
+          {
+            index: routePath.customerBooked(),
+            element: <CustomerBookedPage />,
+          },
+        ],
       },
     ],
   },
