@@ -24,7 +24,7 @@ export const publicRoutes = [
             element: <CustomerBookingPage />,
           },
           {
-            index: routePath.customerBooked(),
+            path: routePath.customerBooked(),
             element: <CustomerBookedPage />,
           },
         ],
